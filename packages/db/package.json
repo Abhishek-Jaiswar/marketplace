@@ -1,0 +1,8 @@
+{
+    "name": "db",
+    "type": "module",
+    "private": true,
+    "scripts": {},
+    "exports": {
+    }
+}
