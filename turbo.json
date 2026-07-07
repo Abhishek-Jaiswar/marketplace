@@ -1,7 +1,17 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
-  "globalEnv": ["PORT", "DATABASE_URL"],
+  "globalEnv": [
+    "PORT",
+    "DATABASE_URL",
+    "LOG_LEVEL",
+    "REDIS_URL",
+    "REDIS_CONNECT_TIMEOUT_MS",
+    "SLOW_QUERY_THRESHOLD_MS",
+    "NEXT_RUNTIME",
+    "DISABLE_FILE_LOGGING",
+    "NODE_ENV"
+  ],
   "tasks": {
     "db:generate": {
       "cache": false

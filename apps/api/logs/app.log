@@ -1,0 +1,248 @@
+2026-07-08 00:09:08 [[32minfo[39m] [undefined]: [32mRedis server replied: #PONG[39m 
+2026-07-08 00:09:08 [[32minfo[39m] [undefined]: [32mRedis is ready, PING/PONG health check passed.[39m 
+2026-07-08 00:09:08 [[32minfo[39m] [undefined]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-08 00:10:02 [[32minfo[39m] [undefined]: [32mRedis server replied: #PONG[39m 
+2026-07-08 00:10:02 [[32minfo[39m] [undefined]: [32mRedis is ready, PING/PONG health check passed.[39m 
+2026-07-08 00:10:02 [[32minfo[39m] [undefined]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-08 00:16:18 [[32minfo[39m] [system]: [32mRedis server replied: #PONG[39m 
+2026-07-08 00:16:18 [[32minfo[39m] [system]: [32mRedis is ready, PING/PONG health check passed.[39m 
+2026-07-08 00:16:19 [[32minfo[39m] [system]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-08 00:16:23 [[32minfo[39m] [system]: [32mRedis server replied: #PONG[39m 
+2026-07-08 00:16:23 [[32minfo[39m] [system]: [32mRedis is ready, PING/PONG health check passed.[39m 
+2026-07-08 00:16:23 [[32minfo[39m] [system]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-08 00:27:48 [[32minfo[39m]: [32mDatabase connection successful[39m {
+  "database": {
+    "status": "connected",
+    "response": [
+      {
+        "healthcheck": 1
+      }
+    ]
+  }
+}
+2026-07-08 00:27:50 [[32minfo[39m]: [32mRedis server replied: #PONG[39m
+2026-07-08 00:27:50 [[32minfo[39m]: [32mRedis is ready, PING/PONG health check passed.[39m
+2026-07-08 00:27:50 [[32minfo[39m]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-08 00:29:45 [[32minfo[39m]: [32mDatabase connection successful[39m {
+  "database": {
+    "status": "connected",
+    "response": [
+      {
+        "healthcheck": 1
+      }
+    ]
+  }
+}
+2026-07-08 00:29:47 [[32minfo[39m]: [32mRedis server replied: #PONG[39m
+2026-07-08 00:29:47 [[32minfo[39m]: [32mRedis is ready, PING/PONG health check passed.[39m
+2026-07-08 00:29:47 [[32minfo[39m]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-08 00:31:12 [[32minfo[39m]: [32mDatabase connection successful[39m {
+  "database": {
+    "status": "connected",
+    "response": [
+      {
+        "healthcheck": 1
+      }
+    ]
+  }
+}
+2026-07-08 00:31:14 [[32minfo[39m]: [32mRedis server replied: #PONG[39m
+2026-07-08 00:31:14 [[32minfo[39m]: [32mRedis is ready, PING/PONG health check passed.[39m
+2026-07-08 00:31:14 [[32minfo[39m]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-08 00:32:39 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 200
+  },
+  "durationMs": 15
+}
+2026-07-08 00:32:39 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 200
+  },
+  "durationMs": 16
+}
+2026-07-08 00:33:51 [[32minfo[39m]: [32mDatabase connection successful[39m {
+  "database": {
+    "status": "connected",
+    "response": [
+      {
+        "healthcheck": 1
+      }
+    ]
+  }
+}
+2026-07-08 00:33:52 [[32minfo[39m]: [32mRedis server replied: #PONG[39m
+2026-07-08 00:33:52 [[32minfo[39m]: [32mRedis is ready, PING/PONG health check passed.[39m
+2026-07-08 00:33:52 [[32minfo[39m]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-08 00:34:00 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"email\", \"public\".\"User\".\"name\", \"public\".\"User\".\"createdAt\" FROM \"public\".\"User\" WHERE 1=1 ORDER BY \"public\".\"User\".\"createdAt\" DESC OFFSET $1",
+    "params": "[\"0\"]",
+    "durationMs": 215.04609999999957,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-08 00:34:00 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 200
+  },
+  "durationMs": 279
+}
+2026-07-08 00:34:00 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 200
+  },
+  "durationMs": 284
+}
+2026-07-08 00:35:10 [[32minfo[39m]: [32mDatabase connection successful[39m {
+  "database": {
+    "status": "connected",
+    "response": [
+      {
+        "healthcheck": 1
+      }
+    ]
+  }
+}
+2026-07-08 00:35:12 [[32minfo[39m]: [32mRedis server replied: #PONG[39m
+2026-07-08 00:35:12 [[32minfo[39m]: [32mRedis is ready, PING/PONG health check passed.[39m
+2026-07-08 00:35:12 [[32minfo[39m]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-08 00:35:45 [[33mwarn[39m]: [33mSlow database query detected[39m {
+  "database": {
+    "query": "SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"email\", \"public\".\"User\".\"name\", \"public\".\"User\".\"createdAt\" FROM \"public\".\"User\" WHERE 1=1 ORDER BY \"public\".\"User\".\"createdAt\" DESC OFFSET $1",
+    "params": "[\"0\"]",
+    "durationMs": 1391.2721999999994,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-08 00:35:45 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 304
+  },
+  "durationMs": 1491
+}
+2026-07-08 00:35:45 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 304
+  },
+  "durationMs": 1493
+}
+2026-07-08 00:35:52 [[33mwarn[39m]: [33mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 409
+  },
+  "durationMs": 471
+}
+2026-07-08 00:35:52 [[33mwarn[39m]: [33mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 409
+  },
+  "durationMs": 431
+}
+2026-07-08 00:35:53 [[33mwarn[39m]: [33mSlow database query detected[39m {
+  "database": {
+    "query": "SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"email\", \"public\".\"User\".\"name\", \"public\".\"User\".\"createdAt\" FROM \"public\".\"User\" WHERE 1=1 ORDER BY \"public\".\"User\".\"createdAt\" DESC OFFSET $1",
+    "params": "[\"0\"]",
+    "durationMs": 884.2281000000003,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-08 00:35:53 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 304
+  },
+  "durationMs": 892
+}
+2026-07-08 00:35:53 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 304
+  },
+  "durationMs": 895
+}

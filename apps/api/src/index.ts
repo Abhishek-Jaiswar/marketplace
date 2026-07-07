@@ -1,101 +1,56 @@
-import { createServer, IncomingMessage, ServerResponse } from "node:http";
-import { db } from "@workspace/db";
+import { testConnection } from "@workspace/db"
+import { createApp as startApp } from "./app.js"
+import { Env } from "./config/env.config.js"
+import { logger } from "@workspace/logger"
+import { testRedisConnection } from "./lib/redis.js"
 
-const port = Number.parseInt(process.env.PORT ?? "4000", 10);
 
-// Helper function to read the body of a request
-const getRequestBody = (req: IncomingMessage): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    let body = "";
-    req.on("data", (chunk) => {
-      body += chunk.toString();
-    });
-    req.on("end", () => {
-      resolve(body);
-    });
-    req.on("error", (err) => {
-      reject(err);
-    });
-  });
-};
-
-// Helper function to send CORS headers
-const setCorsHeaders = (res: ServerResponse) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-};
-
-const server = createServer(async (req, res) => {
-  setCorsHeaders(res);
-
-  // Handle preflight OPTIONS requests
-  if (req.method === "OPTIONS") {
-    res.writeHead(204);
-    res.end();
-    return;
-  }
-
-  const { url, method } = req;
-
+const startServer = async () => {
   try {
-    // Health check endpoint
-    if (url === "/" || url === "/api") {
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ ok: true, service: "api" }));
-      return;
-    }
+    const app = startApp()
+    await testConnection()
+    await testRedisConnection()
 
-    // GET /api/users - Fetch all users
-    if (url === "/api/users" && method === "GET") {
-      const users = await db.user.findMany({
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(users));
-      return;
-    }
-
-    // POST /api/users - Create a new user
-    if (url === "/api/users" && method === "POST") {
-      const bodyText = await getRequestBody(req);
-      const { email, name } = JSON.parse(bodyText);
-
-      if (!email) {
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Email is required." }));
-        return;
-      }
-
-      const user = await db.user.create({
-        data: {
-          email,
-          name,
-        },
-      });
-
-      res.writeHead(201, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(user));
-      return;
-    }
-
-    // 404 Route Not Found
-    res.writeHead(404, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "Route not found" }));
-  } catch (error: any) {
-    console.error("API Error:", error);
-    res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(
-      JSON.stringify({
-        error: "Internal Server Error",
-        message: error.message || String(error),
+    const server = app.listen(Env.PORT, () => {
+      logger.info(`Server started successfully `, {
+        port: `http://localhost:${Env.PORT}`,
+        environment: Env.NODE_ENV,
       })
-    );
-  }
-});
+    })
 
-server.listen(port, () => {
-  console.log(`API server listening on http://localhost:${port}`);
-});
+    const gracefullShutdown = (signal: string) => {
+      logger.info(`${signal} recieved, starting gracefull shutdown...`)
+
+      server.close(() => {
+        logger.warn("HTTP Server closed")
+        logger.info("Gracefull shutdown completed")
+        process.exit(0)
+      })
+
+      setTimeout(() => {
+        logger.error("Forced shutdown after timeout...")
+        process.exit(1)
+      }, 3000)
+    }
+
+    process.on("SIGTERM", () => gracefullShutdown("SIGTERM"))
+    process.on("SIGINT", () => gracefullShutdown("SIGNINT"))
+
+    process.on("uncaughtException", (err) => {
+      logger.error("Uncaught Exception", err)
+      process.exit(1)
+    })
+
+    process.on("unhandledRejection", (err) => {
+      logger.error("Unhandled Rejection", err)
+      process.exit(1)
+    })
+  } catch (error) {
+    logger.error("Failed to start server: ", {
+      error: error instanceof Error ? error.message : "Unknown error",
+    })
+    process.exit(1)
+  }
+}
+
+startServer()

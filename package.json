@@ -12,7 +12,9 @@
     "typecheck": "turbo typecheck",
     "db:generate": "pnpm --filter @workspace/db db:generate",
     "db:migrate": "pnpm --filter @workspace/db db:migrate",
-    "db:seed": "pnpm --filter @workspace/db db:seed"
+    "db:seed": "pnpm --filter @workspace/db db:seed",
+    "redis:up": "docker compose up -d redis",
+    "redis:down": "docker compose down"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
