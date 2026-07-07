@@ -3,11 +3,16 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
+    "build": "pnpm --filter @workspace/db db:generate && turbo build",
+    "dev": "pnpm --filter @workspace/db db:generate && turbo dev",
+    "start": "turbo start",
+    "studio": "pnpm --filter @workspace/db db:studio",
     "lint": "turbo lint",
     "format": "turbo format",
-    "typecheck": "turbo typecheck"
+    "typecheck": "turbo typecheck",
+    "db:generate": "pnpm --filter @workspace/db db:generate",
+    "db:migrate": "pnpm --filter @workspace/db db:migrate",
+    "db:seed": "pnpm --filter @workspace/db db:seed"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
@@ -16,6 +21,14 @@
     "prettier-plugin-tailwindcss": "^0.8.0",
     "turbo": "^2.9.18",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "proper-lockfile>signal-exit": "3.0.7"
+    },
+    "patchedDependencies": {
+      "proper-lockfile@4.1.2": "patches/proper-lockfile@4.1.2.patch"
+    }
   },
   "packageManager": "pnpm@10.33.4",
   "engines": {
