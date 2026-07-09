@@ -1,0 +1,168 @@
+enum SellerStatus {
+  DRAFT
+  DOCUMENTS_PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum BusinessType {
+  INDIVIDUAL
+  SOLE_PROPRIETORSHIP
+  PARTNERSHIP
+  LLP
+  PRIVATE_LIMITED
+  PUBLIC_LIMITED
+}
+
+enum VerificationStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum SellerDocumentType {
+  GST_CERTIFICATE
+  PAN_CARD
+  BUSINESS_LICENSE
+  ADDRESS_PROOF
+  CANCELLED_CHEQUE
+  OTHER
+}
+
+model Seller {
+  id String @id @default(uuid())
+
+  ownerUserId String @unique
+  owner User @relation(fields: [ownerUserId], references: [id])
+
+  businessName String
+  businessType BusinessType
+
+  contactEmail String?
+  contactPhone String?
+
+  status SellerStatus @default(DRAFT)
+
+  approvedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  store Store?
+
+  verification SellerVerification?
+
+  bankAccounts BankAccount[]
+
+  @@index([status])
+}
+
+model Store {
+  id String @id @default(uuid())
+
+  sellerId String @unique
+  seller Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  displayName String
+
+  slug String @unique
+
+  logoMediaId String?
+  bannerMediaId String?
+  addressId     String? @unique
+
+  description String?
+
+  logo    Media?   @relation("StoreLogo", fields: [logoMediaId], references: [id])
+  banner  Media?   @relation("StoreBanner", fields: [bannerMediaId], references: [id])
+  address Address? @relation(fields: [addressId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([logoMediaId])
+  @@index([bannerMediaId])
+}
+
+model BankAccount {
+  id String @id @default(uuid())
+
+  sellerId String
+  seller Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  accountHolderName String
+
+  accountNumber String
+
+  ifscCode String
+
+  bankName String
+
+  isPrimary Boolean @default(false)
+
+  status VerificationStatus @default(PENDING)
+
+  verifiedAt DateTime?
+
+  rejectionReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sellerId])
+  @@index([status])
+}
+
+model SellerVerification {
+  id String @id @default(uuid())
+
+  sellerId String @unique
+  seller Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  status VerificationStatus @default(PENDING)
+
+  submittedAt DateTime?
+
+  reviewedAt DateTime?
+
+  reviewedBy String?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  documents SellerDocument[]
+
+  @@index([status])
+}
+
+model SellerDocument {
+    id String @id @default(uuid())
+
+    verificationId String
+    verification   SellerVerification @relation(fields: [verificationId], references: [id], onDelete: Cascade)
+
+    mediaId String
+    media   Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+    type SellerDocumentType
+
+    status VerificationStatus @default(PENDING)
+
+    rejectionReason String?
+
+    verifiedAt DateTime?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([verificationId])
+    @@index([mediaId])
+    @@index([type])
+    @@index([status])
+}

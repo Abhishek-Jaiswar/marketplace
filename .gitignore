@@ -10,6 +10,10 @@ node_modules
 !.yarn/releases
 !.yarn/versions
 
+.env
+
+/packages/db/src/generated/prisma
+
 # testing
 coverage
 

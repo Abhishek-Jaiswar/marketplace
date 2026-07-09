@@ -1,0 +1,64 @@
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+enum StorageProvider {
+  CLOUDINARY
+  S3
+  LOCAL
+}
+
+model Media {
+  id String @id @default(uuid())
+
+  fileName String
+
+  originalName String
+
+  mimeType String
+
+  extension String?
+
+  size Int
+
+  mediaType MediaType
+
+  provider StorageProvider
+
+  storageKey String
+
+  url String
+
+  checksum String?
+
+  uploadedById String?
+  uploadedBy   User?   @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  sellerDocuments SellerDocument[]
+  storeLogos      Store[]          @relation("StoreLogo")
+  storeBanners    Store[]          @relation("StoreBanner")
+
+  createdAt DateTime @default(now())
+
+  @@index([uploadedById])
+  @@index([mediaType])
+}
+
+model Address {
+  id          String  @id @default(uuid())
+  street1     String
+  street2     String?
+  city        String
+  state       String
+  postalCode  String
+  country     String
+  phoneNumber String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  store Store?
+}
