@@ -1228,3 +1228,603 @@
   "port": "http://localhost:4000",
   "environment": "development"
 }
+2026-07-10 16:16:38 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"firstName\", \"public\".\"User\".\"lastName\", \"public\".\"User\".\"email\", \"public\".\"User\".\"avatar\", \"public\".\"User\".\"status\"::text, \"public\".\"User\".\"roles\"::text[], \"public\".\"User\".\"emailVerified\", \"public\".\"User\".\"emailVerifiedAt\", \"public\".\"User\".\"deletedAt\", \"public\".\"User\".\"createdAt\", \"public\".\"User\".\"updatedAt\" FROM \"public\".\"User\" WHERE (\"public\".\"User\".\"email\" = $1 AND 1=1) LIMIT $2 OFFSET $3",
+    "params": "[\"abhisheknduw@gmail.com\",\"1\",\"0\"]",
+    "durationMs": 88.53850000000239,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:16:38 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "INSERT INTO \"public\".\"User\" (\"id\",\"firstName\",\"lastName\",\"email\",\"status\",\"roles\",\"emailVerified\",\"createdAt\",\"updatedAt\") VALUES ($1,$2,$3,$4,CAST($5::text AS \"public\".\"UserStatus\"),CAST($6::text[] AS \"public\".\"UserRole\"[]),$7,$8,$9) RETURNING \"public\".\"User\".\"id\"",
+    "params": "[\"cmret97xg0000vonf6nf1w9oe\",\"Abhishek\",\"Jaiswar\",\"abhisheknduw@gmail.com\",\"UNVERIFIED\",[\"CUSTOMER\"],false,\"2026-07-10T10:46:38.692Z\",\"2026-07-10T10:46:38.692Z\"]",
+    "durationMs": 6.523500000002969,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:16:38 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "INSERT INTO \"public\".\"Credential\" (\"id\",\"userId\",\"provider\",\"passwordHash\",\"createdAt\",\"updatedAt\") VALUES ($1,$2,CAST($3::text AS \"public\".\"AuthProvider\"),$4,$5,$6) RETURNING \"public\".\"Credential\".\"id\"",
+    "params": "[\"cmret97xp0001vonflr97zzby\",\"cmret97xg0000vonf6nf1w9oe\",\"CREDENTIALS\",\"$argon2id$v=19$m=65536,t=3,p=4$lgX5JVupuDhJHn8sqGo9Kw$DyyqBosHo1krbzwoxr47N+yA6YWyyA2Yo00kHyHYKQk\",\"2026-07-10T10:46:38.692Z\",\"2026-07-10T10:46:38.692Z\"]",
+    "durationMs": 4.823800000005576,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:16:38 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"firstName\", \"public\".\"User\".\"lastName\", \"public\".\"User\".\"email\", \"public\".\"User\".\"status\"::text, \"public\".\"User\".\"roles\"::text[], \"public\".\"User\".\"emailVerified\", \"public\".\"User\".\"createdAt\", \"public\".\"User\".\"updatedAt\" FROM \"public\".\"User\" WHERE \"public\".\"User\".\"id\" = $1 LIMIT $2 OFFSET $3",
+    "params": "[\"cmret97xg0000vonf6nf1w9oe\",\"1\",\"0\"]",
+    "durationMs": 1.8605999999999767,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:16:38 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "COMMIT",
+    "params": "[]",
+    "durationMs": 0.9827999999979511,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:16:42 [[32minfo[39m]: [32mVerification OTP sent successfully to abhisheknduw@gmail.com[39m
+2026-07-10 16:16:42 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/register",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 201
+  },
+  "durationMs": 4446
+}
+2026-07-10 16:16:42 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/register",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 201
+  },
+  "durationMs": 4363
+}
+2026-07-10 16:17:36 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"firstName\", \"public\".\"User\".\"lastName\", \"public\".\"User\".\"email\", \"public\".\"User\".\"avatar\", \"public\".\"User\".\"status\"::text, \"public\".\"User\".\"roles\"::text[], \"public\".\"User\".\"emailVerified\", \"public\".\"User\".\"emailVerifiedAt\", \"public\".\"User\".\"deletedAt\", \"public\".\"User\".\"createdAt\", \"public\".\"User\".\"updatedAt\" FROM \"public\".\"User\" WHERE (\"public\".\"User\".\"email\" = $1 AND 1=1) LIMIT $2 OFFSET $3",
+    "params": "[\"abhisheknduw@gmail.com\",\"1\",\"0\"]",
+    "durationMs": 73.14600000000792,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:17:36 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "SELECT \"public\".\"Credential\".\"id\", \"public\".\"Credential\".\"userId\", \"public\".\"Credential\".\"provider\"::text, \"public\".\"Credential\".\"passwordHash\", \"public\".\"Credential\".\"passwordChangedAt\", \"public\".\"Credential\".\"createdAt\", \"public\".\"Credential\".\"updatedAt\" FROM \"public\".\"Credential\" WHERE \"public\".\"Credential\".\"userId\" = $1 OFFSET $2",
+    "params": "[\"cmret97xg0000vonf6nf1w9oe\",\"0\"]",
+    "durationMs": 3.4333999999944353,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:17:36 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "UPDATE \"public\".\"User\" SET \"status\" = CAST($1::text AS \"public\".\"UserStatus\"), \"emailVerifiedAt\" = $2, \"emailVerified\" = $3, \"updatedAt\" = $4 WHERE (\"public\".\"User\".\"id\" = $5 AND 1=1) RETURNING \"public\".\"User\".\"id\", \"public\".\"User\".\"firstName\", \"public\".\"User\".\"lastName\", \"public\".\"User\".\"email\", \"public\".\"User\".\"status\"::text, \"public\".\"User\".\"roles\"::text[], \"public\".\"User\".\"emailVerified\", \"public\".\"User\".\"updatedAt\"",
+    "params": "[\"ACTIVE\",\"2026-07-10T10:47:36.476Z\",true,\"2026-07-10T10:47:36.490Z\",\"cmret97xg0000vonf6nf1w9oe\"]",
+    "durationMs": 10.675400000007357,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:17:36 [[32minfo[39m]: [32mUser cache invalidated[39m {
+  "userId": "cmret97xg0000vonf6nf1w9oe",
+  "deletedKeys": 0
+}
+2026-07-10 16:17:37 [[32minfo[39m]: [32mUser list cache invalidated[39m {
+  "versionKey": "user:list:version",
+  "nextVersion": 1
+}
+2026-07-10 16:17:37 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/verify",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 200
+  },
+  "durationMs": 1308
+}
+2026-07-10 16:17:37 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/verify",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 200
+  },
+  "durationMs": 1308
+}
+2026-07-10 16:17:56 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"firstName\", \"public\".\"User\".\"lastName\", \"public\".\"User\".\"email\", \"public\".\"User\".\"avatar\", \"public\".\"User\".\"status\"::text, \"public\".\"User\".\"roles\"::text[], \"public\".\"User\".\"emailVerified\", \"public\".\"User\".\"emailVerifiedAt\", \"public\".\"User\".\"deletedAt\", \"public\".\"User\".\"createdAt\", \"public\".\"User\".\"updatedAt\" FROM \"public\".\"User\" WHERE (\"public\".\"User\".\"email\" = $1 AND 1=1) LIMIT $2 OFFSET $3",
+    "params": "[\"abhisheknduw@gmail.com\",\"1\",\"0\"]",
+    "durationMs": 43.038200000009965,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:17:56 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "SELECT \"public\".\"Credential\".\"id\", \"public\".\"Credential\".\"userId\", \"public\".\"Credential\".\"provider\"::text, \"public\".\"Credential\".\"passwordHash\", \"public\".\"Credential\".\"passwordChangedAt\", \"public\".\"Credential\".\"createdAt\", \"public\".\"Credential\".\"updatedAt\" FROM \"public\".\"Credential\" WHERE \"public\".\"Credential\".\"userId\" = $1 OFFSET $2",
+    "params": "[\"cmret97xg0000vonf6nf1w9oe\",\"0\"]",
+    "durationMs": 1.7972000000008848,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:17:56 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "INSERT INTO \"public\".\"Session\" (\"id\",\"userId\",\"refreshTokenHash\",\"expiresAt\",\"lastActivity\",\"ipAddress\",\"userAgent\",\"createdAt\",\"updatedAt\") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING \"public\".\"Session\".\"id\", \"public\".\"Session\".\"userId\", \"public\".\"Session\".\"refreshTokenHash\", \"public\".\"Session\".\"expiresAt\", \"public\".\"Session\".\"lastActivity\", \"public\".\"Session\".\"ipAddress\", \"public\".\"Session\".\"userAgent\", \"public\".\"Session\".\"createdAt\", \"public\".\"Session\".\"updatedAt\"",
+    "params": "[\"cmretaw7z0002vonfi3q2pzm8\",\"cmret97xg0000vonf6nf1w9oe\",\"5f795b75e2969e9f8d21c8d9566bd93df6d756eb2628ac30f98976d8a204d245\",\"2026-08-09T10:47:56.819Z\",\"2026-07-10T10:47:56.831Z\",\"::1\",\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36\",\"2026-07-10T10:47:56.831Z\",\"2026-07-10T10:47:56.831Z\"]",
+    "durationMs": 10.60559999999532,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:17:56 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/login",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 200
+  },
+  "durationMs": 454
+}
+2026-07-10 16:17:56 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/login",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 200
+  },
+  "durationMs": 455
+}
+2026-07-10 16:17:57 [[32minfo[39m]: [32mUser details cache miss - fetching user cmret97xg0000vonf6nf1w9oe from database[39m
+2026-07-10 16:17:57 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"firstName\", \"public\".\"User\".\"lastName\", \"public\".\"User\".\"email\", \"public\".\"User\".\"status\"::text, \"public\".\"User\".\"roles\"::text[], \"public\".\"User\".\"emailVerified\", \"public\".\"User\".\"emailVerifiedAt\" FROM \"public\".\"User\" WHERE (\"public\".\"User\".\"id\" = $1 AND 1=1) LIMIT $2 OFFSET $3",
+    "params": "[\"cmret97xg0000vonf6nf1w9oe\",\"1\",\"0\"]",
+    "durationMs": 1.4161999999923864,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:17:57 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 200
+  },
+  "durationMs": 489
+}
+2026-07-10 16:17:57 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 200
+  },
+  "durationMs": 489
+}
+2026-07-10 16:18:48 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"firstName\", \"public\".\"User\".\"lastName\", \"public\".\"User\".\"email\", \"public\".\"User\".\"avatar\", \"public\".\"User\".\"status\"::text, \"public\".\"User\".\"roles\"::text[], \"public\".\"User\".\"emailVerified\", \"public\".\"User\".\"emailVerifiedAt\", \"public\".\"User\".\"deletedAt\", \"public\".\"User\".\"createdAt\", \"public\".\"User\".\"updatedAt\" FROM \"public\".\"User\" WHERE (\"public\".\"User\".\"email\" = $1 AND 1=1) LIMIT $2 OFFSET $3",
+    "params": "[\"abhisheknduw@gmail.com\",\"1\",\"0\"]",
+    "durationMs": 108.7497999999905,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:18:48 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "SELECT \"public\".\"Credential\".\"id\", \"public\".\"Credential\".\"userId\", \"public\".\"Credential\".\"provider\"::text, \"public\".\"Credential\".\"passwordHash\", \"public\".\"Credential\".\"passwordChangedAt\", \"public\".\"Credential\".\"createdAt\", \"public\".\"Credential\".\"updatedAt\" FROM \"public\".\"Credential\" WHERE \"public\".\"Credential\".\"userId\" = $1 OFFSET $2",
+    "params": "[\"cmret97xg0000vonf6nf1w9oe\",\"0\"]",
+    "durationMs": 1.5662000000011176,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:18:48 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "INSERT INTO \"public\".\"Session\" (\"id\",\"userId\",\"refreshTokenHash\",\"expiresAt\",\"lastActivity\",\"ipAddress\",\"userAgent\",\"createdAt\",\"updatedAt\") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING \"public\".\"Session\".\"id\", \"public\".\"Session\".\"userId\", \"public\".\"Session\".\"refreshTokenHash\", \"public\".\"Session\".\"expiresAt\", \"public\".\"Session\".\"lastActivity\", \"public\".\"Session\".\"ipAddress\", \"public\".\"Session\".\"userAgent\", \"public\".\"Session\".\"createdAt\", \"public\".\"Session\".\"updatedAt\"",
+    "params": "[\"cmretc0gq0003vonf2je4mac0\",\"cmret97xg0000vonf6nf1w9oe\",\"f7218eb497324a1d77c551874985b74b45935e9c400fe964551a84ba2f0bf7f6\",\"2026-08-09T10:48:48.984Z\",\"2026-07-10T10:48:48.986Z\",\"::1\",\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36\",\"2026-07-10T10:48:48.986Z\",\"2026-07-10T10:48:48.986Z\"]",
+    "durationMs": 8.41579999998794,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:18:48 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/login",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 200
+  },
+  "durationMs": 498
+}
+2026-07-10 16:18:48 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/login",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 200
+  },
+  "durationMs": 496
+}
+2026-07-10 16:18:49 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 304
+  },
+  "durationMs": 242
+}
+2026-07-10 16:18:49 [[32minfo[39m]: [32mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 304
+  },
+  "durationMs": 244
+}
+2026-07-10 16:20:05 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "\n      SELECT NOW()\n    ",
+    "params": "[]",
+    "durationMs": 67.67219999999998,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 16:20:05 [[32minfo[39m]: [32mDatabase connection successful[39m {
+  "0": {
+    "now": "2026-07-10T16:20:05.815Z"
+  }
+}
+2026-07-10 16:20:07 [[32minfo[39m]: [32mRedis server replied: #PONG[39m
+2026-07-10 16:20:07 [[32minfo[39m]: [32mRedis is ready, PING/PONG health check passed.[39m
+2026-07-10 16:20:07 [[32minfo[39m]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-10 16:20:15 [[32minfo[39m]: [32mSIGNINT recieved, starting gracefull shutdown...[39m
+2026-07-10 21:13:02 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "\n      SELECT NOW()\n    ",
+    "params": "[]",
+    "durationMs": 92.25970000000007,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 21:13:02 [[32minfo[39m]: [32mDatabase connection successful[39m {
+  "0": {
+    "now": "2026-07-10T21:13:02.482Z"
+  }
+}
+2026-07-10 21:13:03 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "\n      SELECT NOW()\n    ",
+    "params": "[]",
+    "durationMs": 69.80259999999998,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 21:13:03 [[32minfo[39m]: [32mDatabase connection successful[39m {
+  "0": {
+    "now": "2026-07-10T21:13:03.691Z"
+  }
+}
+2026-07-10 21:13:05 [[32minfo[39m]: [32mRedis server replied: #PONG[39m
+2026-07-10 21:13:05 [[32minfo[39m]: [32mRedis is ready, PING/PONG health check passed.[39m
+2026-07-10 21:13:05 [[32minfo[39m]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-10 21:28:36 [[33mwarn[39m]: [33mSlow database query detected[39m {
+  "database": {
+    "query": "\n      SELECT NOW()\n    ",
+    "params": "[]",
+    "durationMs": 552.0762000000001,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 21:28:36 [[32minfo[39m]: [32mDatabase connection successful[39m {
+  "0": {
+    "now": "2026-07-10T21:28:36.125Z"
+  }
+}
+2026-07-10 21:28:37 [[32minfo[39m]: [32mRedis server replied: #PONG[39m
+2026-07-10 21:28:37 [[32minfo[39m]: [32mRedis is ready, PING/PONG health check passed.[39m
+2026-07-10 21:28:37 [[32minfo[39m]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-10 21:33:49 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "\n      SELECT NOW()\n    ",
+    "params": "[]",
+    "durationMs": 119.28279999999995,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 21:33:49 [[32minfo[39m]: [32mDatabase connection successful[39m {
+  "0": {
+    "now": "2026-07-10T21:33:49.408Z"
+  }
+}
+2026-07-10 21:33:51 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "\n      SELECT NOW()\n    ",
+    "params": "[]",
+    "durationMs": 140.14480000000003,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 21:33:51 [[32minfo[39m]: [32mDatabase connection successful[39m {
+  "0": {
+    "now": "2026-07-10T21:33:51.416Z"
+  }
+}
+2026-07-10 21:33:53 [[32minfo[39m]: [32mRedis server replied: #PONG[39m
+2026-07-10 21:33:53 [[32minfo[39m]: [32mRedis is ready, PING/PONG health check passed.[39m
+2026-07-10 21:33:53 [[32minfo[39m]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-10 22:03:27 [[33mwarn[39m]: [33mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 401
+  },
+  "durationMs": 73
+}
+2026-07-10 22:03:27 [[33mwarn[39m]: [33mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 401
+  },
+  "durationMs": 86
+}
+2026-07-10 22:03:27 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {}
+}
+2026-07-10 22:03:27 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 6
+}
+2026-07-10 22:03:27 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 7
+}
+2026-07-10 22:04:11 [[32minfo[39m]: [32mDatabase query[39m {
+  "database": {
+    "query": "\n      SELECT NOW()\n    ",
+    "params": "[]",
+    "durationMs": 111.89760000000001,
+    "slowQueryThresholdMs": 500
+  }
+}
+2026-07-10 22:04:11 [[32minfo[39m]: [32mDatabase connection successful[39m {
+  "0": {
+    "now": "2026-07-10T22:04:11.737Z"
+  }
+}
+2026-07-10 22:04:20 [[32minfo[39m]: [32mRedis server replied: #PONG[39m
+2026-07-10 22:04:20 [[32minfo[39m]: [32mRedis is ready, PING/PONG health check passed.[39m
+2026-07-10 22:04:20 [[32minfo[39m]: [32mServer started successfully [39m {
+  "port": "http://localhost:4000",
+  "environment": "development"
+}
+2026-07-10 22:05:31 [[33mwarn[39m]: [33mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 401
+  },
+  "durationMs": 24
+}
+2026-07-10 22:05:31 [[33mwarn[39m]: [33mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 401
+  },
+  "durationMs": 28
+}
+2026-07-10 22:05:31 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {}
+}
+2026-07-10 22:05:31 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 4
+}
+2026-07-10 22:05:31 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 4
+}
+2026-07-10 22:05:41 [[33mwarn[39m]: [33mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 401
+  },
+  "durationMs": 2
+}
+2026-07-10 22:05:41 [[33mwarn[39m]: [33mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 401
+  },
+  "durationMs": 3
+}
+2026-07-10 22:05:41 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {}
+}
+2026-07-10 22:05:41 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 3
+}
+2026-07-10 22:05:41 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 3
+}
+2026-07-10 22:09:11 [[33mwarn[39m]: [33mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 401
+  },
+  "durationMs": 34
+}
+2026-07-10 22:09:11 [[33mwarn[39m]: [33mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/users/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 401
+  },
+  "durationMs": 52
+}
+2026-07-10 22:09:11 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {}
+}
+2026-07-10 22:09:11 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 12
+}
+2026-07-10 22:09:11 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 13
+}

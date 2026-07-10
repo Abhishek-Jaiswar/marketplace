@@ -365,3 +365,111 @@
   },
   "durationMs": 525
 }
+2026-07-10 22:03:27 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {}
+}
+2026-07-10 22:03:27 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 6
+}
+2026-07-10 22:03:27 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 7
+}
+2026-07-10 22:05:31 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {}
+}
+2026-07-10 22:05:31 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 4
+}
+2026-07-10 22:05:31 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 4
+}
+2026-07-10 22:05:41 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {}
+}
+2026-07-10 22:05:41 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 3
+}
+2026-07-10 22:05:41 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 3
+}
+2026-07-10 22:09:11 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {}
+}
+2026-07-10 22:09:11 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 12
+}
+2026-07-10 22:09:11 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "POST",
+    "path": "/api/users/refresh",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 13
+}

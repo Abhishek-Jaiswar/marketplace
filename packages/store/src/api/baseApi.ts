@@ -35,6 +35,7 @@ const mutex = new SimpleMutex();
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api",
+  credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as any).auth?.accessToken;
     if (token) {

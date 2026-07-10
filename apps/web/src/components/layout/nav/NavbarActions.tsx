@@ -23,10 +23,7 @@ import {
 export function NavbarActions() {
   const { isAuthenticated, user: cachedUser } = useAppSelector((state) => state.auth);
   
-  // Triggers silent refresh / me fetch using the shared httpOnly cookie automatically
-  const { data: userData } = useGetMeQuery(undefined, {
-    skip: !isAuthenticated,
-  });
+  const { data: userData, isLoading } = useGetMeQuery(undefined);
 
   const [logout] = useLogoutMutation();
 
@@ -60,7 +57,9 @@ export function NavbarActions() {
       </Link>
 
       {/* Account Info Dropdown */}
-      {isAuthenticated && user ? (
+      {isLoading ? (
+        <div className="w-8 h-8 rounded-lg bg-muted/60 dark:bg-zinc-800 animate-pulse border border-border" />
+      ) : isAuthenticated && user ? (
         <DropdownMenu>
           <DropdownMenuTrigger className="flex items-center gap-2 p-1.5 pr-3 rounded-xl hover:bg-muted border border-transparent hover:border-border transition-all cursor-pointer group outline-none">
             <Avatar className="w-8 h-8 rounded-lg border border-border group-hover:border-zinc-400 dark:group-hover:border-zinc-650 transition-colors">

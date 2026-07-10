@@ -23,6 +23,7 @@ export const authSlice = createSlice({
     },
     userProfileReceived: (state, action: PayloadAction<UserProfile>) => {
       state.user = action.payload;
+      state.isAuthenticated = true;
     },
     loggedOut: (state) => {
       state.accessToken = null;
