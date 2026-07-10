@@ -1,11 +1,5 @@
 import { baseApi } from "@workspace/store";
-
-export interface User {
-  id: string;
-  email: string;
-  name: string | null;
-  createdAt: string;
-}
+import type { User, CreateUserRequest } from "./user-api.types";
 
 export const usersApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -19,7 +13,7 @@ export const usersApi = baseApi.injectEndpoints({
             ]
           : [{ type: "User" as const, id: "LIST" }],
     }),
-    createUser: build.mutation<User, { name: string; email: string }>({
+    createUser: build.mutation<User, CreateUserRequest>({
       query: (body) => ({
         url: "users",
         method: "POST",

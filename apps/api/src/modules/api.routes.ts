@@ -1,7 +1,8 @@
 import { Router } from "express"
+import { userRouter } from "./users/user.routes.js"
 
-import { usersRouter } from "./users/users.routes.js"
+const router = Router()
 
-export const apiRouter: Router = Router()
+router.use("/users", userRouter)
 
-apiRouter.use("/users", usersRouter)
+export { router as apiRouter }

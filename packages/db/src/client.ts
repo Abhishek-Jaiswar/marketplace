@@ -1,8 +1,8 @@
 import { PrismaPg } from "@prisma/adapter-pg"
 
-import { Prisma, PrismaClient } from "./generated/prisma/client.js"
 import { dbEnv } from "./env.js"
 import { logger } from "@workspace/logger"
+import { Prisma, PrismaClient } from "./generated/prisma/client.js"
 
 const adapter = new PrismaPg({ connectionString: dbEnv.DATABASE_URL })
 

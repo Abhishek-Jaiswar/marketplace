@@ -12,25 +12,15 @@ enum StorageProvider {
 
 model Media {
   id String @id @default(uuid())
-
   fileName String
-
   originalName String
-
   mimeType String
-
   extension String?
-
   size Int
-
   mediaType MediaType
-
   provider StorageProvider
-
   storageKey String
-
   url String
-
   checksum String?
 
   uploadedById String?

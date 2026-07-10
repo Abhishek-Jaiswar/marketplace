@@ -2,16 +2,19 @@ import type { ErrorRequestHandler } from "express"
 
 import { Env } from "../config/env.config.js"
 import { logger } from "@workspace/logger"
-import { HttpError } from "../utils/http-error.js"
+import { AppError } from "../utils/errors/app-error.js"
 
 export const errorHandler: ErrorRequestHandler = (error, _request, response, _next) => {
   void _next
 
-  const statusCode = error instanceof HttpError ? error.statusCode : 500
+  const isAppError = error instanceof AppError
+  const statusCode = isAppError ? error.statusCode : 500
   const message =
-    error instanceof HttpError || Env.NODE_ENV !== "production"
+    isAppError || Env.NODE_ENV !== "production"
       ? error.message
       : "Internal server error"
+
+  const details = isAppError ? error.details : null
 
   if (statusCode >= 500) {
     logger.error("request failed", { error })
@@ -21,6 +24,7 @@ export const errorHandler: ErrorRequestHandler = (error, _request, response, _ne
     error: {
       message,
       statusCode,
+      ...(details ? { details } : {}),
     },
   })
 }

@@ -28,9 +28,14 @@
     "overrides": {
       "proper-lockfile>signal-exit": "3.0.7"
     },
-    "patchedDependencies": {
-      "proper-lockfile@4.1.2": "patches/proper-lockfile@4.1.2.patch"
-    }
+    "onlyBuiltDependencies": [
+      "@prisma/engines",
+      "argon2",
+      "esbuild",
+      "prisma",
+      "sharp",
+      "unrs-resolver"
+    ]
   },
   "packageManager": "pnpm@10.33.4",
   "engines": {

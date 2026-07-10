@@ -3,12 +3,14 @@ import type { TypedUseSelectorHook } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "./api/baseApi";
 import counterReducer from "./slices/counterSlice";
+import authReducer from "./slices/authSlice";
 
 // Create a reference store configuration to infer types
 const referenceStore = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     counter: counterReducer,
+    auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(baseApi.middleware),

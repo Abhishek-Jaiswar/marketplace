@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { baseApi, counterReducer } from "@workspace/store";
+import { baseApi, counterReducer, authReducer } from "@workspace/store";
 import type { AppStore } from "@workspace/store";
 
 export const makeStore = (): AppStore => {
@@ -7,6 +7,7 @@ export const makeStore = (): AppStore => {
     reducer: {
       [baseApi.reducerPath]: baseApi.reducer,
       counter: counterReducer,
+      auth: authReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(baseApi.middleware),

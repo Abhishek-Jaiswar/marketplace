@@ -22,6 +22,10 @@ const envSchema = z.object({
   REDIS_CONNECT_TIMEOUT_MS: z.coerce.number().int().positive().default(5_000),
   TRUST_PROXY: z.coerce.boolean().default(false),
   SHUTDOWN_TIMEOUT_MS: z.coerce.number().int().positive().default(10_000),
+
+  MAIL_USER: z.string(),
+  MAIL_PASS: z.string(),
+  JWT_SECRET: z.string().default("cbs-marketplace-super-secret-key-123456!@#"),
 })
 
 const parseEnv = () => {
