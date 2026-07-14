@@ -302,6 +302,36 @@ export default function StorefrontPage() {
         </div>
       </section>
 
+      {/* BECOME A SELLER BANNER */}
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-zinc-900 via-indigo-950 to-zinc-900 border border-zinc-800 text-white p-8 md:p-12 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 text-left">
+          <div className="space-y-3 max-w-2xl relative z-10">
+            <span className="inline-block px-3 py-1 rounded-full text-[9px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-widest font-mono">
+              Seller Program
+            </span>
+            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+              Start your selling journey on <span className="text-indigo-400">CBS Marketplace</span>
+            </h2>
+            <p className="text-xs md:text-sm text-zinc-400 leading-relaxed">
+              Reach millions of active buyers, enjoy 0% onboarding fees, secure weekly payouts, and leverage our national shipping network. Turn your business into a digital powerhouse today.
+            </p>
+          </div>
+          <div className="shrink-0 relative z-10">
+            <a
+              href={process.env.NEXT_PUBLIC_SELLER_CENTRAL_URL || "http://localhost:3001"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-6 shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5"
+            >
+              Become a Seller
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+          {/* Decorative glow */}
+          <div className="absolute right-0 top-0 w-64 h-64 opacity-20 pointer-events-none bg-gradient-to-br from-indigo-500 to-purple-600 blur-3xl rounded-full"></div>
+        </div>
+      </section>
+
       {/* 5. EXPLORE ALL PRODUCTS SECTION */}
       <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-16">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-border">

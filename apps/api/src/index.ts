@@ -4,7 +4,6 @@ import { Env } from "./config/env.config.js"
 import { logger } from "@workspace/logger"
 import { testRedisConnection } from "./lib/redis.js"
 
-
 const startServer = async () => {
   try {
     const app = startApp()

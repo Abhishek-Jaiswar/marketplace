@@ -40,6 +40,7 @@ model Address {
   id          String  @id @default(uuid())
   street1     String
   street2     String?
+  landmark String?
   city        String
   state       String
   postalCode  String
@@ -51,4 +52,12 @@ model Address {
 
   // Relations
   store Store?
+
+  customerId String?
+  customer   Customer? @relation("CustomerAddresses", fields: [customerId], references: [id], onDelete: Cascade)
+
+  defaultShippingFor Customer? @relation("DefaultShippingAddress")
+  defaultBillingFor   Customer? @relation("DefaultBillingAddress")
+
+  @@index([customerId])
 }

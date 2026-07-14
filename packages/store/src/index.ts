@@ -56,3 +56,41 @@ export {
 // Custom Typed Hooks & Types
 export { useAppDispatch, useAppSelector, useAppStore } from "./hooks";
 export type { RootState, AppDispatch, AppStore } from "./hooks";
+
+// Seller API Types
+export type {
+  BusinessType,
+  SellerStatus,
+  VerificationStatus,
+  SellerDocumentType,
+  Address,
+  Store,
+  BankAccount,
+  Media,
+  SellerDocument,
+  SellerVerification,
+  Seller,
+  RegisterSellerRequest,
+  OnboardRequest,
+  UpdateStoreRequest,
+  BankAccountRequest,
+  VerifySellerRequest,
+  PaginatedSellersResponse,
+} from "./api/seller/seller-api.types";
+
+// Seller API and Hooks
+export {
+  sellerApi,
+  useRegisterSellerMutation,
+  useOnboardSellerMutation,
+  useGetSellerMeQuery,
+  useLazyGetSellerMeQuery,
+  useUpdateSellerProfileMutation,
+  useUpdateStoreMutation,
+  useAddBankAccountMutation,
+  useUploadDocumentMutation,
+  useSubmitOnboardingMutation,
+  useGetSellersAdminQuery,
+  useVerifySellerAdminMutation,
+} from "./api/seller/seller-api";
+

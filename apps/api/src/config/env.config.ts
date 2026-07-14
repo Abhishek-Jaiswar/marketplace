@@ -23,6 +23,10 @@ const envSchema = z.object({
   TRUST_PROXY: z.coerce.boolean().default(false),
   SHUTDOWN_TIMEOUT_MS: z.coerce.number().int().positive().default(10_000),
 
+  CLOUDINARY_CLOUD_NAME: z.string().min(1),
+  CLOUDINARY_CLOUD_API_KEY: z.string().min(1),
+  CLOUDINARY_CLOUD_API_SECRET: z.string().min(1),
+
   MAIL_USER: z.string(),
   MAIL_PASS: z.string(),
   JWT_SECRET: z.string().default("cbs-marketplace-super-secret-key-123456!@#"),

@@ -44,9 +44,14 @@ export function Navbar() {
           <Link href="/deals" className="hover:text-foreground transition-colors py-1">
             Today&apos;s Deals
           </Link>
-          <Link href="/sell" className="hover:text-foreground transition-colors py-1">
+          <a
+            href={process.env.NEXT_PUBLIC_SELLER_CENTRAL_URL || "http://localhost:3001"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors py-1"
+          >
             Sell on CBS
-          </Link>
+          </a>
           <Link href="/registry" className="hover:text-foreground transition-colors py-1">
             Registry
           </Link>

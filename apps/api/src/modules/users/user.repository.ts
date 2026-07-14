@@ -42,6 +42,9 @@ class UserRepository {
             passwordHash,
           },
         },
+        customer: {
+          create: {},
+        },
       },
       select: {
         id: true,

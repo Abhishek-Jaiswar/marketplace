@@ -1,0 +1,19 @@
+model Customer {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phoneNumber String?
+
+  defaultShippingAddressId String? @unique
+  defaultBillingAddressId  String? @unique
+
+  defaultShippingAddress Address? @relation("DefaultShippingAddress", fields: [defaultShippingAddressId], references: [id], onDelete: SetNull)
+  defaultBillingAddress   Address? @relation("DefaultBillingAddress", fields: [defaultBillingAddressId], references: [id], onDelete: SetNull)
+
+  addresses Address[] @relation("CustomerAddresses")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}

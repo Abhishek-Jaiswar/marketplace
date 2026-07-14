@@ -90,26 +90,16 @@ model Store {
 
 model BankAccount {
   id String @id @default(uuid())
-
   sellerId String
   seller Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-
   accountHolderName String
-
   accountNumber String
-
   ifscCode String
-
   bankName String
-
   isPrimary Boolean @default(false)
-
   status VerificationStatus @default(PENDING)
-
   verifiedAt DateTime?
-
   rejectionReason String?
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

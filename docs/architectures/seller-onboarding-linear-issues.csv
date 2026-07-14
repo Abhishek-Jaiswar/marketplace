@@ -1,0 +1,26 @@
+Milestone,Team,Title,Labels,Priority,Estimate,Depends On
+Discovery and Contracts,Product / Backend,Define seller onboarding business workflow,"seller-onboarding,mvp",High,2,
+Discovery and Contracts,Backend,Define API contracts for seller onboarding,"seller-onboarding,api,mvp",High,3,Define seller onboarding business workflow
+Discovery and Contracts,Backend / Admin Central,Define admin review API contracts,"seller-onboarding,api,admin-central,mvp",High,2,Define seller onboarding business workflow
+Data Model and Backend Foundation,Backend / Platform,Audit current seller Prisma schema,"seller-onboarding,db,mvp",High,2,Define seller onboarding business workflow
+Data Model and Backend Foundation,Backend,Add seller onboarding repository layer,"seller-onboarding,api,db",High,3,Audit current seller Prisma schema
+Data Model and Backend Foundation,Backend,Add seller onboarding schemas and types,"seller-onboarding,api",High,3,Define API contracts for seller onboarding
+Data Model and Backend Foundation,Backend,Add seller onboarding service layer,"seller-onboarding,api,kyc,security",High,5,"Add seller onboarding repository layer; Add seller onboarding schemas and types"
+Data Model and Backend Foundation,Backend,Add seller onboarding controller and routes,"seller-onboarding,api,auth,security",High,3,Add seller onboarding service layer
+Customer and Standalone Entry,Web,Add storefront Become a Seller entry point,"seller-onboarding,web,auth",Medium,3,Define API contracts for seller onboarding
+Customer and Standalone Entry,Web,Add standalone seller application entry,"seller-onboarding,web,auth",Medium,5,Define API contracts for seller onboarding
+Customer and Standalone Entry,Web / Platform,Add shared seller onboarding RTK Query API,"seller-onboarding,web,api",High,3,Add seller onboarding controller and routes
+Seller Onboarding UI,Seller Central,Build onboarding shell in Seller Central,"seller-onboarding,seller-central",High,5,Add shared seller onboarding RTK Query API
+Seller Onboarding UI,Seller Central,Build business information step,"seller-onboarding,seller-central",High,3,Build onboarding shell in Seller Central
+Seller Onboarding UI,Seller Central,Build store setup step,"seller-onboarding,seller-central",High,5,Build onboarding shell in Seller Central
+Seller Onboarding UI,Seller Central,Build business address step,"seller-onboarding,seller-central",Medium,3,Build onboarding shell in Seller Central
+Seller Onboarding UI,Seller Central,Build bank account step,"seller-onboarding,seller-central,kyc",High,5,Build onboarding shell in Seller Central
+Seller Onboarding UI,Seller Central,Build document upload step,"seller-onboarding,seller-central,kyc",High,5,Build onboarding shell in Seller Central
+Seller Onboarding UI,Seller Central,Build review and submit step,"seller-onboarding,seller-central",High,3,"Build business information step; Build store setup step; Build business address step; Build bank account step; Build document upload step"
+Admin Review Workflow,Admin Central,Build admin seller review queue,"seller-onboarding,admin-central",High,3,Define admin review API contracts
+Admin Review Workflow,Admin Central,Build admin seller detail review page,"seller-onboarding,admin-central,kyc",High,5,Build admin seller review queue
+Admin Review Workflow,Backend / Admin Central,Build approve seller action,"seller-onboarding,admin-central,api,security",High,3,Build admin seller detail review page
+Admin Review Workflow,Backend / Admin Central,Build reject seller action,"seller-onboarding,admin-central,api,security",High,3,Build admin seller detail review page
+End-to-End QA and Release,QA / Backend,Add backend tests for seller onboarding service,"seller-onboarding,qa,api",High,5,Add seller onboarding service layer
+End-to-End QA and Release,QA / Web / Seller Central / Admin Central,Add frontend flow QA checklist,"seller-onboarding,qa,web,seller-central,admin-central",Medium,3,"Build review and submit step; Build approve seller action; Build reject seller action"
+End-to-End QA and Release,Product / Engineering,Release readiness review,"seller-onboarding,qa,mvp",High,2,Add frontend flow QA checklist

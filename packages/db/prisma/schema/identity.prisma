@@ -43,6 +43,7 @@ model User {
   sessions           Session[]
   verificationTokens VerificationToken[]
   seller             Seller?
+  customer           Customer?
   uploadedMedia      Media[]
 
   @@index([status])
