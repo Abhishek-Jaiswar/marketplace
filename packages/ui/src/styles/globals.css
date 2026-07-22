@@ -7,112 +7,121 @@
 @source "../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
 
+/* ==========================================================================
+   CBS MARKETPLACE DESIGN SYSTEM TOKENS
+   Consumer E-Commerce Color Palette (Amazon / Flipkart / Meesho Inspired)
+   Centralized variables - easily configurable for future branding updates.
+   ========================================================================== */
+
 :root {
-  --background: oklch(1.0000 0 0);
-  --foreground: oklch(0.1448 0 0);
-  --card: oklch(1.0000 0 0);
-  --card-foreground: oklch(0.1448 0 0);
-  --popover: oklch(1.0000 0 0);
-  --popover-foreground: oklch(0.1448 0 0);
-  --primary: oklch(0.5555 0 0);
-  --primary-foreground: oklch(0.9851 0 0);
-  --secondary: oklch(0.9702 0 0);
-  --secondary-foreground: oklch(0.2046 0 0);
-  --muted: oklch(0.9702 0 0);
-  --muted-foreground: oklch(0.5486 0 0);
-  --accent: oklch(0.9702 0 0);
-  --accent-foreground: oklch(0.2046 0 0);
-  --destructive: oklch(0.5830 0.2387 28.4765);
-  --destructive-foreground: oklch(0.9702 0 0);
-  --border: oklch(0.9219 0 0);
-  --input: oklch(0.9219 0 0);
-  --ring: oklch(0.7090 0 0);
-  --chart-1: oklch(0.5555 0 0);
-  --chart-2: oklch(0.5555 0 0);
-  --chart-3: oklch(0.5555 0 0);
-  --chart-4: oklch(0.5555 0 0);
-  --chart-5: oklch(0.5555 0 0);
-  --sidebar: oklch(0.9851 0 0);
-  --sidebar-foreground: oklch(0.1448 0 0);
-  --sidebar-primary: oklch(0.2046 0 0);
-  --sidebar-primary-foreground: oklch(0.9851 0 0);
-  --sidebar-accent: oklch(0.9702 0 0);
-  --sidebar-accent-foreground: oklch(0.2046 0 0);
-  --sidebar-border: oklch(0.9219 0 0);
-  --sidebar-ring: oklch(0.7090 0 0);
-  --font-sans: Inter, ui-sans-serif, sans-serif, system-ui;
-  --font-serif: Merriweather, ui-serif, serif;
-  --font-mono: Geist Mono, monospace;
-  --radius: 0rem;
-  --shadow-x: 0px;
-  --shadow-y: 1px;
-  --shadow-blur: 0px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0;
-  --shadow-color: hsl(0 0% 0%);
-  --shadow-2xs: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
-  --shadow-xs: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
-  --shadow-sm: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 1px 2px -1px hsl(0 0% 0% / 0.00);
-  --shadow: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 1px 2px -1px hsl(0 0% 0% / 0.00);
-  --shadow-md: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 2px 4px -1px hsl(0 0% 0% / 0.00);
-  --shadow-lg: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 4px 6px -1px hsl(0 0% 0% / 0.00);
-  --shadow-xl: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 8px 10px -1px hsl(0 0% 0% / 0.00);
-  --shadow-2xl: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
-  --tracking-normal: 0em;
-  --spacing: 0.25rem;
+  /* Surface & Canvas */
+  --background: oklch(0.985 0.004 247);       /* Soft Warm Canvas (#F8FAFC) */
+  --foreground: oklch(0.18 0.015 250);        /* Deep Charcoal (#0F172A) */
+
+  /* Cards & Containers */
+  --card: oklch(1.000 0 0);                  /* Pure White (#FFFFFF) */
+  --card-foreground: oklch(0.18 0.015 250);   /* Deep Charcoal (#0F172A) */
+  --popover: oklch(1.000 0 0);
+  --popover-foreground: oklch(0.18 0.015 250);
+
+  /* Brand Primary (Trust & Main Navigation) */
+  --primary: oklch(0.55 0.22 255);            /* Warm Royal Cobalt Blue (#2563EB) */
+  --primary-foreground: oklch(0.99 0 0);
+
+  /* Action & Conversion (Buy Now / Add to Cart / Deal of Day) */
+  --secondary: oklch(0.68 0.22 45);           /* Sunburst Saffron Orange (#F97316) */
+  --secondary-foreground: oklch(0.99 0 0);
+
+  /* Deals & Discounts (Meesho Pink/Red) */
+  --accent: oklch(0.58 0.24 15);              /* Rose Crimson (#E11D48) */
+  --accent-foreground: oklch(0.99 0 0);
+
+  /* Neutral Muted & Borders */
+  --muted: oklch(0.96 0.005 247);             /* Off-white Gray (#F1F5F9) */
+  --muted-foreground: oklch(0.50 0.015 250);   /* Slate Gray (#64748B) */
+  --border: oklch(0.91 0.005 247);            /* Crisp Light Border (#E2E8F0) */
+  --input: oklch(0.91 0.005 247);
+  --ring: oklch(0.55 0.22 255);
+
+  /* Trust & Delivery Accents */
+  --trust-green: oklch(0.62 0.19 160);        /* Emerald Mint (#10B981) */
+  --rating-gold: oklch(0.75 0.18 80);         /* Star Rating Yellow (#F59E0B) */
+
+  /* Destructive & Feedback */
+  --destructive: oklch(0.58 0.23 25);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  /* Sidebars & Component Specifics */
+  --sidebar: oklch(0.99 0 0);
+  --sidebar-foreground: oklch(0.18 0.015 250);
+  --sidebar-primary: oklch(0.55 0.22 255);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.96 0.005 247);
+  --sidebar-accent-foreground: oklch(0.18 0.015 250);
+  --sidebar-border: oklch(0.91 0.005 247);
+  --sidebar-ring: oklch(0.55 0.22 255);
+
+  /* Typography & Geometry */
+  --font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: Merriweather, Georgia, serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", monospace;
+
+  /* Friendly Squircles (12px default) */
+  --radius: 0.75rem;
+
+  /* Soft Ambient Shadows */
+  --shadow-color: hsl(220 14% 10% / 0.08);
+  --shadow-sm: 0 1px 2px 0 var(--shadow-color);
+  --shadow-md: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
+  --shadow-lg: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
+  --shadow-xl: 0 20px 25px -5px var(--shadow-color), 0 8px 10px -6px var(--shadow-color);
 }
 
 .dark {
-  --background: oklch(0.1448 0 0);
-  --foreground: oklch(0.9851 0 0);
-  --card: oklch(0.2134 0 0);
-  --card-foreground: oklch(0.9851 0 0);
-  --popover: oklch(0.2686 0 0);
-  --popover-foreground: oklch(0.9851 0 0);
-  --primary: oklch(0.5555 0 0);
-  --primary-foreground: oklch(0.9851 0 0);
-  --secondary: oklch(0.2686 0 0);
-  --secondary-foreground: oklch(0.9851 0 0);
-  --muted: oklch(0.2686 0 0);
-  --muted-foreground: oklch(0.7090 0 0);
-  --accent: oklch(0.3715 0 0);
-  --accent-foreground: oklch(0.9851 0 0);
-  --destructive: oklch(0.7022 0.1892 22.2279);
-  --destructive-foreground: oklch(0.2686 0 0);
-  --border: oklch(0.3407 0 0);
-  --input: oklch(0.4386 0 0);
-  --ring: oklch(0.5555 0 0);
-  --chart-1: oklch(0.5555 0 0);
-  --chart-2: oklch(0.5555 0 0);
-  --chart-3: oklch(0.5555 0 0);
-  --chart-4: oklch(0.5555 0 0);
-  --chart-5: oklch(0.5555 0 0);
-  --sidebar: oklch(0.2046 0 0);
-  --sidebar-foreground: oklch(0.9851 0 0);
-  --sidebar-primary: oklch(0.9851 0 0);
-  --sidebar-primary-foreground: oklch(0.2046 0 0);
-  --sidebar-accent: oklch(0.2686 0 0);
-  --sidebar-accent-foreground: oklch(0.9851 0 0);
-  --sidebar-border: oklch(1.0000 0 0);
-  --sidebar-ring: oklch(0.4386 0 0);
-  --font-sans: Inter, ui-sans-serif, sans-serif, system-ui;
-  --font-serif: Merriweather, ui-serif, serif;
-  --font-mono: Geist Mono, monospace;
-  --radius: 0rem;
-  --shadow-x: 0px;
-  --shadow-y: 1px;
-  --shadow-blur: 0px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0;
-  --shadow-color: hsl(0 0% 0%);
-  --shadow-2xs: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
-  --shadow-xs: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
-  --shadow-sm: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 1px 2px -1px hsl(0 0% 0% / 0.00);
-  --shadow: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 1px 2px -1px hsl(0 0% 0% / 0.00);
-  --shadow-md: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 2px 4px -1px hsl(0 0% 0% / 0.00);
-  --shadow-lg: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 4px 6px -1px hsl(0 0% 0% / 0.00);
-  --shadow-xl: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 8px 10px -1px hsl(0 0% 0% / 0.00);
-  --shadow-2xl: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
+  /* Dark Mode Surfaces */
+  --background: oklch(0.14 0.02 250);         /* Deep Obsidian (#090D16) */
+  --foreground: oklch(0.98 0.005 247);        /* Crisp Soft White (#F8FAFC) */
+
+  /* Dark Mode Cards */
+  --card: oklch(0.20 0.02 250);               /* Dark Slate (#1E293B) */
+  --card-foreground: oklch(0.98 0.005 247);
+  --popover: oklch(0.20 0.02 250);
+  --popover-foreground: oklch(0.98 0.005 247);
+
+  /* Primary Brand (Adjusted for Dark Mode Contrast) */
+  --primary: oklch(0.62 0.22 255);            /* Vivid Blue (#3B82F6) */
+  --primary-foreground: oklch(0.99 0 0);
+
+  /* Action & Conversion */
+  --secondary: oklch(0.68 0.22 45);           /* Sunburst Saffron (#F97316) */
+  --secondary-foreground: oklch(0.99 0 0);
+
+  /* Deals & Discounts */
+  --accent: oklch(0.62 0.24 15);              /* Rose Crimson (#F43F5E) */
+  --accent-foreground: oklch(0.99 0 0);
+
+  /* Dark Mode Neutrals */
+  --muted: oklch(0.25 0.02 250);
+  --muted-foreground: oklch(0.70 0.015 250);
+  --border: oklch(0.28 0.02 250);             /* Slate Border (#334155) */
+  --input: oklch(0.28 0.02 250);
+  --ring: oklch(0.62 0.22 255);
+
+  /* Trust & Delivery */
+  --trust-green: oklch(0.65 0.19 160);
+  --rating-gold: oklch(0.78 0.18 80);
+
+  /* Dark Mode Sidebars */
+  --sidebar: oklch(0.18 0.02 250);
+  --sidebar-foreground: oklch(0.98 0.005 247);
+  --sidebar-primary: oklch(0.62 0.22 255);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.25 0.02 250);
+  --sidebar-accent-foreground: oklch(0.98 0.005 247);
+  --sidebar-border: oklch(0.28 0.02 250);
+  --sidebar-ring: oklch(0.62 0.22 255);
+
+  --shadow-color: hsl(0 0% 0% / 0.4);
 }
 
 @theme inline {
@@ -122,24 +131,26 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+
+  /* Named Semantic Color Tokens for easy inline usage across apps */
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
+
+  --color-trust: var(--trust-green);
+  --color-rating: var(--rating-gold);
+
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -157,15 +168,12 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
 
-  --shadow-2xs: var(--shadow-2xs);
-  --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);
-  --shadow: var(--shadow);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
-  --shadow-2xl: var(--shadow-2xl);
 }
 
 @layer base {
@@ -174,6 +182,6 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 }
