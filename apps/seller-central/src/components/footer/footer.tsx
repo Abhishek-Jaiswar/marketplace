@@ -23,7 +23,7 @@ const Footer = () => {
         {/* Links 1 */}
         <div className="flex flex-col gap-2">
           <span className="text-xs font-bold text-white uppercase tracking-wider mb-2">Sell</span>
-          <Link href="/seller/register" className="text-xs hover:text-white transition-colors">Start Selling</Link>
+          <Link href="/register" className="text-xs hover:text-white transition-colors">Start Selling</Link>
           <Link href="/fees-and-commission" className="text-xs hover:text-white transition-colors">Fees & Commission</Link>
           <Link href="/shipping-info" className="text-xs hover:text-white transition-colors">Shipping & Delivery</Link>
         </div>

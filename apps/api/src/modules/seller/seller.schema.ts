@@ -19,6 +19,13 @@ export const registerSellerSchema = z.object({
 export const onboardSchema = z.object({
   businessName: z.string().trim().min(1, { message: "Business name is required" }),
   businessType: BusinessTypeEnum,
+  gstin: z
+    .string()
+    .trim()
+    .regex(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/, {
+      message: "Invalid GSTIN format",
+    })
+    .optional(),
   contactPhone: z.string().trim().optional(),
   contactEmail: z.string().trim().email({ message: "Valid contact email is required" }).optional(),
 })

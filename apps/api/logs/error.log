@@ -695,3 +695,1530 @@
   },
   "durationMs": 4
 }
+2026-07-15 10:29:03 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 10:29:03 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 2024
+}
+2026-07-15 10:29:03 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 2026
+}
+2026-07-15 10:29:05 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 10:29:05 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 510
+}
+2026-07-15 10:29:05 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 512
+}
+2026-07-15 10:30:31 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 10:30:31 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1024
+}
+2026-07-15 10:30:31 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1026
+}
+2026-07-15 10:31:48 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 10:31:48 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1320
+}
+2026-07-15 10:31:48 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1321
+}
+2026-07-15 10:42:25 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 10:42:25 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 2523
+}
+2026-07-15 10:42:25 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 2526
+}
+2026-07-15 10:42:46 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 10:42:46 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 995
+}
+2026-07-15 10:42:46 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 997
+}
+2026-07-15 10:50:41 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 10:50:41 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 6181
+}
+2026-07-15 10:50:41 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 6181
+}
+2026-07-15 10:51:22 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 10:51:22 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 475
+}
+2026-07-15 10:51:22 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 476
+}
+2026-07-15 10:59:45 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 10:59:45 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1690
+}
+2026-07-15 10:59:45 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1691
+}
+2026-07-15 15:01:24 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:01:24 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 671
+}
+2026-07-15 15:01:24 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 673
+}
+2026-07-15 15:02:26 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:02:26 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 297
+}
+2026-07-15 15:02:26 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 298
+}
+2026-07-15 15:02:52 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:02:52 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 237
+}
+2026-07-15 15:02:52 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 240
+}
+2026-07-15 15:03:35 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:03:35 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 472
+}
+2026-07-15 15:03:35 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 475
+}
+2026-07-15 15:08:57 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:08:57 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 903
+}
+2026-07-15 15:08:57 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 905
+}
+2026-07-15 15:10:08 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:10:08 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 343
+}
+2026-07-15 15:10:08 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 345
+}
+2026-07-15 15:10:16 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:10:20 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:10:20 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1440
+}
+2026-07-15 15:10:20 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1441
+}
+2026-07-15 15:10:37 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:10:37 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1219
+}
+2026-07-15 15:10:37 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1220
+}
+2026-07-15 15:10:39 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:10:39 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 762
+}
+2026-07-15 15:10:39 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 763
+}
+2026-07-15 15:15:45 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:15:45 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 276
+}
+2026-07-15 15:15:45 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 277
+}
+2026-07-15 15:16:39 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:16:39 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 255
+}
+2026-07-15 15:16:39 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 256
+}
+2026-07-15 15:16:44 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:16:44 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 249
+}
+2026-07-15 15:16:44 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 250
+}
+2026-07-15 15:17:35 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:17:35 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1857
+}
+2026-07-15 15:17:35 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1857
+}
+2026-07-15 15:21:31 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:21:31 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 273
+}
+2026-07-15 15:21:31 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 275
+}
+2026-07-15 15:25:02 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:25:02 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 475
+}
+2026-07-15 15:25:02 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 476
+}
+2026-07-15 15:25:24 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:25:24 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 357
+}
+2026-07-15 15:25:24 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 357
+}
+2026-07-15 15:25:52 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:25:52 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 270
+}
+2026-07-15 15:25:52 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 271
+}
+2026-07-15 15:26:09 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:26:09 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 362
+}
+2026-07-15 15:26:09 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 362
+}
+2026-07-15 15:32:21 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:32:21 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 347
+}
+2026-07-15 15:32:21 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 348
+}
+2026-07-15 15:41:56 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:41:56 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 314
+}
+2026-07-15 15:41:56 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 314
+}
+2026-07-15 15:45:22 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:45:22 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 280
+}
+2026-07-15 15:45:22 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 282
+}
+2026-07-15 15:47:38 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:47:38 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 262
+}
+2026-07-15 15:47:38 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 262
+}
+2026-07-15 15:49:30 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:49:30 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 550
+}
+2026-07-15 15:49:30 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 552
+}
+2026-07-15 15:49:56 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:49:56 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 371
+}
+2026-07-15 15:49:56 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 372
+}
+2026-07-15 15:50:54 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:50:54 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1244
+}
+2026-07-15 15:50:54 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 1244
+}
+2026-07-15 15:53:04 [[31merror[39m]: [31mrequest failed[39m {
+  "error": {
+    "code": "P2022",
+    "meta": {
+      "modelName": "Seller",
+      "driverAdapterError": {
+        "name": "DriverAdapterError",
+        "cause": {
+          "originalCode": "42703",
+          "originalMessage": "column Seller.gstin does not exist",
+          "kind": "ColumnNotFound",
+          "column": "Seller.gstin"
+        }
+      }
+    },
+    "clientVersion": "7.8.0",
+    "name": "PrismaClientKnownRequestError"
+  }
+}
+2026-07-15 15:53:04 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 274
+}
+2026-07-15 15:53:04 [[31merror[39m]: [31mrequest completed[39m {
+  "request": {
+    "method": "GET",
+    "path": "/api/sellers/me",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  "response": {
+    "statusCode": 500
+  },
+  "durationMs": 275
+}
+2026-07-15 16:00:03 [[31merror[39m]: [31mRedis health-check failed.[39m {
+  "error": "Connection is closed."
+}

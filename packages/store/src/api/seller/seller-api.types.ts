@@ -100,6 +100,7 @@ export interface Seller {
   businessType: BusinessType;
   contactEmail?: string | null;
   contactPhone?: string | null;
+  gstin?: string | null;
   status: SellerStatus;
   approvedAt?: string | null;
   createdAt: string;
@@ -123,6 +124,7 @@ export interface OnboardRequest {
   businessType: BusinessType;
   contactPhone?: string;
   contactEmail?: string;
+  gstin?: string;
 }
 
 export interface UpdateStoreRequest {

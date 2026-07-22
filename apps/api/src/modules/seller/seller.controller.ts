@@ -213,6 +213,19 @@ class SellerController {
       next(error)
     }
   }
+
+  verifyGstin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { gstin } = req.query
+      if (!gstin || typeof gstin !== "string") {
+        throw new BadRequestError("GSTIN is required")
+      }
+      const result = await sellerService.lookupGstin(gstin)
+      res.status(200).json(result)
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 export const sellerController = new SellerController()

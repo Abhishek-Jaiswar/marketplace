@@ -121,13 +121,15 @@ class SellerRepository {
     businessName: string,
     businessType: BusinessType,
     contactEmail?: string,
-    contactPhone?: string
+    contactPhone?: string,
+    gstin?: string
   ) {
     return db.seller.create({
       data: {
         ownerUserId,
         businessName,
         businessType,
+        gstin: gstin ?? null,
         contactEmail: contactEmail ?? null,
         contactPhone: contactPhone ?? null,
         status: "DRAFT",
@@ -167,6 +169,7 @@ class SellerRepository {
     data: {
       businessName?: string
       businessType?: BusinessType
+      gstin?: string
       contactEmail?: string
       contactPhone?: string
       status?: SellerStatus
@@ -176,6 +179,7 @@ class SellerRepository {
     const updateData: any = {}
     if (data.businessName !== undefined) updateData.businessName = data.businessName
     if (data.businessType !== undefined) updateData.businessType = data.businessType
+    if (data.gstin !== undefined) updateData.gstin = data.gstin ?? null
     if (data.contactEmail !== undefined) updateData.contactEmail = data.contactEmail ?? null
     if (data.contactPhone !== undefined) updateData.contactPhone = data.contactPhone ?? null
     if (data.status !== undefined) updateData.status = data.status

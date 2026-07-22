@@ -163,6 +163,9 @@ importers:
       '@workspace/store':
         specifier: workspace:*
         version: link:../../packages/store
+      '@workspace/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       lucide-react:
         specifier: ^1.23.0
         version: 1.24.0(react@19.2.4)

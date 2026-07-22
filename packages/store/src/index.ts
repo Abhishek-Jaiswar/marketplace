@@ -82,6 +82,8 @@ export type {
 export {
   sellerApi,
   useRegisterSellerMutation,
+  useVerifyGstinQuery,
+  useLazyVerifyGstinQuery,
   useOnboardSellerMutation,
   useGetSellerMeQuery,
   useLazyGetSellerMeQuery,
@@ -93,4 +95,28 @@ export {
   useGetSellersAdminQuery,
   useVerifySellerAdminMutation,
 } from "./api/seller/seller-api";
+
+// Customer API Types
+export type {
+  Address as CustomerAddress,
+  User as CustomerUser,
+  Customer,
+  UpdateCustomerProfileRequest,
+  CreateAddressRequest,
+  UpdateAddressRequest,
+} from "./api/customer/customer-api.types";
+
+// Customer API and Hooks
+export {
+  customerApi,
+  useGetCustomerProfileQuery,
+  useLazyGetCustomerProfileQuery,
+  useUpdateCustomerProfileMutation,
+  useCreateCustomerAddressMutation,
+  useUpdateCustomerAddressMutation,
+  useDeleteCustomerAddressMutation,
+  useSetDefaultShippingAddressMutation,
+  useSetDefaultBillingAddressMutation,
+} from "./api/customer/customer-api";
+
 

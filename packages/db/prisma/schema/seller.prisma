@@ -29,6 +29,7 @@ enum SellerDocumentType {
   BUSINESS_LICENSE
   ADDRESS_PROOF
   CANCELLED_CHEQUE
+  SIGNATURE
   OTHER
 }
 
@@ -40,6 +41,8 @@ model Seller {
 
   businessName String
   businessType BusinessType
+
+  gstin String? @unique
 
   contactEmail String?
   contactPhone String?

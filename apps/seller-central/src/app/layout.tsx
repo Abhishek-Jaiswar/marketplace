@@ -1,17 +1,23 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Inter, Lora, IBM_Plex_Mono } from "next/font/google"
 import StoreProvider from "./StoreProvider"
 import "./globals.css"
 import HeaderFooter from "@/components/layout/header-footer"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fontSans = Inter({
   subsets: ["latin"],
+  variable: "--font-sans",
 })
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const fontSerif = Lora({
   subsets: ["latin"],
+  variable: "--font-serif",
+})
+
+const fontMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  weight: ['100', '200', '300', '400', '500', '600', '700'],
 })
 
 export const metadata: Metadata = {
@@ -24,11 +30,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const isDasbboard = "";
+  const isDasbboard = ""
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <StoreProvider>

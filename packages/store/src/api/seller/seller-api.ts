@@ -10,6 +10,7 @@ import type {
   PaginatedSellersResponse,
   Store,
   BankAccount,
+  BusinessType,
 } from "./seller-api.types";
 
 export const sellerApi = baseApi.injectEndpoints({
@@ -20,6 +21,9 @@ export const sellerApi = baseApi.injectEndpoints({
         method: "POST",
         body: payload,
       }),
+    }),
+    verifyGstin: builder.query<{ tradeName: string; legalName: string; businessType: BusinessType; state: string; status: string }, string>({
+      query: (gstin) => `/sellers/verify-gstin?gstin=${gstin}`,
     }),
     onboardSeller: builder.mutation<{ message: string; user: any; seller: Seller; accessToken: string }, OnboardRequest>({
       query: (payload) => ({
@@ -104,6 +108,8 @@ export const sellerApi = baseApi.injectEndpoints({
 
 export const {
   useRegisterSellerMutation,
+  useVerifyGstinQuery,
+  useLazyVerifyGstinQuery,
   useOnboardSellerMutation,
   useGetSellerMeQuery,
   useLazyGetSellerMeQuery,

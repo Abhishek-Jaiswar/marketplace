@@ -27,6 +27,7 @@ const uploadLimiter = rateLimiter({
 
 // Public routes
 router.post("/register", registerLimiter, sellerController.register)
+router.get("/verify-gstin", sellerController.verifyGstin)
 
 // Authenticated seller onboarding & profile routes
 router.use(requireAuth)
