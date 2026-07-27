@@ -38,7 +38,7 @@ export default function Hero({ handleStartSelling }: HeroProps) {
         {/* Heading */}
         <h1 className="text-4xl md:text-5xl lg:text-6.5xl font-black text-zinc-900 tracking-tight leading-[1.08]">
           Grow Your Business with{" "}
-          <span className="text-indigo-600 font-black">ShopEase</span>
+          <span className="text-indigo-600 font-black">CBS</span>
         </h1>
 
         <p className="text-zinc-500 text-sm md:text-base leading-relaxed font-semibold max-w-lg">
@@ -119,7 +119,7 @@ export default function Hero({ handleStartSelling }: HeroProps) {
         <div className="w-full max-w-[620px] bg-white border border-zinc-150/70 rounded-[28px] shadow-2xl overflow-hidden scale-95 md:scale-100">
           <img
             src="/dashboard-mockup.png"
-            alt="ShopEase Seller Dashboard Mockup"
+            alt="CBS Seller Dashboard Mockup"
             className="w-full h-auto object-contain block"
           />
         </div>

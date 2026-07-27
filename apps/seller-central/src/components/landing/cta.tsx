@@ -68,7 +68,7 @@ export default function CTA({ handleStartSelling }: CTAProps) {
               Ready to grow your business?
             </h4>
             <p className="text-[10px] font-bold text-indigo-100 leading-normal">
-              Join ShopEase and start your selling journey today.
+              Join CBS and start your selling journey today.
             </p>
           </div>
           <button

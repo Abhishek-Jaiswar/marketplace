@@ -2,15 +2,13 @@
 "use client";
 
 import { useRef } from "react";
-import { Provider } from "react-redux";
-import { setupListeners } from "@reduxjs/toolkit/query";
-import { makeStore, AppStore } from "../lib/store";
+import { Provider, setupListeners, makeStore, AppStore } from "@workspace/store";
 
 export default function StoreProvider({ children }: { children: React.ReactNode }) {
   const storeRef = useRef<AppStore>(undefined);
 
   if (!storeRef.current) {
-    storeRef.current = makeStore();
+    storeRef.current = makeStore() as AppStore;
     setupListeners(storeRef.current.dispatch);
   }
 

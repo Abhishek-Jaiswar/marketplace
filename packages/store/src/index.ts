@@ -1,6 +1,11 @@
 // Base API and RTK Query
 export { baseApi } from "./api/baseApi";
 
+// Store Factory & Provider
+export { makeStore } from "./store";
+export { Provider } from "react-redux";
+export { setupListeners } from "@reduxjs/toolkit/query";
+
 // Counter Slice and Actions
 export {
   counterSlice,

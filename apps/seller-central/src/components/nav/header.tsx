@@ -2,14 +2,23 @@
 
 import Link from "next/link"
 import React from "react"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, ArrowRight, LayoutDashboard, Sparkles } from "lucide-react"
 import Logo from "../logo"
+import { useGetMeQuery, useGetSellerMeQuery } from "@workspace/store"
 import { buttonVariants } from "@workspace/ui/components/button"
 
 export default function Header() {
+  const { data: userData } = useGetMeQuery()
+  const { data: sellerData } = useGetSellerMeQuery(undefined, {
+    skip: !userData?.user,
+  })
+
+  const user = userData?.user
+  const hasSellerProfile = Boolean(sellerData?.seller)
+
   return (
-    <header className="sticky top-0 z-50 bg-white">
-      <div className="mx-auto flex h-14 w-full max-w-7xl items-center justify-between">
+    <header className="sticky top-0 z-50 bg-white border-b border-zinc-100">
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Logo />
 
@@ -63,18 +72,42 @@ export default function Header() {
         </nav>
 
         {/* Auth Actions */}
-        <div className="flex items-center gap-6">
-          <Link
-            href="/login"
-            className="text-sm font-semibold text-zinc-700 transition-colors hover:text-indigo-600"
-          >
-            Login
-          </Link>
-          <Link href="/register" className={buttonVariants()}>
-            Start Selling
-          </Link>
+        <div className="flex items-center gap-4">
+          {user ? (
+            hasSellerProfile ? (
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md shadow-indigo-600/20 transition-all"
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                <span>Dashboard</span>
+              </Link>
+            ) : (
+              <Link
+                href="/onboard"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md shadow-indigo-600/20 transition-all animate-pulse"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Complete Onboarding</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            )
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-sm font-semibold text-zinc-700 transition-colors hover:text-indigo-600"
+              >
+                Login
+              </Link>
+              <Link href="/register" className={buttonVariants()}>
+                Start Selling
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
   )
 }
+

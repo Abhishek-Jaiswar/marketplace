@@ -37,7 +37,7 @@ export const BusinessVerification: React.FC<BusinessVerificationProps> = ({
       {/* Selling Categories Option */}
       <div className="space-y-3">
         <span className="block text-xs font-bold text-zinc-800">
-          What do you plan to sell on ShopEase?
+          What do you plan to sell on CBS?
         </span>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Option A: All Categories */}
@@ -113,17 +113,17 @@ export const BusinessVerification: React.FC<BusinessVerificationProps> = ({
         <label className="block text-xs font-bold text-zinc-800">
           Enter your GSTIN <span className="text-red-500">*</span>
         </label>
-        <div className="relative border border-zinc-250 focus-within:border-indigo-500 rounded-xl p-1 bg-zinc-50/10 flex items-center gap-2">
+        <div className="relative border border-zinc-250 focus-within:border-indigo-500 rounded-xl p-1 bg-zinc-50/10 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           <input
             type="text"
             value={gstin}
             onChange={(e) => setGstin(e.target.value.toUpperCase())}
             placeholder="e.g. 27ABCDE1234F1Z5"
             disabled={gstinVerified}
-            className="flex-1 bg-transparent border-none text-xs font-mono font-bold tracking-wider uppercase px-3 py-2.5 focus:outline-none placeholder-zinc-400"
+            className="flex-1 bg-transparent border-none text-xs font-mono font-bold tracking-wider uppercase px-3 py-2.5 focus:outline-none placeholder-zinc-400 min-w-0"
           />
           {gstinVerified ? (
-            <div className="flex items-center gap-1 text-[10px] font-extrabold text-emerald-600 uppercase tracking-wider px-3.5 select-none">
+            <div className="flex items-center justify-center gap-1 text-[10px] font-extrabold text-emerald-600 uppercase tracking-wider px-3.5 py-2 select-none shrink-0">
               <Check className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>Verified</span>
             </div>
@@ -132,9 +132,9 @@ export const BusinessVerification: React.FC<BusinessVerificationProps> = ({
               type="button"
               onClick={onVerifyGstin}
               disabled={isVerifyingGstin}
-              className="h-9 px-5 shrink-0 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition-colors cursor-pointer disabled:opacity-55 flex items-center justify-center gap-1.5"
+              className="h-10 sm:h-9 px-5 shrink-0 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-extrabold transition-colors cursor-pointer disabled:opacity-55 flex items-center justify-center gap-1.5 shadow-sm"
             >
-              {isVerifyingGstin ? <Loader2 className="w-3 h-3 animate-spin" /> : "Verify GSTIN"}
+              {isVerifyingGstin ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Verify GSTIN"}
             </button>
           )}
         </div>
@@ -156,7 +156,7 @@ export const BusinessVerification: React.FC<BusinessVerificationProps> = ({
 
         <div className="flex items-center gap-1.5 text-[10px] font-semibold text-zinc-400 mt-1 pb-1">
           <Lock className="w-3.5 h-3.5 text-zinc-350" />
-          <span>GSTIN is mandatory to sell products on ShopEase.</span>
+          <span>GSTIN is mandatory to sell products on CBS.</span>
         </div>
       </div>
     </div>

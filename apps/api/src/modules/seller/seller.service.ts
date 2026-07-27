@@ -29,14 +29,13 @@ class SellerService {
 
     const result = await sellerRepository.registerSellerTransaction(payload, passwordHash)
 
-    const otp = generateOtp()
-    await userCache.setEmailVerificationOtp(result.user.email, otp)
-
     try {
+      const otp = generateOtp()
+      await userCache.setEmailVerificationOtp(result.user.email, otp)
       await mailService.sendOtpEmail(result.user.email, otp)
       logger.info(`Seller verification OTP sent successfully to ${result.user.email}`)
     } catch (err) {
-      logger.error(`Failed to send seller verification OTP email to ${result.user.email}`, err)
+      logger.error(`Failed to process seller verification OTP for ${result.user.email}`, err)
     }
 
     return {
@@ -140,15 +139,25 @@ class SellerService {
       throw new ForbiddenError("Cannot edit store details in its current status")
     }
 
+    let slug = payload.slug
+    if (!slug) {
+      slug = payload.displayName
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+      if (!slug) slug = `store-${seller.id.substring(0, 6)}`
+    }
+
     // Validate slug uniqueness if changed
-    const existingStore = await sellerRepository.findStoreBySlug(payload.slug)
+    const existingStore = await sellerRepository.findStoreBySlug(slug)
     if (existingStore && existingStore.sellerId !== seller.id) {
-      throw new ConflictError("Store link / slug is already taken by another seller")
+      slug = `${slug}-${Math.floor(100 + Math.random() * 900)}`
     }
 
     const store = await sellerRepository.upsertStore(seller.id, {
       displayName: payload.displayName,
-      slug: payload.slug,
+      slug,
       description: payload.description,
       address: payload.address,
     })

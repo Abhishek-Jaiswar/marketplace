@@ -1,384 +1,352 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React from "react"
+import Link from "next/link"
+import { useGetSellerMeQuery } from "@workspace/store"
 import {
-  useGetMeQuery,
-  useGetSellerMeQuery,
-  useVerifySellerAdminMutation,
-} from "@workspace/store";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card"
+import { Badge } from "@workspace/ui/components/badge"
+import { Button } from "@workspace/ui/components/button"
 import {
-  Loader2,
-  Clock,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
-  Building,
-  Store,
-  DollarSign,
-  Package,
-  ShoppingCart,
-  Star,
-  Settings,
-  ChevronRight,
-  User,
-  Shield,
-  FileText,
-  CreditCard,
-  Edit,
-} from "lucide-react";
+  TrendingUpIcon,
+  ShoppingBagIcon,
+  AlertTriangleIcon,
+  StarIcon,
+  PlusIcon,
+  DownloadIcon,
+  ArrowUpRightIcon,
+  CreditCardIcon,
+  PackageIcon,
+  ClockIcon,
+  ShieldCheckIcon,
+  ArrowRightIcon,
+  XCircleIcon,
+} from "lucide-react"
+
+const recentOrders = [
+  {
+    id: "ORD-9482",
+    customer: "Sarah Jenkins",
+    email: "sarah.j@example.com",
+    date: "Today, 10:24 AM",
+    status: "processing" as const,
+    amount: "$249.00",
+    items: 3,
+  },
+  {
+    id: "ORD-9481",
+    customer: "Michael Chen",
+    email: "m.chen@example.com",
+    date: "Today, 09:12 AM",
+    status: "shipped" as const,
+    amount: "$120.50",
+    items: 1,
+  },
+  {
+    id: "ORD-9480",
+    customer: "Emma Watson",
+    email: "emma.w@example.com",
+    date: "Yesterday",
+    status: "shipped" as const,
+    amount: "$89.99",
+    items: 2,
+  },
+  {
+    id: "ORD-9479",
+    customer: "David Miller",
+    email: "d.miller@example.com",
+    date: "Yesterday",
+    status: "pending" as const,
+    amount: "$450.00",
+    items: 5,
+  },
+  {
+    id: "ORD-9478",
+    customer: "Sophia Taylor",
+    email: "sophia.t@example.com",
+    date: "Jul 25, 2026",
+    status: "shipped" as const,
+    amount: "$75.20",
+    items: 1,
+  },
+]
+
+const topProducts = [
+  { name: "Wireless Noise-Canceling Headphones", sales: 342, stock: 48, price: "$199.00" },
+  { name: "Ergonomic Mechanical Keyboard", sales: 215, stock: 12, price: "$149.50" },
+  { name: "Ultra-wide 34\" Curved Monitor", sales: 180, stock: 4, price: "$599.00" },
+  { name: "USB-C Multi-port Hub", sales: 145, stock: 85, price: "$49.99" },
+]
 
 export default function SellerDashboard() {
-  const router = useRouter();
+  const { data: sellerData } = useGetSellerMeQuery()
+  const seller = sellerData?.seller
 
-  const { data: userData, isLoading: userLoading } = useGetMeQuery();
-  const { data: sellerData, isLoading: sellerLoading, refetch: refetchSeller } = useGetSellerMeQuery(undefined, {
-    skip: !userData?.user,
-  });
+  const isUnderReview = seller?.status === "UNDER_REVIEW"
+  const isRejected = seller?.status === "REJECTED"
+  const isApproved = seller?.status === "APPROVED"
 
-  const [verifySeller, { isLoading: isVerifying }] = useVerifySellerAdminMutation();
+  const rejectionRemarks = seller?.verification?.remarks || "Please review your uploaded documents and details."
 
-  const [simRemarks, setSimRemarks] = useState("Looks authentic and verified.");
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
-
-  const isLoading = userLoading || sellerLoading;
-
-  // Handle Admin review simulation
-  const handleAdminReview = async (status: "APPROVED" | "REJECTED") => {
-    setErrorMsg("");
-    setSuccessMsg("");
-
-    if (!sellerData?.seller?.id) {
-      setErrorMsg("Seller ID is not found.");
-      return;
-    }
-
-    try {
-      const response = await verifySeller({
-        sellerId: sellerData.seller.id,
-        body: {
-          status,
-          remarks: simRemarks,
-        },
-      }).unwrap();
-
-      setSuccessMsg(response.message || `Seller status updated successfully.`);
-      await refetchSeller();
-    } catch (err: any) {
-      setErrorMsg(err?.data?.message || err?.message || "Failed to update seller status.");
-    }
-  };
-
-  const handleEditDraft = () => {
-    // Navigate to onboarding wizard
-    router.push("/onboard");
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen bg-white dark:bg-zinc-950 items-center justify-center p-6">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-10 h-10 animate-spin text-indigo-600" />
-          <p className="text-sm font-semibold text-zinc-500">Loading seller workspace...</p>
-        </div>
-      </div>
-    );
-  }
-
-  const seller = sellerData?.seller;
-
-  // Render Status Screens if not approved
-  if (!seller) {
-    return (
-      <div className="flex min-h-screen bg-white dark:bg-zinc-950 items-center justify-center p-6 text-center">
-        <div className="max-w-md bg-white dark:bg-zinc-900 border border-zinc-150 p-8 rounded-3xl shadow-sm space-y-6">
-          <AlertTriangle className="w-12 h-12 text-yellow-500 mx-auto" />
-          <h2 className="text-2xl font-extrabold text-zinc-900 dark:text-white">Profile Missing</h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            You don&apos;t have a seller profile registered with this account yet.
-          </p>
-          <button
-            onClick={() => router.push("/onboard")}
-            className="w-full flex h-11 items-center justify-center rounded-xl bg-indigo-600 text-sm font-semibold text-white shadow-lg cursor-pointer"
-          >
-            Start Onboarding
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // 1. UNDER REVIEW SCREEN
-  if (seller.status === "UNDER_REVIEW") {
-    return (
-      <div className="flex min-h-screen bg-white dark:bg-zinc-950 flex-col items-center justify-center p-6">
-        <div className="max-w-xl w-full bg-white dark:bg-zinc-900 border border-zinc-150 dark:border-zinc-800/80 rounded-3xl p-8 shadow-xl space-y-8 text-center relative overflow-hidden">
-          
-          <Clock className="w-14 h-14 text-indigo-600 dark:text-indigo-400 mx-auto animate-pulse" />
-          
-          <div className="space-y-2">
-            <h2 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
-              Application Under Review
-            </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-md mx-auto leading-relaxed">
-              We have received your business onboarding application for <span className="font-bold text-zinc-700 dark:text-zinc-300">{seller.businessName}</span>. 
-              Our verification team is auditing your credentials. Typically this takes 24-48 hours.
-            </p>
-          </div>
-
-          {/* Details list */}
-          <div className="bg-zinc-50 dark:bg-zinc-950 p-5 rounded-2xl border border-zinc-150 dark:border-zinc-850 text-left space-y-2 max-w-md mx-auto text-xs text-zinc-500">
-            <div className="flex justify-between"><span>Legal Name:</span> <span className="font-semibold text-zinc-800 dark:text-zinc-200">{seller.businessName}</span></div>
-            <div className="flex justify-between"><span>Shop link:</span> <span className="font-semibold text-zinc-800 dark:text-zinc-200">cbs.com/stores/{seller.store?.slug || "pending"}</span></div>
-            <div className="flex justify-between"><span>Bank account:</span> <span className="font-semibold text-zinc-800 dark:text-zinc-200">****{seller.bankAccounts?.[0]?.accountNumber.slice(-4) || "pending"}</span></div>
-            <div className="flex justify-between"><span>Uploaded Docs:</span> <span className="font-semibold text-emerald-600 dark:text-emerald-400">{seller.verification?.documents.length || 0} files</span></div>
-          </div>
-
-          {/* Admin simulator panel */}
-          <div className="border-t border-zinc-100 dark:border-zinc-850 pt-6 space-y-4 text-left">
-            <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold text-xs">
-              <Shield className="w-4 h-4 shrink-0" />
-              <span>Admin Simulation Panel (Demo Tool)</span>
-            </div>
-            
-            {errorMsg && <div className="text-red-500 text-xs font-semibold">{errorMsg}</div>}
-            {successMsg && <div className="text-emerald-500 text-xs font-semibold">{successMsg}</div>}
-
-            <div className="space-y-1.5">
-              <label className="block text-[10px] text-zinc-400 uppercase font-bold tracking-wider">
-                Auditing Notes / Remarks
-              </label>
-              <input
-                type="text"
-                value={simRemarks}
-                onChange={(e) => setSimRemarks(e.target.value)}
-                placeholder="e.g. Approved after verifying GST details."
-                className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-250 dark:border-zinc-850 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => handleAdminReview("APPROVED")}
-                disabled={isVerifying}
-                className="h-10 rounded-xl bg-emerald-600 text-white font-semibold text-xs cursor-pointer shadow-md hover:bg-emerald-700 disabled:opacity-50"
-              >
-                Approve Seller ✓
-              </button>
-              <button
-                onClick={() => handleAdminReview("REJECTED")}
-                disabled={isVerifying}
-                className="h-10 rounded-xl bg-red-600 text-white font-semibold text-xs cursor-pointer shadow-md hover:bg-red-700 disabled:opacity-50"
-              >
-                Reject Application ✗
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    );
-  }
-
-  // 2. REJECTED SCREEN
-  if (seller.status === "REJECTED") {
-    return (
-      <div className="flex min-h-screen bg-white dark:bg-zinc-950 flex-col items-center justify-center p-6">
-        <div className="max-w-xl w-full bg-white dark:bg-zinc-900 border border-zinc-150 dark:border-zinc-800/80 rounded-3xl p-8 shadow-xl space-y-8 text-center relative overflow-hidden">
-          
-          <XCircle className="w-14 h-14 text-red-500 mx-auto" />
-          
-          <div className="space-y-2">
-            <h2 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
-              Application Rejected
-            </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-md mx-auto leading-relaxed">
-              Unfortunately, your onboarding application was rejected during audit.
-            </p>
-          </div>
-
-          {/* Remarks banner */}
-          <div className="p-5 bg-red-500/10 border border-red-500/20 rounded-2xl text-left space-y-1">
-            <span className="text-[10px] font-bold text-red-600 uppercase tracking-widest font-mono">
-              Rejection remarks
-            </span>
-            <p className="text-xs text-red-700 dark:text-red-400 font-medium">
-              &quot;{seller.verification?.remarks || "No remarks provided."}&quot;
-            </p>
-          </div>
-
-          <div className="flex justify-center gap-4">
-            <button
-              onClick={handleEditDraft}
-              className="flex h-11 items-center gap-2 justify-center rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white cursor-pointer hover:bg-indigo-700"
-            >
-              <Edit className="w-4 h-4" /> Edit Details & Re-submit
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // 3. APPROVED SCREEN (ACTUAL SELLER CENTRAL DASHBOARD)
   return (
-    <div className="flex flex-col min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 font-sans transition-colors duration-300">
-      {/* Navigation Header */}
-      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-zinc-100 dark:bg-zinc-950/80 dark:border-zinc-900 transition-colors">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+    <div className="flex flex-col gap-6">
+      {/* Real-time Status Banners for Great UX */}
+      {isUnderReview && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-200">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white font-black text-lg">
-              C
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400">
+              <ClockIcon className="size-5" />
             </div>
-            <span className="text-md font-bold tracking-tight font-mono">
-              CBS <span className="text-indigo-600 dark:text-indigo-400">Seller Hub</span>
-            </span>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 text-[10px] font-bold uppercase tracking-wider font-mono">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Approved
-            </div>
-            <span className="hidden sm:inline-block text-xs font-semibold text-zinc-500">
-              User: <span className="text-zinc-900 dark:text-zinc-100">{userData?.user?.email}</span>
-            </span>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Dashboard layout */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-8 space-y-8">
-        
-        {/* Welcome Banner */}
-        <div className="p-8 rounded-3xl bg-gradient-to-r from-indigo-900 via-indigo-950 to-slate-950 text-white relative overflow-hidden shadow-lg text-left">
-          <div className="relative z-10 space-y-2 max-w-xl">
-            <h2 className="text-2xl font-black tracking-tight sm:text-3xl">
-              Welcome back, {seller.businessName}!
-            </h2>
-            <p className="text-xs text-indigo-200">
-              Your store <span className="font-bold underline text-white">cbs-market.com/stores/{seller.store?.slug}</span> is live. Start adding products to receive customer orders!
-            </p>
-          </div>
-          <div className="absolute right-[-10%] top-[-50%] w-[50%] h-[200%] opacity-15 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 blur-3xl pointer-events-none"></div>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {[
-            { label: "Total Revenue", value: "$0.00", icon: DollarSign },
-            { label: "Orders Pending", value: "0", icon: ShoppingCart },
-            { label: "Active Products", value: "0", icon: Package },
-            { label: "Store Rating", value: "5.0 ★", icon: Star },
-          ].map((stat, idx) => (
-            <div
-              key={idx}
-              className="flex flex-col p-6 bg-white dark:bg-zinc-900 border border-zinc-150 dark:border-zinc-800/80 rounded-2xl shadow-sm hover:shadow-md transition-all text-left"
-            >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 mb-4">
-                <stat.icon className="h-5 w-5" />
-              </div>
-              <span className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">
-                {stat.value}
-              </span>
-              <span className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-1 uppercase font-bold tracking-wider">
-                {stat.label}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Middle panels */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-left">
-          {/* Store info preview */}
-          <div className="lg:col-span-1 bg-white dark:bg-zinc-900 border border-zinc-150 dark:border-zinc-800/80 rounded-3xl p-6 shadow-sm space-y-4">
-            <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest font-mono">
-              Store Profile
-            </h3>
-            
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850">
-                <Store className="w-5 h-5 text-indigo-600" />
-              </div>
-              <div className="min-w-0">
-                <span className="block text-sm font-bold text-zinc-900 dark:text-white truncate">
-                  {seller.store?.displayName}
-                </span>
-                <span className="block text-xs text-zinc-400 truncate">
-                  slug: {seller.store?.slug}
-                </span>
-              </div>
-            </div>
-
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed italic">
-              &quot;{seller.store?.description || "No description provided yet."}&quot;
-            </p>
-
-            <div className="border-t border-zinc-100 dark:border-zinc-800 pt-4 space-y-2.5 text-xs text-zinc-500">
-              <div className="flex items-start gap-2">
-                <Building className="w-4 h-4 shrink-0 text-zinc-400 mt-0.5" />
-                <span>Pickup: {seller.store?.address?.street1}, {seller.store?.address?.city}, {seller.store?.address?.state}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CreditCard className="w-4 h-4 shrink-0 text-zinc-400" />
-                <span>Bank Account: ****{seller.bankAccounts?.[0]?.accountNumber.slice(-4)} ({seller.bankAccounts?.[0]?.bankName})</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Catalog placeholder & sales */}
-          <div className="lg:col-span-2 bg-white dark:bg-zinc-900 border border-zinc-150 dark:border-zinc-800/80 rounded-3xl p-6 shadow-sm flex flex-col justify-between min-h-[300px]">
             <div>
-              <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest font-mono mb-4">
-                Active Catalog
-              </h3>
-              <div className="text-center py-10 space-y-3">
-                <Package className="w-10 h-10 text-zinc-300 dark:text-zinc-700 mx-auto" />
-                <div>
-                  <h4 className="text-sm font-bold text-zinc-800 dark:text-zinc-200">No Products Listed</h4>
-                  <p className="text-xs text-zinc-400 max-w-xs mx-auto mt-1">
-                    Your seller account is approved! The next step is listing your inventory so customers can browse.
-                  </p>
-                </div>
-              </div>
+              <div className="font-bold text-sm">Merchant Application Under Review</div>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Our administration team is currently verifying your GSTIN & business details. Features will unlock upon approval.
+              </p>
             </div>
-            
-            <button className="w-full flex h-10 items-center justify-center rounded-xl bg-zinc-900 px-4 text-xs font-semibold text-white hover:bg-zinc-850 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 cursor-pointer">
-              Add First Product
-            </button>
           </div>
+          <Badge variant="warning" className="shrink-0">
+            Pending Admin Verification
+          </Badge>
         </div>
+      )}
 
-        {/* Admin reset helper (so the user can test the flow back and forth) */}
-        <div className="bg-white dark:bg-zinc-900 border border-red-500/20 rounded-3xl p-6 text-left space-y-4">
-          <div className="flex items-center gap-2 text-red-500 font-bold text-xs">
-            <Shield className="w-4 h-4 shrink-0" />
-            <span>Admin Control Panel (Demo Reset Tool)</span>
+      {isRejected && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-900 dark:text-rose-200">
+          <div className="flex items-center gap-3">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/20 text-rose-600 dark:text-rose-400">
+              <XCircleIcon className="size-5" />
+            </div>
+            <div>
+              <div className="font-bold text-sm">Action Needed: Application Revision Requested</div>
+              <p className="text-xs text-rose-700 dark:text-rose-300 mt-0.5 font-medium">
+                Admin Remarks: &quot;{rejectionRemarks}&quot;
+              </p>
+            </div>
           </div>
-
-          {errorMsg && <div className="text-red-500 text-xs font-semibold">{errorMsg}</div>}
-          {successMsg && <div className="text-emerald-500 text-xs font-semibold">{successMsg}</div>}
-
-          <div className="flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={() => handleAdminReview("REJECTED")}
-              disabled={isVerifying}
-              className="h-10 px-5 rounded-xl bg-red-600 text-white font-semibold text-xs cursor-pointer shadow-md hover:bg-red-700 disabled:opacity-50"
-            >
-              Reject / Suspend Seller Account
-            </button>
-            <button
-              onClick={async () => {
-                router.push("/seller");
-              }}
-              className="h-10 px-5 rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-500 font-semibold text-xs cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-900"
-            >
-              Log Out
-            </button>
-          </div>
+          <Button asChild size="sm" variant="destructive" className="shrink-0 gap-1.5">
+            <Link href="/onboard">
+              Update Application Details
+              <ArrowRightIcon className="size-3.5" />
+            </Link>
+          </Button>
         </div>
+      )}
 
-      </main>
+      {/* Header Section */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              Seller Overview
+            </h1>
+            {isApproved && (
+              <Badge variant="success" className="gap-1">
+                <ShieldCheckIcon className="size-3" /> Verified Seller
+              </Badge>
+            )}
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Monitor your store sales, fulfillment pipeline, and performance metrics.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" className="gap-1.5">
+            <DownloadIcon className="size-4" />
+            Export Data
+          </Button>
+          <Button size="sm" className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90">
+            <PlusIcon className="size-4" />
+            Add New Product
+          </Button>
+        </div>
+      </div>
+
+      {/* KPI Stats Grid */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Metric 1 */}
+        <Card className="border-l-4 border-l-primary">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              Total Revenue
+            </CardTitle>
+            <div className="rounded-lg bg-primary/10 p-2 text-primary">
+              <TrendingUpIcon className="size-4" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">$48,250.00</div>
+            <div className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400 mt-1">
+              <span className="font-semibold">+14.2%</span> from last month
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Metric 2 */}
+        <Card className="border-l-4 border-l-sky-500">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              Active Orders
+            </CardTitle>
+            <div className="rounded-lg bg-sky-500/10 p-2 text-sky-600 dark:text-sky-400">
+              <ShoppingBagIcon className="size-4" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">128</div>
+            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+              <span className="font-medium text-foreground">18 orders</span> waiting for dispatch
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Metric 3 */}
+        <Card className="border-l-4 border-l-amber-500">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              Inventory Alert
+            </CardTitle>
+            <div className="rounded-lg bg-amber-500/10 p-2 text-amber-600 dark:text-amber-400">
+              <AlertTriangleIcon className="size-4" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">4 Items</div>
+            <div className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400 mt-1">
+              Stock below threshold (&lt;5 units)
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Metric 4 */}
+        <Card className="border-l-4 border-l-emerald-500">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              Store Rating
+            </CardTitle>
+            <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-400">
+              <StarIcon className="size-4" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">4.9 / 5.0</div>
+            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+              Based on <span className="font-medium text-foreground">1,240 reviews</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content Layout */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Left Column: Recent Orders Table (2 cols) */}
+        <Card className="lg:col-span-2">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Recent Orders</CardTitle>
+              <CardDescription>
+                Live order stream from your storefront.
+              </CardDescription>
+            </div>
+            <Button variant="ghost" size="sm" className="gap-1 text-xs text-primary">
+              View All Orders
+              <ArrowUpRightIcon className="size-3" />
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="relative overflow-x-auto rounded-lg border">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-muted/50 text-xs text-muted-foreground uppercase">
+                  <tr>
+                    <th className="px-4 py-3">Order ID</th>
+                    <th className="px-4 py-3">Customer</th>
+                    <th className="px-4 py-3">Date</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3 text-right">Amount</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {recentOrders.map((order) => (
+                    <tr key={order.id} className="hover:bg-muted/30 transition-colors">
+                      <td className="px-4 py-3 font-medium text-foreground">{order.id}</td>
+                      <td className="px-4 py-3">
+                        <div className="font-medium">{order.customer}</div>
+                        <div className="text-xs text-muted-foreground">{order.email}</div>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-muted-foreground">{order.date}</td>
+                      <td className="px-4 py-3">
+                        {order.status === "shipped" && (
+                          <Badge variant="success">Shipped</Badge>
+                        )}
+                        {order.status === "processing" && (
+                          <Badge variant="info">Processing</Badge>
+                        )}
+                        {order.status === "pending" && (
+                          <Badge variant="warning">Pending</Badge>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-right font-semibold">{order.amount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Right Column: Payout Balance & Top Products */}
+        <div className="flex flex-col gap-6">
+          {/* Payout Card */}
+          <Card className="bg-gradient-to-br from-primary/5 via-card to-card border-primary/20">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-semibold text-muted-foreground">
+                  Available Payout Balance
+                </CardTitle>
+                <CreditCardIcon className="size-4 text-primary" />
+              </div>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div>
+                <div className="text-3xl font-extrabold text-foreground">$12,450.00</div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Next scheduled payout on <span className="font-semibold text-foreground">Aug 1, 2026</span>
+                </p>
+              </div>
+              <Button size="sm" className="w-full gap-1.5">
+                Request Instant Withdrawal
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Top Selling Products Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <PackageIcon className="size-4 text-primary" />
+                Top Selling Products
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              {topProducts.map((prod) => (
+                <div key={prod.name} className="flex items-center justify-between text-sm">
+                  <div className="max-w-[180px]">
+                    <div className="font-medium truncate">{prod.name}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {prod.sales} sales • {prod.stock} in stock
+                    </div>
+                  </div>
+                  <span className="font-semibold text-foreground">{prod.price}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
-  );
+  )
 }

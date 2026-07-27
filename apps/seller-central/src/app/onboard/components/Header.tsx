@@ -1,5 +1,6 @@
 import React from "react";
-import { Bell, ChevronDown, ShoppingBag } from "lucide-react";
+import { Bell, ChevronDown } from "lucide-react";
+import Logo from "@/components/logo";
 
 interface HeaderProps {
   userName?: string;
@@ -19,21 +20,9 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-b border-zinc-150 py-3 px-8 flex items-center justify-between shadow-sm">
+    <header className="sticky top-0 z-50 w-full bg-white border-b border-zinc-150 py-3 px-4 sm:px-8 flex items-center justify-between shadow-sm">
       {/* Logo */}
-      <div className="flex items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white">
-          <ShoppingBag className="w-5 h-5" />
-        </div>
-        <div className="flex flex-col leading-none">
-          <span className="text-md font-extrabold text-zinc-900 tracking-tight font-sans">
-            ShopEase
-          </span>
-          <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">
-            Marketplace
-          </span>
-        </div>
-      </div>
+      <Logo iconSize={32} subtitle="Marketplace" />
 
       {/* Stepper Progress */}
       <div className="hidden md:flex items-center gap-6">

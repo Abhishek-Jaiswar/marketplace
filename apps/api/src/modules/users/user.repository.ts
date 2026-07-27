@@ -20,7 +20,7 @@ class UserRepository {
     })
   }
 
-  async findUserByEmail(email: string) {
+  async findUserByEmail(email: string) {  
     return await db.user.findUnique({
       where: {
         email,
@@ -129,7 +129,7 @@ class UserRepository {
       where: {
         refreshTokenHash,
       },
-      include: {
+      include: { 
         user: {
           select: {
             id: true,

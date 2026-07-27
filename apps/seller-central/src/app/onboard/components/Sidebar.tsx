@@ -11,6 +11,8 @@ interface SidebarProps {
   addressCompleted?: boolean;
   listingCreated?: boolean;
   stockAdded?: boolean;
+  activeStep?: number;
+  onSelectStep?: (step: number) => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -23,6 +25,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   addressCompleted = false,
   listingCreated = false,
   stockAdded = false,
+  activeStep = 1,
+  onSelectStep,
 }) => {
   const [openSections, setOpenSections] = useState({
     account: true,
@@ -61,13 +65,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Accordion Steps List */}
       <div className="space-y-4">
         {/* Section 1: Account Verification */}
-        <div className="border-b border-zinc-100 pb-3">
+        <div className={`border-b border-zinc-100 pb-3 rounded-2xl transition-colors ${activeStep === 1 ? "bg-indigo-50/50 p-2" : ""}`}>
           <button
             type="button"
-            onClick={() => toggleSection("account")}
-            className="w-full flex items-center justify-between py-1.5 text-xs font-extrabold text-zinc-800 uppercase tracking-wider hover:opacity-85 transition-opacity"
+            onClick={() => {
+              toggleSection("account");
+              if (onSelectStep) onSelectStep(1);
+            }}
+            className="w-full flex items-center justify-between py-1.5 text-xs font-extrabold text-zinc-800 uppercase tracking-wider hover:opacity-85 transition-opacity cursor-pointer"
           >
-            <span>Account Verification</span>
+            <span className={activeStep === 1 ? "text-indigo-600 font-extrabold" : ""}>1. Account Verification</span>
             {openSections.account ? (
               <ChevronUp className="w-4 h-4 text-zinc-400" />
             ) : (
@@ -93,13 +100,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Section 2: Business Verification */}
-        <div className="border-b border-zinc-100 pb-3">
+        <div className={`border-b border-zinc-100 pb-3 rounded-2xl transition-colors ${activeStep === 2 ? "bg-indigo-50/50 p-2" : ""}`}>
           <button
             type="button"
-            onClick={() => toggleSection("business")}
-            className="w-full flex items-center justify-between py-1.5 text-xs font-extrabold text-zinc-800 uppercase tracking-wider hover:opacity-85 transition-opacity"
+            onClick={() => {
+              toggleSection("business");
+              if (onSelectStep) onSelectStep(2);
+            }}
+            className="w-full flex items-center justify-between py-1.5 text-xs font-extrabold text-zinc-800 uppercase tracking-wider hover:opacity-85 transition-opacity cursor-pointer"
           >
-            <span>Business Verification</span>
+            <span className={activeStep === 2 ? "text-indigo-600 font-extrabold" : ""}>2. Business & Signature</span>
             {openSections.business ? (
               <ChevronUp className="w-4 h-4 text-zinc-400" />
             ) : (
@@ -116,7 +126,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 ) : (
                   <div className="h-4 w-4 rounded-full border-2 border-orange-500 bg-white"></div>
                 )}
-                <span>ID Verification</span>
+                <span>GSTIN Verification</span>
               </li>
               <li className="flex items-center gap-2.5 text-xs font-semibold text-zinc-500">
                 {signatureVerified ? (
@@ -126,20 +136,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 ) : (
                   <div className="h-4 w-4 rounded-full border-2 border-orange-500 bg-white"></div>
                 )}
-                <span>Signature Verification</span>
+                <span>Digital Signature</span>
               </li>
             </ul>
           )}
         </div>
 
         {/* Section 3: Store Details */}
-        <div className="border-b border-zinc-100 pb-3">
+        <div className={`border-b border-zinc-100 pb-3 rounded-2xl transition-colors ${activeStep === 3 ? "bg-indigo-50/50 p-2" : ""}`}>
           <button
             type="button"
-            onClick={() => toggleSection("store")}
-            className="w-full flex items-center justify-between py-1.5 text-xs font-extrabold text-zinc-800 uppercase tracking-wider hover:opacity-85 transition-opacity"
+            onClick={() => {
+              toggleSection("store");
+              if (onSelectStep) onSelectStep(3);
+            }}
+            className="w-full flex items-center justify-between py-1.5 text-xs font-extrabold text-zinc-800 uppercase tracking-wider hover:opacity-85 transition-opacity cursor-pointer"
           >
-            <span>Store Details</span>
+            <span className={activeStep === 3 ? "text-indigo-600 font-extrabold" : ""}>3. Store & Bank Details</span>
             {openSections.store ? (
               <ChevronUp className="w-4 h-4 text-zinc-400" />
             ) : (
@@ -156,7 +169,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 ) : (
                   <div className="h-4 w-4 rounded-full border-2 border-zinc-300 bg-white"></div>
                 )}
-                <span>Display Name</span>
+                <span>Display Name & Pickup Address</span>
               </li>
               <li className="flex items-center gap-2.5 text-xs font-semibold text-zinc-400">
                 {addressCompleted ? (
@@ -166,7 +179,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 ) : (
                   <div className="h-4 w-4 rounded-full border-2 border-zinc-300 bg-white"></div>
                 )}
-                <span>Pickup Address</span>
+                <span>Bank Payout Account</span>
               </li>
             </ul>
           )}
@@ -179,7 +192,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onClick={() => toggleSection("listing")}
             className="w-full flex items-center justify-between py-1.5 text-xs font-extrabold text-zinc-800 uppercase tracking-wider hover:opacity-85 transition-opacity"
           >
-            <span>Listing & Inventory</span>
+            <div className="flex items-center gap-2">
+              <span>Listing & Inventory</span>
+              <span className="text-[9px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full lowercase tracking-normal">
+                optional
+              </span>
+            </div>
             {openSections.listing ? (
               <ChevronUp className="w-4 h-4 text-zinc-400" />
             ) : (

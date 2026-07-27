@@ -268,19 +268,21 @@ class SellerRepository {
       }
     }
 
+    const finalSlug = storeData.slug || `store-${sellerId.substring(0, 6)}`
+
     // 2. Upsert Store
     return db.store.upsert({
       where: { sellerId },
       create: {
         sellerId,
         displayName: storeData.displayName,
-        slug: storeData.slug,
+        slug: finalSlug,
         description: storeData.description ?? null,
         addressId: addressId ?? null,
       },
       update: {
         displayName: storeData.displayName,
-        slug: storeData.slug,
+        slug: finalSlug,
         description: storeData.description ?? null,
         addressId: addressId !== undefined ? addressId : null,
       },
@@ -305,7 +307,23 @@ class SellerRepository {
       bankName: string
     }
   ) {
-    // Disable primary flag on any existing bank accounts if we set this one
+    const existing = await db.bankAccount.findFirst({
+      where: { sellerId, isPrimary: true },
+    })
+
+    if (existing) {
+      return db.bankAccount.update({
+        where: { id: existing.id },
+        data: {
+          accountHolderName: bankData.accountHolderName,
+          accountNumber: bankData.accountNumber,
+          ifscCode: bankData.ifscCode,
+          bankName: bankData.bankName,
+          status: "PENDING",
+        },
+      })
+    }
+
     await db.bankAccount.updateMany({
       where: { sellerId },
       data: { isPrimary: false },
@@ -473,8 +491,8 @@ class SellerRepository {
       const seller = await tx.seller.create({
         data: {
           ownerUserId: user.id,
-          businessName: payload.businessName,
-          businessType: payload.businessType,
+          businessName: payload.businessName || `${payload.firstName}'s Store`,
+          businessType: payload.businessType || "INDIVIDUAL",
           contactEmail: payload.email,
           status: "DRAFT",
         },

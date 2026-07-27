@@ -69,7 +69,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({
         {/* Banner Details */}
         <div className="space-y-4 max-w-[55%] z-10">
           <h4 className="text-sm font-extrabold leading-snug tracking-tight">
-            Grow your business with ShopEase
+            Grow your business with CBS
           </h4>
           <ul className="space-y-1.5 text-[10px] font-bold text-indigo-100 pl-1 list-disc list-inside">
             <li>Reach Crores of Customers</li>
@@ -185,7 +185,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({
           </div>
           <div className="flex items-center gap-3 text-xs font-bold text-zinc-700">
             <Mail className="w-4.5 h-4.5 text-indigo-600 shrink-0" />
-            <span className="break-all">seller.support@shopease.com</span>
+            <span className="break-all">seller.support@cbs.com</span>
           </div>
           <div className="flex items-center gap-3 text-xs font-bold text-zinc-500">
             <Clock className="w-4.5 h-4.5 text-indigo-600 shrink-0" />

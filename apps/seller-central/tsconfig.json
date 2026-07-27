@@ -3,7 +3,9 @@
   "compilerOptions": {
     "incremental": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@workspace/store": ["../../packages/store/src/index.ts"],
+      "@workspace/store/*": ["../../packages/store/src/*"]
     }
   },
   "include": [

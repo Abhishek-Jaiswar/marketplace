@@ -15,10 +15,13 @@ import {
   TrendingUp,
   Settings,
   Shield,
-  Headset,
   Loader2,
   ShoppingBag,
+  ArrowRight,
+  Phone,
 } from "lucide-react";
+
+import Logo from "@/components/logo";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -26,13 +29,13 @@ export default function RegisterPage() {
 
   // Form Fields
   const [fullName, setFullName] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
   const [email, setEmail] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreed, setAgreed] = useState(false);
 
-  // States
+  // UI States
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -41,8 +44,8 @@ export default function RegisterPage() {
     e.preventDefault();
     setErrorMsg("");
 
-    if (!fullName || !mobileNumber || !email || !password || !confirmPassword) {
-      setErrorMsg("All fields are required.");
+    if (!agreed) {
+      setErrorMsg("Please agree to the Terms of Service & Privacy Policy.");
       return;
     }
 
@@ -51,178 +54,136 @@ export default function RegisterPage() {
       return;
     }
 
-    if (!agreed) {
-      setErrorMsg("You must agree to the Terms of Service and Privacy Policy.");
+    if (mobileNumber.length !== 10) {
+      setErrorMsg("Please enter a valid 10-digit mobile number.");
       return;
     }
 
-    // Split full name into first and last
     const nameParts = fullName.trim().split(" ");
     const firstName = nameParts[0] || "";
-    const lastName = nameParts.slice(1).join(" ") || "";
+    const lastName = nameParts.slice(1).join(" ") || undefined;
 
     try {
       await registerSeller({
         firstName,
-        lastName: lastName || undefined,
-        email: email.trim(),
+        lastName,
+        email,
         password,
         businessName: `${fullName}'s Store`,
         businessType: "INDIVIDUAL",
       }).unwrap();
 
       // Redirect to OTP verification page
-      router.push(`/verify-otp?email=${encodeURIComponent(email.trim())}`);
+      router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
     } catch (err: any) {
-      setErrorMsg(err?.data?.message || err?.message || "Registration failed.");
+      setErrorMsg(err?.data?.message || err?.message || "Registration failed. Please try again.");
     }
   };
 
   return (
-    <div className="flex-1 w-full min-h-screen bg-white flex grid grid-cols-1 lg:grid-cols-12 text-left font-sans select-none">
-      {/* LEFT COLUMN: Sidebar Benefits (30% width / col-span-4) */}
-      <div className="hidden lg:flex lg:col-span-4 bg-indigo-50/40 border-r border-zinc-150 p-8 flex-col justify-between select-none">
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white">
-            <ShoppingBag className="w-5 h-5" />
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="text-md font-extrabold text-zinc-900 tracking-tight">
-              ShopEase
-            </span>
-            <span className="text-[10px] text-indigo-600 font-bold uppercase tracking-wider">
-              Seller Hub
-            </span>
-          </div>
-        </div>
+    <div className="min-h-screen w-full bg-white flex flex-col lg:flex-row text-left font-sans select-none">
+      {/* LEFT COLUMN: Sidebar Benefits & Hero Image */}
+      <div className="hidden lg:flex lg:w-5/12 xl:w-4/12 bg-gradient-to-b from-indigo-900 via-indigo-950 to-slate-950 text-white p-8 xl:p-12 flex-col justify-between relative">
+        {/* Decorative background glow */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-indigo-500/10 rounded-full filter blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-violet-500/10 rounded-full filter blur-3xl pointer-events-none" />
 
-        {/* Vector SVG Mock illustration */}
-        <div className="my-8 flex justify-center">
-          <svg
-            viewBox="0 0 150 150"
-            fill="none"
-            className="w-48 h-48 drop-shadow-md"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* Store base */}
-            <rect x="25" y="80" width="100" height="48" rx="8" fill="#ffffff" stroke="#e4e4e7" strokeWidth="2" />
-            {/* Store roof canopy */}
-            <path d="M15,80 L135,80 L120,50 L30,50 Z" fill="#818cf8" />
-            <path d="M30,80 C37,80 37,70 44,70 C51,70 51,80 58,80 C65,80 65,70 72,70 C79,70 79,80 86,80 C93,80 93,70 100,70 C107,70 107,80 114,80" stroke="#4f46e5" strokeWidth="3" strokeLinecap="round" />
-            {/* Shopping Cart */}
-            <circle cx="50" cy="118" r="5" fill="#a1a1aa" />
-            <circle cx="90" cy="118" r="5" fill="#a1a1aa" />
-            <path d="M35,95 L110,95 L100,113 L45,113 Z" fill="#e4e4e7" />
-            {/* Floating Coins */}
-            <circle cx="75" cy="30" r="10" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
-            <circle cx="75" cy="30" r="6" fill="#f59e0b" />
-            <circle cx="110" cy="40" r="8" fill="#fbbf24" stroke="#d97706" strokeWidth="1" />
-          </svg>
-        </div>
+        <div className="relative z-10 space-y-8">
+          {/* Logo */}
+          <Logo light iconSize={36} />
 
-        {/* Features Checklist */}
-        <div className="space-y-6">
-          <div className="flex gap-4">
-            <div className="h-8 w-8 shrink-0 rounded-lg bg-white border border-zinc-150 flex items-center justify-center text-indigo-600 shadow-sm">
-              <TrendingUp className="w-4.5 h-4.5" />
-            </div>
-            <div className="flex flex-col gap-0.5 leading-snug">
-              <span className="text-xs font-black text-zinc-800">
-                Grow Your Business
-              </span>
-              <span className="text-[10px] text-zinc-400 font-bold">
-                Reach crores of customers across India
-              </span>
+          {/* Hero Image Section */}
+          <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm p-3 shadow-2xl">
+            <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-slate-900">
+              <img
+                src="/login-side-img.png"
+                alt="CBS Seller Central Dashboard"
+                className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500"
+              />
             </div>
           </div>
 
-          <div className="flex gap-4">
-            <div className="h-8 w-8 shrink-0 rounded-lg bg-white border border-zinc-150 flex items-center justify-center text-indigo-600 shadow-sm">
-              <Settings className="w-4.5 h-4.5" />
+          {/* Features Checklist */}
+          <div className="space-y-4">
+            <div className="flex items-start gap-3.5 bg-white/5 border border-white/10 rounded-xl p-3.5 backdrop-blur-sm">
+              <div className="h-9 w-9 shrink-0 rounded-lg bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300">
+                <TrendingUp className="w-4.5 h-4.5" />
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-sm font-bold text-white">
+                  Grow Your Business
+                </span>
+                <span className="text-xs text-indigo-200/70 font-medium leading-normal">
+                  Reach millions of active buyers across India
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col gap-0.5 leading-snug">
-              <span className="text-xs font-black text-zinc-800">
-                Easy to Start
-              </span>
-              <span className="text-[10px] text-zinc-400 font-bold">
-                Simple onboarding and quick account setup
-              </span>
-            </div>
-          </div>
 
-          <div className="flex gap-4">
-            <div className="h-8 w-8 shrink-0 rounded-lg bg-white border border-zinc-150 flex items-center justify-center text-indigo-600 shadow-sm">
-              <Shield className="w-4.5 h-4.5" />
+            <div className="flex items-start gap-3.5 bg-white/5 border border-white/10 rounded-xl p-3.5 backdrop-blur-sm">
+              <div className="h-9 w-9 shrink-0 rounded-lg bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300">
+                <Settings className="w-4.5 h-4.5" />
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-sm font-bold text-white">
+                  0% Commission Models
+                </span>
+                <span className="text-xs text-indigo-200/70 font-medium leading-normal">
+                  Competitive rates and transparent fee structures
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col gap-0.5 leading-snug">
-              <span className="text-xs font-black text-zinc-800">
-                Secure & Reliable
-              </span>
-              <span className="text-[10px] text-zinc-400 font-bold">
-                Safe payments and data protection
-              </span>
-            </div>
-          </div>
 
-          <div className="flex gap-4">
-            <div className="h-8 w-8 shrink-0 rounded-lg bg-white border border-zinc-150 flex items-center justify-center text-indigo-600 shadow-sm">
-              <Headset className="w-4.5 h-4.5" />
-            </div>
-            <div className="flex flex-col gap-0.5 leading-snug">
-              <span className="text-xs font-black text-zinc-800">
-                24/7 Support
-              </span>
-              <span className="text-[10px] text-zinc-400 font-bold">
-                We're here to help you succeed
-              </span>
+            <div className="flex items-start gap-3.5 bg-white/5 border border-white/10 rounded-xl p-3.5 backdrop-blur-sm">
+              <div className="h-9 w-9 shrink-0 rounded-lg bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300">
+                <Shield className="w-4.5 h-4.5" />
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-sm font-bold text-white">
+                  Fast 7-Day Settlements
+                </span>
+                <span className="text-xs text-indigo-200/70 font-medium leading-normal">
+                  Quick payouts directly into your bank account
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Footer info banner */}
-        <div className="pt-4 border-t border-zinc-200 flex flex-col gap-2">
-          <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wide">
-            Trusted by 1L+ sellers across India
+        <div className="relative z-10 pt-6 mt-6 border-t border-white/10 flex items-center justify-between">
+          <span className="text-xs text-indigo-300 font-medium">
+            Join 100,000+ registered sellers
           </span>
-          <div className="flex items-center gap-2">
-            <div className="flex -space-x-2 overflow-hidden">
-              {[
-                "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop",
-                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop",
-                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&fit=crop",
-                "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&fit=crop",
-              ].map((src, idx) => (
-                <img
-                  key={idx}
-                  className="inline-block h-6.5 w-6.5 rounded-full ring-2 ring-white"
-                  src={src}
-                  alt="Seller avatar"
-                />
-              ))}
-              <div className="inline-flex h-6.5 w-6.5 items-center justify-center rounded-full bg-indigo-50 border border-indigo-100 text-[8px] font-extrabold text-indigo-600 ring-2 ring-white">
-                +50K
-              </div>
-            </div>
+          <div className="flex -space-x-2 overflow-hidden">
+            {[
+              "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop",
+              "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop",
+              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&fit=crop",
+            ].map((src, idx) => (
+              <img
+                key={idx}
+                className="inline-block h-7 w-7 rounded-full ring-2 ring-indigo-900 object-cover"
+                src={src}
+                alt="Seller avatar"
+              />
+            ))}
           </div>
         </div>
       </div>
 
-      {/* RIGHT COLUMN: Signup Form (70% width / col-span-8) */}
-      <div className="col-span-1 lg:col-span-8 p-8 sm:p-12 md:p-16 flex flex-col justify-between">
-        {/* Top Header Row */}
-        <div className="flex justify-between items-center pb-4">
-          <div className="flex items-center gap-2 lg:hidden">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white">
-              <ShoppingBag className="w-4.5 h-4.5" />
-            </div>
-            <span className="text-sm font-extrabold text-zinc-950">ShopEase</span>
+      {/* RIGHT COLUMN: Signup Form */}
+      <div className="flex-1 flex flex-col justify-between p-8 sm:p-12 lg:p-16 bg-white min-h-screen">
+        {/* Top Header Navigation */}
+        <div className="flex items-center justify-between max-w-xl mx-auto w-full mb-6">
+          <div className="lg:hidden">
+            <Logo iconSize={32} />
           </div>
-          <div className="text-xs font-bold text-zinc-400 ml-auto select-none">
-            Already have an account?{" "}
+
+          <div className="text-sm font-medium text-zinc-500 ml-auto">
+            Already have a seller account?{" "}
             <Link
               href="/login"
-              className="text-indigo-600 hover:text-indigo-700 font-black hover:underline"
+              className="text-indigo-600 hover:text-indigo-700 font-bold hover:underline ml-1"
             >
               Log in
             </Link>
@@ -230,83 +191,57 @@ export default function RegisterPage() {
         </div>
 
         {/* Form Container */}
-        <div className="max-w-[550px] w-full mx-auto space-y-6 pt-4">
-          {/* Logo Title (Mobile only or hub banner) */}
-          <div className="hidden lg:flex items-center gap-1 text-[11px] font-extrabold text-indigo-600 tracking-wide uppercase leading-none">
-            <ShoppingBag className="w-3.5 h-3.5" /> ShopEase Seller Hub
-          </div>
-
-          <div className="space-y-1 text-left">
-            <h2 className="text-2xl font-black text-zinc-900 tracking-tight">
+        <div className="max-w-xl w-full mx-auto space-y-6 my-auto">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-xs font-bold text-indigo-600">
+              <ShieldCheck className="w-4 h-4" /> Start Selling on CBS
+            </div>
+            <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight">
               Create your seller account
-            </h2>
-            <p className="text-xs text-zinc-400 font-bold leading-normal">
-              Join thousands of sellers and start growing your business on India's
-              trusted marketplace.
+            </h1>
+            <p className="text-sm text-zinc-500 font-medium leading-relaxed">
+              Join thousands of thriving businesses and sell to millions of customers.
             </p>
           </div>
 
-          {/* Stepper Progress bar */}
-          <div className="flex items-center gap-4 py-2 border-b border-zinc-100 select-none">
-            <div className="flex items-center gap-1.5 text-xs font-extrabold text-indigo-600">
-              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-white text-[10px]">
-                1
-              </div>
-              <span>Account Details</span>
-            </div>
-            <div className="h-[1px] w-8 bg-zinc-200"></div>
-            <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-400">
-              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-zinc-100 text-zinc-400 text-[10px]">
-                2
-              </div>
-              <span>Business Details</span>
-            </div>
-            <div className="h-[1px] w-8 bg-zinc-200"></div>
-            <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-400">
-              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-zinc-100 text-zinc-400 text-[10px]">
-                3
-              </div>
-              <span>Verification</span>
-            </div>
-          </div>
-
-          {/* Errors */}
+          {/* Error Notice */}
           {errorMsg && (
-            <div className="p-3.5 rounded-xl border border-red-500/20 bg-red-550/10 text-red-600 text-xs font-bold">
-              {errorMsg}
+            <div className="p-3.5 rounded-xl border border-red-200 bg-red-50 text-red-700 text-xs font-semibold flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-red-600 shrink-0" />
+              <span>{errorMsg}</span>
             </div>
           )}
 
-          {/* Main Register Form */}
+          {/* Register Form */}
           <form onSubmit={handleRegister} className="space-y-4">
             {/* Full Name */}
-            <div className="space-y-1">
-              <label className="block text-[10px] text-zinc-400 font-extrabold uppercase tracking-wide">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider">
                 Full Name
               </label>
-              <div className="relative border border-zinc-200 focus-within:border-indigo-500 rounded-xl p-1 bg-zinc-50/10 flex items-center gap-2.5">
-                <User className="absolute left-3 w-4 h-4 text-zinc-400" />
+              <div className="relative flex items-center">
+                <User className="absolute left-3.5 w-4.5 h-4.5 text-zinc-400 pointer-events-none" />
                 <input
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Enter your full name"
                   required
-                  className="w-full bg-transparent border-none text-xs font-bold px-9 py-2.5 focus:outline-none placeholder-zinc-405 text-zinc-800"
+                  className="w-full bg-zinc-50 border border-zinc-200 rounded-xl pl-11 pr-4 py-3 text-sm font-medium text-zinc-900 placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 transition-all"
                 />
               </div>
             </div>
 
-            {/* Phone & Email Row */}
+            {/* Mobile & Email Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Mobile Number */}
-              <div className="space-y-1">
-                <label className="block text-[10px] text-zinc-400 font-extrabold uppercase tracking-wide">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider">
                   Mobile Number
                 </label>
-                <div className="relative border border-zinc-200 focus-within:border-indigo-500 rounded-xl p-1 bg-zinc-50/10 flex items-center gap-1">
-                  <Smartphone className="absolute left-3 w-4 h-4 text-zinc-400" />
-                  <span className="pl-9 pr-1.5 text-xs font-extrabold text-zinc-400 select-none border-r border-zinc-200 font-mono">
+                <div className="relative flex items-center">
+                  <Smartphone className="absolute left-3.5 w-4.5 h-4.5 text-zinc-400 pointer-events-none" />
+                  <span className="pl-11 pr-2 text-xs font-bold text-zinc-500 border-r border-zinc-200 select-none font-mono">
                     +91
                   </span>
                   <input
@@ -314,27 +249,27 @@ export default function RegisterPage() {
                     maxLength={10}
                     value={mobileNumber}
                     onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ""))}
-                    placeholder="Enter mobile number"
+                    placeholder="10-digit number"
                     required
-                    className="w-full bg-transparent border-none text-xs font-bold px-1.5 py-2.5 focus:outline-none placeholder-zinc-405 text-zinc-800 font-mono"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl pl-3 pr-4 py-3 text-sm font-medium text-zinc-900 placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 transition-all font-mono"
                   />
                 </div>
               </div>
 
               {/* Email Address */}
-              <div className="space-y-1">
-                <label className="block text-[10px] text-zinc-400 font-extrabold uppercase tracking-wide">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider">
                   Email Address
                 </label>
-                <div className="relative border border-zinc-200 focus-within:border-indigo-500 rounded-xl p-1 bg-zinc-50/10 flex items-center gap-2.5">
-                  <Mail className="absolute left-3 w-4 h-4 text-zinc-400" />
+                <div className="relative flex items-center">
+                  <Mail className="absolute left-3.5 w-4.5 h-4.5 text-zinc-400 pointer-events-none" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email address"
+                    placeholder="name@business.com"
                     required
-                    className="w-full bg-transparent border-none text-xs font-bold px-9 py-2.5 focus:outline-none placeholder-zinc-405 text-zinc-800"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl pl-11 pr-4 py-3 text-sm font-medium text-zinc-900 placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 transition-all"
                   />
                 </div>
               </div>
@@ -343,153 +278,106 @@ export default function RegisterPage() {
             {/* Password Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Password */}
-              <div className="space-y-1">
-                <label className="block text-[10px] text-zinc-400 font-extrabold uppercase tracking-wide">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider">
                   Password
                 </label>
-                <div className="relative border border-zinc-200 focus-within:border-indigo-500 rounded-xl p-1 bg-zinc-50/10 flex items-center gap-2">
-                  <Lock className="absolute left-3 w-4 h-4 text-zinc-400" />
+                <div className="relative flex items-center">
+                  <Lock className="absolute left-3.5 w-4.5 h-4.5 text-zinc-400 pointer-events-none" />
                   <input
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Create a strong password"
+                    placeholder="Create password"
                     required
-                    className="w-full bg-transparent border-none text-xs font-bold px-9 py-2.5 focus:outline-none placeholder-zinc-405 text-zinc-800"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl pl-11 pr-11 py-3 text-sm font-medium text-zinc-900 placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 text-zinc-400 hover:text-zinc-650 cursor-pointer"
+                    className="absolute right-3.5 text-zinc-400 hover:text-zinc-600 p-1 rounded-md transition-colors"
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
                   </button>
                 </div>
               </div>
 
               {/* Confirm Password */}
-              <div className="space-y-1">
-                <label className="block text-[10px] text-zinc-400 font-extrabold uppercase tracking-wide">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider">
                   Confirm Password
                 </label>
-                <div className="relative border border-zinc-200 focus-within:border-indigo-500 rounded-xl p-1 bg-zinc-50/10 flex items-center gap-2">
-                  <Lock className="absolute left-3 w-4 h-4 text-zinc-400" />
+                <div className="relative flex items-center">
+                  <Lock className="absolute left-3.5 w-4.5 h-4.5 text-zinc-400 pointer-events-none" />
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm your password"
+                    placeholder="Confirm password"
                     required
-                    className="w-full bg-transparent border-none text-xs font-bold px-9 py-2.5 focus:outline-none placeholder-zinc-405 text-zinc-800"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl pl-11 pr-11 py-3 text-sm font-medium text-zinc-900 placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 text-zinc-400 hover:text-zinc-650 cursor-pointer"
+                    className="absolute right-3.5 text-zinc-400 hover:text-zinc-600 p-1 rounded-md transition-colors"
                   >
-                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showConfirmPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Secure Info Banner */}
-            <div className="flex gap-2.5 p-3.5 bg-indigo-50/45 border border-indigo-100 rounded-xl text-left select-none">
-              <ShieldCheck className="w-5 h-5 text-indigo-650 shrink-0" />
-              <div className="space-y-0.5 leading-snug">
-                <span className="text-[10px] font-black text-indigo-950 block">
-                  Secure & Trusted
-                </span>
-                <span className="text-[9px] text-zinc-400 font-bold">
-                  Your information is 100% safe with us. We never share your data.
-                </span>
-              </div>
-            </div>
-
             {/* Terms checkbox */}
-            <label className="flex items-center gap-2 cursor-pointer py-1 text-left select-none">
+            <label className="flex items-center gap-2 cursor-pointer pt-1 text-left select-none group">
               <input
                 type="checkbox"
                 checked={agreed}
                 onChange={(e) => setAgreed(e.target.checked)}
-                className="h-4 w-4 rounded-md border-zinc-250 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                className="h-4 w-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
               />
-              <span className="text-[10px] text-zinc-550 font-bold">
+              <span className="text-xs text-zinc-600 font-medium">
                 I agree to the{" "}
-                <Link href="/terms" className="text-indigo-600 hover:underline">
+                <Link href="/terms" className="text-indigo-600 hover:underline font-semibold">
                   Terms of Service
                 </Link>{" "}
                 and{" "}
-                <Link href="/privacy" className="text-indigo-600 hover:underline">
+                <Link href="/privacy" className="text-indigo-600 hover:underline font-semibold">
                   Privacy Policy
                 </Link>
               </span>
             </label>
 
-            {/* Register Action Button */}
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-11 bg-indigo-650 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold uppercase tracking-widest transition-all shadow-md shadow-indigo-550/15 cursor-pointer disabled:opacity-55 flex items-center justify-center gap-1.5"
+              className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-indigo-600/20 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 mt-2"
             >
               {isLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
-                  <span>Continue</span>
-                  <span>→</span>
+                  <span>Create Account & Continue</span>
+                  <ArrowRight className="w-4.5 h-4.5" />
                 </>
               )}
             </button>
           </form>
-
-          {/* Divider */}
-          <div className="relative flex py-1 items-center select-none">
-            <div className="flex-grow border-t border-zinc-150"></div>
-            <span className="flex-shrink mx-3.5 text-[10px] font-bold text-zinc-400 uppercase tracking-wide">
-              or
-            </span>
-            <div className="flex-grow border-t border-zinc-150"></div>
-          </div>
-
-          {/* Google Button */}
-          <button
-            type="button"
-            className="w-full flex h-11 items-center justify-center gap-2 border border-zinc-200 hover:bg-zinc-50 bg-white text-zinc-700 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer select-none"
-          >
-            <svg viewBox="0 0 24 24" className="w-4.5 h-4.5" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                fill="#4285F4"
-              />
-              <path
-                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                fill="#34A853"
-              />
-              <path
-                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.85z"
-                fill="#FBBC05"
-              />
-              <path
-                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85c.87-2.6 3.3-4.53 6.16-4.53z"
-                fill="#EA4335"
-              />
-            </svg>
-            <span>Sign up with Google</span>
-          </button>
         </div>
 
-        {/* Footer Privacy Info */}
-        <div className="text-center text-[10px] font-semibold text-zinc-400 mt-6 select-none leading-relaxed">
-          By continuing, you agree to ShopEase's{" "}
-          <Link href="/terms" className="underline hover:text-zinc-600">
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link href="/privacy" className="underline hover:text-zinc-600">
-            Privacy Policy
-          </Link>
-          .
+        {/* Footer Support Info */}
+        <div className="max-w-xl w-full mx-auto text-center text-xs text-zinc-500 pt-6 border-t border-zinc-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <span>Need help during registration?</span>
+          <div className="flex items-center gap-3 font-semibold text-zinc-700">
+            <span className="flex items-center gap-1.5">
+              <Phone className="w-3.5 h-3.5 text-indigo-600" /> 1800-123-4455
+            </span>
+            <span className="h-3 w-[1px] bg-zinc-200" />
+            <span className="flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5 text-indigo-600" /> support@cbs.com
+            </span>
+          </div>
         </div>
       </div>
     </div>

@@ -140,7 +140,7 @@ class SellerController {
         throw new BadRequestError("Document file is required")
       }
 
-      const allowedTypes = ["GST_CERTIFICATE", "PAN_CARD", "BUSINESS_LICENSE", "ADDRESS_PROOF", "CANCELLED_CHEQUE", "OTHER"]
+      const allowedTypes = ["GST_CERTIFICATE", "PAN_CARD", "BUSINESS_LICENSE", "ADDRESS_PROOF", "CANCELLED_CHEQUE", "SIGNATURE", "OTHER"]
       if (!allowedTypes.includes(type)) {
         throw new BadRequestError(`Invalid document type. Allowed types: ${allowedTypes.join(", ")}`)
       }

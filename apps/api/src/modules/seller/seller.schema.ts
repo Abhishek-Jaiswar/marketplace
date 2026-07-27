@@ -14,6 +14,8 @@ export const registerSellerSchema = z.object({
   lastName: z.string().trim().optional(),
   email: z.string().trim().email({ message: "Valid email is required" }),
   password: z.string().trim().min(8, { message: "Password must be at least 8 characters" }),
+  businessName: z.string().trim().optional(),
+  businessType: BusinessTypeEnum.optional(),
 })
 
 export const onboardSchema = z.object({
@@ -47,9 +49,10 @@ export const storeSchema = z.object({
     .string()
     .trim()
     .min(3, { message: "Slug must be at least 3 characters" })
-    .regex(/^[a-z0-9-]+$/, { message: "Slug must only contain lowercase letters, numbers, and hyphens" }),
+    .regex(/^[a-z0-9-]+$/, { message: "Slug must only contain lowercase letters, numbers, and hyphens" })
+    .optional(),
   description: z.string().trim().optional(),
-  address: addressSchema,
+  address: addressSchema.optional(),
 })
 
 export const bankAccountSchema = z.object({
@@ -58,8 +61,8 @@ export const bankAccountSchema = z.object({
   ifscCode: z
     .string()
     .trim()
-    .min(1, { message: "IFSC code is required" })
-    .regex(/^[A-Z]{4}0[A-Z0-9]{6}$/, { message: "Invalid IFSC code format" }),
+    .min(4, { message: "IFSC code is required" })
+    .transform((val) => val.toUpperCase()),
   bankName: z.string().trim().min(1, { message: "Bank name is required" }),
 })
 

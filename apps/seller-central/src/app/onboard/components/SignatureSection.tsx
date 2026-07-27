@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { PenTool, UploadCloud, CheckCircle2, RefreshCw, Save, Check } from "lucide-react";
+import { PenTool, UploadCloud, CheckCircle2, RefreshCw, Save, ArrowRight, Loader2 } from "lucide-react";
 
 interface SignatureSectionProps {
   canvasSignature: string | null;
   signatureUploaded: string | null;
   isUploading?: boolean;
+  isSubmitting?: boolean;
   onUploadSignature: (file: File) => void;
   onClearCanvas: () => void;
   onSaveCanvas: () => void;
+  onGoToDashboard?: () => void;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   isDrawing: boolean;
   startDrawing: (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => void;
@@ -19,9 +21,11 @@ export const SignatureSection: React.FC<SignatureSectionProps> = ({
   canvasSignature,
   signatureUploaded,
   isUploading = false,
+  isSubmitting = false,
   onUploadSignature,
   onClearCanvas,
   onSaveCanvas,
+  onGoToDashboard,
   canvasRef,
   isDrawing,
   startDrawing,
@@ -117,8 +121,8 @@ export const SignatureSection: React.FC<SignatureSectionProps> = ({
           <div className="relative border border-zinc-250 bg-white rounded-xl overflow-hidden">
             <canvas
               ref={canvasRef}
-              width={500}
-              height={140}
+              width={600}
+              height={180}
               onMouseDown={startDrawing}
               onMouseMove={draw}
               onMouseUp={stopDrawing}
@@ -126,28 +130,28 @@ export const SignatureSection: React.FC<SignatureSectionProps> = ({
               onTouchStart={startDrawing}
               onTouchMove={draw}
               onTouchEnd={stopDrawing}
-              className="w-full h-32 bg-white cursor-crosshair block"
+              className="w-full h-36 bg-white cursor-crosshair block touch-none"
             />
             {!canvasSignature && (
-              <div className="absolute inset-0 flex items-center justify-center text-zinc-350 pointer-events-none text-[11px] font-semibold select-none">
+              <div className="absolute inset-0 flex items-center justify-center text-zinc-400 pointer-events-none text-xs font-semibold select-none px-4 text-center">
                 Draw your signature inside this box
               </div>
             )}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2.5">
             <button
               type="button"
               onClick={onClearCanvas}
-              className="px-4 py-2 border border-zinc-200 bg-white hover:bg-zinc-50 rounded-xl text-xs font-bold text-zinc-500 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="w-full sm:w-auto h-11 px-5 border border-zinc-200 bg-white hover:bg-zinc-50 rounded-xl text-xs font-bold text-zinc-600 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              <RefreshCw className="w-3.5 h-3.5" /> Clear
+              <RefreshCw className="w-3.5 h-3.5" /> Clear Signature
             </button>
             <button
               type="button"
               onClick={onSaveCanvas}
               disabled={!canvasSignature || isUploading}
-              className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+              className="w-full sm:w-auto h-11 px-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold transition-all disabled:opacity-50 flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-indigo-600/20"
             >
               {isUploading ? (
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -184,8 +188,8 @@ export const SignatureSection: React.FC<SignatureSectionProps> = ({
 
       {/* Signature upload state indicator */}
       {signatureUploaded && (
-        <div className="flex items-center gap-2 text-xs text-emerald-600 font-bold bg-emerald-50 border border-emerald-100 p-3.5 rounded-xl">
-          <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-500" />
+        <div className="flex items-center gap-2 text-xs text-emerald-700 font-bold bg-emerald-50 border border-emerald-200 p-3.5 rounded-xl">
+          <CheckCircle2 className="w-4.5 h-4.5 shrink-0 text-emerald-600" />
           <span>Signature successfully saved & bound to seller profile!</span>
         </div>
       )}

@@ -26,6 +26,7 @@ export type SellerDocumentType =
   | "BUSINESS_LICENSE"
   | "ADDRESS_PROOF"
   | "CANCELLED_CHEQUE"
+  | "SIGNATURE"
   | "OTHER";
 
 export interface Address {
@@ -129,9 +130,9 @@ export interface OnboardRequest {
 
 export interface UpdateStoreRequest {
   displayName: string;
-  slug: string;
+  slug?: string;
   description?: string;
-  address: {
+  address?: {
     street1: string;
     street2?: string;
     landmark?: string;
