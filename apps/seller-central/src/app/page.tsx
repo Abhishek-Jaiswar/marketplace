@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useGetMeQuery, useGetSellerMeQuery } from "@workspace/store";
+import { useAppSelector, useGetMeQuery, useGetSellerMeQuery } from "@workspace/store";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Hero from "@/components/landing/hero";
 import Features from "@/components/landing/features";
@@ -11,12 +11,14 @@ import CTA from "@/components/landing/cta";
 
 export default function LandingPage() {
   const router = useRouter();
-  const { data: userData } = useGetMeQuery();
-  const { data: sellerData } = useGetSellerMeQuery(undefined, {
-    skip: !userData?.user,
+  const { isAuthenticated, user: cachedUser } = useAppSelector((state) => state.auth);
+  const { data: userData, isLoading: isUserLoading } = useGetMeQuery();
+  const user = userData?.user || cachedUser;
+
+  const { data: sellerData, isLoading: isSellerLoading } = useGetSellerMeQuery(undefined, {
+    skip: !user,
   });
 
-  const user = userData?.user;
   const hasSellerProfile = Boolean(sellerData?.seller);
 
   const handleStartSelling = () => {
@@ -31,10 +33,12 @@ export default function LandingPage() {
     }
   };
 
+  const showOnboardingBanner = Boolean(user && !hasSellerProfile && !isSellerLoading);
+
   return (
     <div className="flex-1 w-full bg-[#f9fafb] flex flex-col text-left font-sans">
       {/* Pending Onboarding Banner for logged in user */}
-      {user && !hasSellerProfile && (
+      {showOnboardingBanner && user && (
         <div className="w-full bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 text-white py-3.5 px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-inner">
           <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold">
             <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-white shrink-0">

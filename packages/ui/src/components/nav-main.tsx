@@ -83,7 +83,7 @@ export function NavMain({
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      asChild
+                      render={<a href={item.url} />}
                       tooltip={item.title}
                       className={`group relative flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm font-medium transition-all ${
                         item.isActive
@@ -91,28 +91,26 @@ export function NavMain({
                           : "text-foreground/80 hover:bg-slate-100 dark:hover:bg-slate-800/40 hover:text-foreground"
                       }`}
                     >
-                      <a href={item.url} className="flex w-full items-center gap-2.5">
-                        <RenderIcon icon={item.icon} className="size-4 text-foreground/80 group-hover:text-foreground" />
-                        <span className="flex-1 truncate">{item.title}</span>
+                      <RenderIcon icon={item.icon} className="size-4 text-foreground/80 group-hover:text-foreground" />
+                      <span className="flex-1 truncate">{item.title}</span>
 
-                        {item.badge !== undefined && (
-                          <span
-                            className={`inline-flex items-center justify-center rounded-md px-1.5 py-0.5 text-[11px] font-semibold leading-none ${
-                              item.badgeColor === "red"
-                                ? "bg-red-500 text-white shadow-2xs"
-                                : item.badgeColor === "brand"
-                                ? "bg-primary text-primary-foreground font-bold"
-                                : "bg-muted text-muted-foreground/80 font-normal"
-                            }`}
-                          >
-                            {item.badge}
-                          </span>
-                        )}
+                      {item.badge !== undefined && (
+                        <span
+                          className={`inline-flex items-center justify-center rounded-md px-1.5 py-0.5 text-[11px] font-semibold leading-none ${
+                            item.badgeColor === "red"
+                              ? "bg-red-500 text-white shadow-2xs"
+                              : item.badgeColor === "brand"
+                              ? "bg-primary text-primary-foreground font-bold"
+                              : "bg-muted text-muted-foreground/80 font-normal"
+                          }`}
+                        >
+                          {item.badge}
+                        </span>
+                      )}
 
-                        {item.isExternal && (
-                          <ArrowUpRightIcon className="size-3.5 text-muted-foreground/60 group-hover:text-foreground transition-colors" />
-                        )}
-                      </a>
+                      {item.isExternal && (
+                        <ArrowUpRightIcon className="size-3.5 text-muted-foreground/60 group-hover:text-foreground transition-colors" />
+                      )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 )

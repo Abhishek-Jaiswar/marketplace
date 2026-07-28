@@ -24,12 +24,14 @@ import { ChevronsUpDownIcon, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIco
 
 export function NavUser({
   user,
+  onLogout,
 }: {
   user: {
     name: string
     email: string
     avatar: string
   }
+  onLogout?: () => void
 }) {
   const { isMobile } = useSidebar()
   const initials = user.name
@@ -110,7 +112,10 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator className="my-1" />
-            <DropdownMenuItem className="gap-2 text-xs py-2 rounded-lg text-destructive focus:text-destructive focus:bg-destructive/10">
+            <DropdownMenuItem
+              onClick={onLogout}
+              className="gap-2 text-xs py-2 rounded-lg text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer"
+            >
               <LogOutIcon className="size-3.5" />
               Log out
             </DropdownMenuItem>

@@ -2,22 +2,79 @@
 
 import Link from "next/link"
 import React from "react"
-import { ChevronDown, ArrowRight, LayoutDashboard, Sparkles } from "lucide-react"
+import {
+  ChevronDown,
+  ArrowRight,
+  LayoutDashboard,
+  Sparkles,
+  LogOut,
+  Settings,
+} from "lucide-react"
 import Logo from "../logo"
-import { useGetMeQuery, useGetSellerMeQuery } from "@workspace/store"
+import {
+  useAppSelector,
+  useGetMeQuery,
+  useGetSellerMeQuery,
+  useLogoutMutation,
+} from "@workspace/store"
 import { buttonVariants } from "@workspace/ui/components/button"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@workspace/ui/components/avatar"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@workspace/ui/components/dropdown-menu"
+import { useRouter } from "next/navigation"
 
 export default function Header() {
-  const { data: userData } = useGetMeQuery()
-  const { data: sellerData } = useGetSellerMeQuery(undefined, {
-    skip: !userData?.user,
-  })
+  const { isAuthenticated, user: cachedUser } = useAppSelector(
+    (state) => state.auth
+  )
+  const { data: userData, isLoading: isUserLoading } = useGetMeQuery(undefined)
+  const user = userData?.user || cachedUser
 
-  const user = userData?.user
+  const { data: sellerData, isLoading: isSellerLoading } = useGetSellerMeQuery(
+    undefined,
+    {
+      skip: !user,
+    }
+  )
+
+  const [logout, { isLoading: isLogoutLoading }] = useLogoutMutation()
+  const router = useRouter()
+
   const hasSellerProfile = Boolean(sellerData?.seller)
 
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap()
+      router.push("/login")
+    } catch (error) {
+      console.error("Logout failed:", error)
+    }
+  }
+
+  const getInitials = () => {
+    if (!user) return "S"
+    if (user.firstName) {
+      return `${user.firstName.charAt(0)}${user.lastName ? user.lastName.charAt(0) : ""}`.toUpperCase()
+    }
+    return user.email.charAt(0).toUpperCase()
+  }
+
+  // Prevent UI flickering while auth or seller data is resolving on initial load
+  const isResolvingAuth = (isUserLoading && !user) || (Boolean(user) && isSellerLoading && !sellerData)
+
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-zinc-100">
+    <header className="sticky top-0 z-50 border-b border-zinc-100 bg-white">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Logo />
@@ -73,23 +130,76 @@ export default function Header() {
 
         {/* Auth Actions */}
         <div className="flex items-center gap-4">
-          {user ? (
+          {isResolvingAuth ? (
+            <div className="h-9 w-32 animate-pulse rounded-xl bg-zinc-150/70" />
+          ) : user ? (
             hasSellerProfile ? (
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md shadow-indigo-600/20 transition-all"
-              >
-                <LayoutDashboard className="w-4 h-4" />
-                <span>Dashboard</span>
-              </Link>
+              <div className="flex items-center justify-center gap-3">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="flex items-center gap-2 rounded-full outline-none ring-offset-background transition-all hover:opacity-90 focus-visible:outline-none cursor-pointer">
+                    <Avatar className="h-9 w-9 border border-zinc-200">
+                      <AvatarImage
+                        src={"https://placehold.net/avatar-5.png"}
+                        alt={user.email}
+                      />
+                      <AvatarFallback className="bg-indigo-100 text-xs font-bold text-indigo-700">
+                        {getInitials()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent align="end" className="w-56 mt-1.5 p-1.5 shadow-xl border border-zinc-150 rounded-xl">
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel className="px-2 py-1.5">
+                        <div className="flex flex-col text-left">
+                          <span className="text-xs font-bold text-zinc-900 truncate">
+                            {user.firstName ? `${user.firstName} ${user.lastName || ""}` : "Seller Account"}
+                          </span>
+                          <span className="text-[10px] font-medium text-zinc-500 truncate font-mono">
+                            {user.email}
+                          </span>
+                        </div>
+                      </DropdownMenuLabel>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem
+                        onClick={() => router.push("/dashboard")}
+                        className="cursor-pointer text-xs font-medium gap-2 py-2"
+                      >
+                        <LayoutDashboard className="h-4 w-4 text-zinc-500" />
+                        <span>Dashboard</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => router.push("/dashboard/settings")}
+                        className="cursor-pointer text-xs font-medium gap-2 py-2"
+                      >
+                        <Settings className="h-4 w-4 text-zinc-500" />
+                        <span>Settings</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem
+                        disabled={isLogoutLoading}
+                        onClick={handleLogout}
+                        className="cursor-pointer text-xs font-medium gap-2 py-2 text-rose-600 focus:bg-rose-50 focus:text-rose-700"
+                      >
+                        <LogOut className="h-4 w-4 text-rose-500" />
+                        <span>Logout</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             ) : (
               <Link
                 href="/onboard"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md shadow-indigo-600/20 transition-all animate-pulse"
+                className="inline-flex animate-pulse items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-bold text-white shadow-md shadow-indigo-600/20 transition-all hover:bg-indigo-700"
               >
-                <Sparkles className="w-4 h-4" />
+                <Sparkles className="h-4 w-4" />
                 <span>Complete Onboarding</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="h-4 w-4" />
               </Link>
             )
           ) : (

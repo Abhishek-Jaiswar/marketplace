@@ -128,11 +128,9 @@ export default function SellerDashboard() {
               </p>
             </div>
           </div>
-          <Button asChild size="sm" variant="destructive" className="shrink-0 gap-1.5">
-            <Link href="/onboard">
-              Update Application Details
-              <ArrowRightIcon className="size-3.5" />
-            </Link>
+          <Button render={<Link href="/onboard" />} size="sm" variant="destructive" className="shrink-0 gap-1.5">
+            Update Application Details
+            <ArrowRightIcon className="size-3.5" />
           </Button>
         </div>
       )}

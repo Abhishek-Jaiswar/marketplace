@@ -1,3 +1,4 @@
+
 import { SidebarData } from "@workspace/ui/components/app-sidebar"
 import {
   LayoutDashboardIcon,
@@ -5,7 +6,6 @@ import {
   ShoppingCartIcon,
   BarChart3Icon,
   SettingsIcon,
-  StoreIcon,
   BellIcon,
   InboxIcon,
   HelpCircleIcon,
@@ -17,14 +17,9 @@ import {
 } from "lucide-react"
 
 export const sellerSidebarData: SidebarData = {
-  appName: "Seller Portal",
+  appName: "Seller Central",
   appSubtitle: "seller.cbsmarketplace.com",
-  appLogo: <StoreIcon className="size-4" />,
-  user: {
-    name: "Alex Merchant",
-    email: "alex@sellerstore.com",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-  },
+  appLogo: "/shopping.png",
   groups: [
     {
       groupTitle: "Overview",

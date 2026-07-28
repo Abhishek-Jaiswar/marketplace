@@ -71,6 +71,7 @@ export const authApi = baseApi.injectEndpoints({
         body: payload,
       }),
     }),
+
     logout: builder.mutation<LogoutResponse, void>({
       query: () => ({
         url: "/users/logout",
@@ -86,6 +87,7 @@ export const authApi = baseApi.injectEndpoints({
         }
       },
     }),
+    
     getMe: builder.query<GetMeResponse, void>({
       query: () => "/users/me",
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {

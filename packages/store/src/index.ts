@@ -25,6 +25,17 @@ export {
 export { default as authReducer } from "./slices/authSlice";
 export type { AuthState } from "./slices/authSlice";
 
+// Onboarding Slice and Actions
+export {
+  onboardingSlice,
+  setOnboardingStep,
+  setWelcomeView,
+  startOnboarding,
+  resetOnboardingState,
+} from "./slices/onboardingSlice";
+export { default as onboardingReducer } from "./slices/onboardingSlice";
+export type { OnboardingState } from "./slices/onboardingSlice";
+
 // Auth API types
 export type {
   UserProfile,

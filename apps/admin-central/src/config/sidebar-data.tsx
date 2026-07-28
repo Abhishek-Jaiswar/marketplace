@@ -18,11 +18,6 @@ export const adminSidebarData: SidebarData = {
   appName: "Admin Central",
   appSubtitle: "admin.cbsmarketplace.studio",
   appLogo: <ShieldCheckIcon className="size-4" />,
-  user: {
-    name: "Kamil Bachanek",
-    email: "kamil@microdose.studio",
-    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
-  },
   groups: [
     {
       groupTitle: "Overview",

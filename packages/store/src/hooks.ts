@@ -4,6 +4,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "./api/baseApi";
 import counterReducer from "./slices/counterSlice";
 import authReducer from "./slices/authSlice";
+import onboardingReducer from "./slices/onboardingSlice";
 
 // Create a reference store configuration to infer types
 const referenceStore = configureStore({
@@ -11,6 +12,7 @@ const referenceStore = configureStore({
     [baseApi.reducerPath]: baseApi.reducer,
     counter: counterReducer,
     auth: authReducer,
+    onboarding: onboardingReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(baseApi.middleware),

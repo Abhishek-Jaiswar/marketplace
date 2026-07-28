@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CBS Marketplace",
+  title: "CBS Storefront",
   description: "The universal marketplace for customers",
 };
 

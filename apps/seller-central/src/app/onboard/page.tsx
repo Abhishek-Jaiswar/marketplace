@@ -1,65 +1,93 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useRef, Suspense } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import {
   useGetMeQuery,
   useGetSellerMeQuery,
   useOnboardSellerMutation,
   useUpdateSellerProfileMutation,
-  useUpdateStoreMutation,
   useAddBankAccountMutation,
   useUploadDocumentMutation,
-  useSubmitOnboardingMutation,
   useLazyVerifyGstinQuery,
+  useAppDispatch,
+  useAppSelector,
+  setOnboardingStep,
+  setWelcomeView,
+  startOnboarding,
 } from "@workspace/store";
-import { Loader2, AlertCircle, CheckCircle, ArrowRight, ArrowLeft } from "lucide-react";
+import {
+  Loader2,
+  AlertCircle,
+  CheckCircle2,
+  ArrowRight,
+} from "lucide-react";
 
-// Sub-components
-import { Header } from "./components/Header";
-import { Sidebar } from "./components/Sidebar";
-import { VerificationSection } from "./components/VerificationSection";
-import { BusinessVerification } from "./components/BusinessVerification";
-import { SignatureSection } from "./components/SignatureSection";
-import { StoreDetailsSection } from "./components/StoreDetailsSection";
-import { ReviewSummarySection } from "./components/ReviewSummarySection";
-import { RightPanel } from "./components/RightPanel";
+import Logo from "@/components/logo";
+import { OnboardGstinVerification } from "./components/OnboardGstinVerification";
+import { OnboardSignaturePad } from "./components/OnboardSignaturePad";
 import { HelpFloatingButton } from "./components/HelpFloatingButton";
+import { OnboardWelcomeBanner } from "./components/OnboardWelcomeBanner";
+import { OnboardBankForm } from "./components/OnboardBankForm";
+import { OnboardLegalReview } from "./components/OnboardLegalReview";
 
-export default function SellerOnboardingPage() {
+function OnboardingContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const dispatch = useAppDispatch();
 
-  // Step state for step-wise rendering
-  const [currentStep, setCurrentStep] = useState<number>(1);
+  // Redux onboarding state
+  const { currentStep, isWelcomeView } = useAppSelector(
+    (state) => state.onboarding
+  );
 
-  // Auth & Seller states
+  // Auth & Seller queries
   const { data: userData, isLoading: userLoading } = useGetMeQuery();
-  const { data: sellerData, isLoading: sellerLoading, refetch: refetchSeller } = useGetSellerMeQuery(undefined, {
+  const {
+    data: sellerData,
+    isLoading: sellerLoading,
+    refetch: refetchSeller,
+  } = useGetSellerMeQuery(undefined, {
     skip: !userData?.user,
   });
 
   const [onboardSeller] = useOnboardSellerMutation();
   const [updateProfile] = useUpdateSellerProfileMutation();
-  const [updateStore] = useUpdateStoreMutation();
   const [addBankAccount] = useAddBankAccountMutation();
-  const [uploadDocument, { isLoading: isUploading }] = useUploadDocumentMutation();
-  const [submitOnboarding, { isLoading: isSubmitting }] = useSubmitOnboardingMutation();
-  const [triggerVerifyGstin, { isFetching: isVerifyingGstin }] = useLazyVerifyGstinQuery();
+  const [uploadDocument, { isLoading: isUploading }] =
+    useUploadDocumentMutation();
+  const [triggerVerifyGstin, { isFetching: isVerifyingGstin }] =
+    useLazyVerifyGstinQuery();
 
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
-  // Step state
+  // Business & GSTIN states
   const [gstin, setGstin] = useState("");
   const [gstinVerified, setGstinVerified] = useState(false);
-  const [gstinDetails, setGstinDetails] = useState<{ tradeName: string; legalName: string; businessType: string; state: string; status: string } | null>(null);
-  const [categoryMode, setCategoryMode] = useState<"all" | "specific">("all");
+  const [gstinDetails, setGstinDetails] = useState<{
+    tradeName: string;
+    legalName: string;
+    businessType: string;
+    state: string;
+    status: string;
+  } | null>(null);
 
-  // Signature States
+  // Signature states
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [canvasSignature, setCanvasSignature] = useState<string | null>(null);
-  const [signatureUploaded, setSignatureUploaded] = useState<string | null>(null);
+  const [signatureUploaded, setSignatureUploaded] = useState<string | null>(
+    null
+  );
+
+  // Bank Account states
+  const [bankName, setBankName] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [ifscCode, setIfscCode] = useState("");
+  const [accountHolderName, setAccountHolderName] = useState("");
+  const [isSavingBank, setIsSavingBank] = useState(false);
 
   // Redirect if not logged in
   useEffect(() => {
@@ -68,7 +96,19 @@ export default function SellerOnboardingPage() {
     }
   }, [userData, userLoading, router]);
 
-  // Sync profile details if they already exist
+  // Sync step from URL parameter (e.g. /onboard?step=2) on mount or refresh
+  useEffect(() => {
+    const stepParam = searchParams.get("step");
+    if (stepParam) {
+      const stepNum = parseInt(stepParam, 10);
+      if (!isNaN(stepNum) && stepNum >= 1 && stepNum <= 3) {
+        dispatch(setWelcomeView(false));
+        dispatch(setOnboardingStep(stepNum));
+      }
+    }
+  }, [searchParams, dispatch]);
+
+  // Sync profile details and auto-resume steps
   useEffect(() => {
     if (sellerData?.seller) {
       const seller = sellerData.seller;
@@ -84,47 +124,93 @@ export default function SellerOnboardingPage() {
         });
       }
 
-      // Check if signature document is uploaded
+      // Signature check
       const docs = seller.verification?.documents || [];
       const sigDoc = docs.find((d: any) => d.type === "SIGNATURE");
       if (sigDoc) {
         setSignatureUploaded(sigDoc.media.fileName);
       }
 
-      // If fully onboarded and approved, go to dashboard
-      if (seller.status === "APPROVED" || seller.status === "UNDER_REVIEW") {
+      // Bank account check
+      if (seller.bankAccounts && seller.bankAccounts.length > 0) {
+        const bank = seller.bankAccounts[0];
+        if (bank) {
+          setBankName(bank.bankName || "");
+          setAccountNumber(bank.accountNumber || "");
+          setIfscCode(bank.ifscCode || "");
+          setAccountHolderName(bank.accountHolderName || "");
+        }
+      }
+
+      // Smart Navigation based on DB completion
+      if (
+        seller.status === "APPROVED" ||
+        seller.status === "UNDER_REVIEW" ||
+        Boolean(seller.store?.addressId)
+      ) {
         router.push("/dashboard");
+      } else if (
+        seller.gstin &&
+        seller.bankAccounts &&
+        seller.bankAccounts.length > 0
+      ) {
+        router.push("/store-setup");
+      } else if (seller.gstin && sigDoc && !searchParams.get("step")) {
+        // If GSTIN and Signature are done and no explicit URL step is set, resume at Step 2 (Bank Details)
+        dispatch(setWelcomeView(false));
+        dispatch(setOnboardingStep(2));
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("step", "2");
+        router.replace(`${pathname}?${params.toString()}`);
       }
     }
-  }, [sellerData, router]);
+  }, [sellerData, router, dispatch, pathname, searchParams]);
 
-  // Initialize Signature Pad Styling
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.lineWidth = 2.5;
-        ctx.lineCap = "round";
-        ctx.strokeStyle = "#4f46e5"; // Indigo-600
-      }
-    }
-  }, [canvasRef.current]);
+  // Update step in Redux AND push to URL query string
+  const handleStepChange = (step: number) => {
+    dispatch(setOnboardingStep(step));
+    dispatch(setWelcomeView(false));
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("step", step.toString());
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
-  // GSTIN Lookup Trigger
+  const handleStartOnboarding = () => {
+    dispatch(startOnboarding());
+    dispatch(setOnboardingStep(1));
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("step", "1");
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const handleCancelOnboarding = () => {
+    dispatch(setWelcomeView(true));
+    dispatch(setOnboardingStep(1));
+    router.push("/");
+  };
+
+  // GSTIN Verification
   const handleVerifyGstin = async () => {
     setErrorMsg("");
     setSuccessMsg("");
-    if (!gstin || gstin.trim().length !== 15) {
-      setErrorMsg("Please enter a valid 15-digit GSTIN.");
+    if (!gstin.trim() || gstin.trim().length !== 15) {
+      setErrorMsg("Please enter a valid 15-digit GSTIN number.");
       return;
     }
 
     try {
       const response = await triggerVerifyGstin(gstin.trim()).unwrap();
-      setGstinDetails(response);
       setGstinVerified(true);
-      setSuccessMsg("GSTIN verified successfully!");
+      setGstinDetails({
+        tradeName: response.tradeName,
+        legalName: response.legalName,
+        businessType: response.businessType,
+        state: response.state,
+        status: response.status,
+      });
+      setSuccessMsg(
+        `GSTIN Verified! Registered Legal Name: ${response.tradeName}`
+      );
 
       if (!sellerData?.seller) {
         await onboardSeller({
@@ -142,11 +228,13 @@ export default function SellerOnboardingPage() {
       await refetchSeller();
     } catch (err: any) {
       setGstinVerified(false);
-      setErrorMsg(err?.data?.message || err?.message || "GSTIN verification failed.");
+      setErrorMsg(
+        err?.data?.message || err?.message || "GSTIN verification failed."
+      );
     }
   };
 
-  // e-Signature Upload Callback
+  // Signature File Upload
   const handleUploadSignatureFile = async (file: File) => {
     setErrorMsg("");
     setSuccessMsg("");
@@ -162,58 +250,40 @@ export default function SellerOnboardingPage() {
       setSuccessMsg("Signature uploaded successfully!");
       await refetchSeller();
     } catch (err: any) {
-      setErrorMsg(err?.data?.message || err?.message || "Failed to upload signature.");
+      setErrorMsg(
+        err?.data?.message || err?.message || "Failed to upload signature."
+      );
     }
   };
 
-  // Canvas Signature Methods
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  // Signature Canvas Handlers
+  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    setIsDrawing(true);
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const rect = canvas.getBoundingClientRect();
-
-    let clientX = 0, clientY = 0;
-    if ("touches" in e) {
-      if (e.touches && e.touches[0]) {
-        clientX = e.touches[0].clientX;
-        clientY = e.touches[0].clientY;
-      }
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
-
     ctx.beginPath();
-    ctx.moveTo(clientX - rect.left, clientY - rect.top);
-    setIsDrawing(true);
+    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
   };
 
-  const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDrawing) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const rect = canvas.getBoundingClientRect();
-
-    let clientX = 0, clientY = 0;
-    if ("touches" in e) {
-      if (e.touches && e.touches[0]) {
-        clientX = e.touches[0].clientX;
-        clientY = e.touches[0].clientY;
-      }
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
-
-    ctx.lineTo(clientX - rect.left, clientY - rect.top);
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#4f46e5";
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
     ctx.stroke();
   };
 
   const stopDrawing = () => {
+    if (!isDrawing) return;
     setIsDrawing(false);
     const canvas = canvasRef.current;
     if (canvas) {
@@ -223,332 +293,250 @@ export default function SellerOnboardingPage() {
 
   const clearCanvas = () => {
     const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        setCanvasSignature(null);
-      }
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
+    setCanvasSignature(null);
   };
 
   const saveCanvasSignature = async () => {
-    if (!canvasSignature) {
-      setErrorMsg("Please draw your signature first.");
-      return;
-    }
-    setErrorMsg("");
+    if (!canvasSignature) return;
     try {
-      const res = await fetch(canvasSignature);
-      const blob = await res.blob();
-      const file = new File([blob], "signature.png", { type: "image/png" });
+      const blob = await (await fetch(canvasSignature)).blob();
+      const file = new File([blob], "signature-drawn.png", {
+        type: "image/png",
+      });
       await handleUploadSignatureFile(file);
     } catch (err: any) {
-      setErrorMsg("Failed to upload drawn signature.");
+      setErrorMsg("Failed to save drawn signature.");
     }
   };
 
-  const handleSaveStore = async (data: {
-    displayName: string;
-    description?: string;
-    street1: string;
-    city: string;
-    state: string;
-    postalCode: string;
-  }) => {
+  // Bank Save Handler
+  const handleSaveBankSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setErrorMsg("");
-    setSuccessMsg("");
+    if (
+      !accountNumber.trim() ||
+      !ifscCode.trim() ||
+      !bankName.trim() ||
+      !accountHolderName.trim()
+    ) {
+      setErrorMsg("All bank account fields are required.");
+      return;
+    }
+
     try {
-      await updateStore({
-        displayName: data.displayName,
-        description: data.description,
-        address: {
-          street1: data.street1,
-          city: data.city,
-          state: data.state,
-          postalCode: data.postalCode,
-          country: "India",
-        },
+      setIsSavingBank(true);
+      await addBankAccount({
+        accountNumber: accountNumber.trim(),
+        ifscCode: ifscCode.trim().toUpperCase(),
+        bankName: bankName.trim(),
+        accountHolderName: accountHolderName.trim(),
       }).unwrap();
-      setSuccessMsg("Store details & pickup address saved successfully!");
       await refetchSeller();
+      setSuccessMsg("Bank Account details saved!");
+      handleStepChange(3);
     } catch (err: any) {
-      setErrorMsg(err?.data?.message || err?.message || "Failed to save store details.");
+      setErrorMsg(
+        err?.data?.message || err?.message || "Failed to save bank details."
+      );
+    } finally {
+      setIsSavingBank(false);
     }
   };
 
-  const handleSaveBank = async (data: {
-    accountNumber: string;
-    ifscCode: string;
-    bankName: string;
-    accountHolderName: string;
-  }) => {
-    setErrorMsg("");
-    setSuccessMsg("");
-    try {
-      await addBankAccount(data).unwrap();
-      setSuccessMsg("Bank account saved successfully!");
-      await refetchSeller();
-    } catch (err: any) {
-      setErrorMsg(err?.data?.message || err?.message || "Failed to save bank account.");
-    }
+  const handleProceedToStoreSetup = () => {
+    router.push("/store-setup");
   };
 
-  const isStoreCompleted = !!sellerData?.seller?.store?.addressId;
-  const isBankCompleted = (sellerData?.seller?.bankAccounts?.length || 0) > 0;
-  const isFormValid = gstinVerified && !!signatureUploaded && isStoreCompleted && isBankCompleted;
-
-  // Submit and route to dashboard
-  const handleGoToDashboard = async () => {
-    setErrorMsg("");
-    setSuccessMsg("");
-
-    if (!gstinVerified || !signatureUploaded) {
-      setErrorMsg("Please complete GSTIN verification and attach your signature.");
-      return;
-    }
-
-    if (!isStoreCompleted) {
-      setErrorMsg("Please complete Store Setup & Pickup Address.");
-      return;
-    }
-
-    if (!isBankCompleted) {
-      setErrorMsg("Please add Bank Account details.");
-      return;
-    }
-
-    try {
-      await submitOnboarding().unwrap();
-      await refetchSeller();
-      router.push("/dashboard");
-    } catch (err: any) {
-      setErrorMsg(err?.data?.message || err?.message || "Failed to finalize onboarding.");
-    }
-  };
-
-  if (userLoading || sellerLoading || isSubmitting) {
+  if (userLoading || sellerLoading) {
     return (
-      <div className="flex min-h-screen bg-zinc-50 items-center justify-center p-6">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-10 h-10 animate-spin text-indigo-600" />
-          <p className="text-sm font-semibold text-zinc-500">Loading your onboarding dashboard...</p>
-        </div>
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-zinc-500 font-sans">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mb-2" />
+        <span className="text-xs font-semibold">Loading Seller Portal...</span>
       </div>
     );
   }
 
-  // Dynamic progress calculation
-  let progress = 20;
-  if (gstinVerified) progress += 20;
-  if (signatureUploaded) progress += 20;
-  if (isStoreCompleted) progress += 20;
-  if (isBankCompleted) progress += 20;
+  // -------------------------------------------------------------
+  // STEP 0: WELCOME & LAUNCH SCREEN (INSTRUCTIONS + START / CANCEL)
+  // -------------------------------------------------------------
+  if (isWelcomeView && !searchParams.get("step")) {
+    return (
+      <>
+        <OnboardWelcomeBanner
+          onStart={handleStartOnboarding}
+          onCancel={handleCancelOnboarding}
+        />
+        <HelpFloatingButton />
+      </>
+    );
+  }
 
+  // -------------------------------------------------------------
+  // STEP 1-3: CENTERED MINIMALIST DISTRACTION-FREE STEP UI
+  // -------------------------------------------------------------
   return (
-    <div className="flex flex-col min-h-screen bg-zinc-50/50 font-sans transition-colors duration-300">
-      {/* 1. Header Bar */}
-      <Header
-        userName={userData?.user?.firstName ? `${userData.user.firstName} ${userData.user.lastName || ""}`.trim() : "Abhishek Jaiswar"}
-        sellerId={sellerData?.seller?.id ? `SE-${sellerData.seller.id.substring(0, 6).toUpperCase()}` : "SE123456"}
-      />
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans select-none text-zinc-900 pb-16">
+      {/* Top Minimal Progress Bar Header */}
+      <header className="sticky top-0 z-30 bg-white border-b border-zinc-200/80 px-6 py-4 flex items-center justify-between">
+        <Logo iconSize={24} subtitle="Seller Onboarding" />
 
-      {/* 2. Unified Grid Layout with Step-Wise Middle Form */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-8 py-4 sm:py-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-        {/* Left Column: Progress & Interactive Step Sidebar (col-span-3) */}
-        <div className="lg:col-span-3">
-          <Sidebar
-            progressPercentage={progress}
-            mobileVerified={true}
-            emailVerified={true}
-            idVerified={gstinVerified}
-            signatureVerified={!!signatureUploaded}
-            storeNameCompleted={isStoreCompleted}
-            addressCompleted={isBankCompleted}
-            activeStep={currentStep}
-            onSelectStep={setCurrentStep}
-          />
-        </div>
-
-        {/* Middle Column: Step-Wise Form Display (col-span-6) */}
-        <div className="lg:col-span-6 space-y-6">
-          {/* Greeting Header */}
-          <div className="space-y-1 text-left">
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-600 border border-indigo-100 text-[10px] font-bold uppercase tracking-wider">
-                Step {currentStep} of 4
-              </span>
-            </div>
-            <h1 className="text-2xl font-black text-zinc-900 tracking-tight">
-              Hello, {userData?.user?.firstName || "Abhishek"}! 👋
-            </h1>
-            <p className="text-xs text-zinc-400 font-bold">
-              Complete your seller details step-by-step to start selling.
-            </p>
+        <div className="flex items-center gap-3">
+          <div className="flex flex-col text-right hidden sm:block">
+            <span className="text-xs font-bold text-zinc-800">
+              Step {currentStep} of 3
+            </span>
+            <span className="text-[10px] text-zinc-400 font-semibold">
+              {currentStep === 1
+                ? "Business & GSTIN Verification"
+                : currentStep === 2
+                ? "Bank Payout Account"
+                : "Legal Confirmation"}
+            </span>
           </div>
 
-          {/* Feedback Alerts */}
-          {errorMsg && (
-            <div className="flex items-start gap-2.5 p-4 rounded-2xl border border-red-500/20 bg-red-50 text-red-600 text-xs font-semibold text-left">
-              <AlertCircle className="w-4.5 h-4.5 shrink-0 mt-0.5" />
-              <span>{errorMsg}</span>
-            </div>
-          )}
-
-          {successMsg && (
-            <div className="flex items-start gap-2.5 p-4 rounded-2xl border border-emerald-500/20 bg-emerald-50 text-emerald-600 text-xs font-semibold text-left">
-              <CheckCircle className="w-4.5 h-4.5 shrink-0 mt-0.5" />
-              <span>{successMsg}</span>
-            </div>
-          )}
-
-          {/* STEP 1: Account & Contact Verification */}
-          {currentStep === 1 && (
-            <div className="space-y-6 animate-fadeIn">
-              <VerificationSection
-                phoneNumber={sellerData?.seller?.contactPhone || "+91 85911 51528"}
-                emailAddress={userData?.user?.email || "abhisheknduw@gmail.com"}
-              />
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(2)}
-                  className="flex h-12 items-center gap-2 px-7 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold shadow-lg shadow-indigo-600/20 transition-all cursor-pointer"
-                >
-                  <span>Next: Business & Signature →</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 2: Business GSTIN & e-Signature */}
-          {currentStep === 2 && (
-            <div className="space-y-6 animate-fadeIn">
-              <BusinessVerification
-                gstin={gstin}
-                setGstin={setGstin}
-                gstinVerified={gstinVerified}
-                gstinDetails={gstinDetails}
-                isVerifyingGstin={isVerifyingGstin}
-                onVerifyGstin={handleVerifyGstin}
-                categoryMode={categoryMode}
-                setCategoryMode={setCategoryMode}
-              />
-
-              <SignatureSection
-                canvasSignature={canvasSignature}
-                signatureUploaded={signatureUploaded}
-                isUploading={isUploading}
-                isSubmitting={isSubmitting}
-                onUploadSignature={handleUploadSignatureFile}
-                onClearCanvas={clearCanvas}
-                onSaveCanvas={saveCanvasSignature}
-                onGoToDashboard={() => setCurrentStep(3)}
-                canvasRef={canvasRef}
-                isDrawing={isDrawing}
-                startDrawing={startDrawing}
-                draw={draw}
-                stopDrawing={stopDrawing}
-              />
-
-              <div className="flex justify-between items-center pt-2">
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(1)}
-                  className="flex h-11 items-center gap-2 px-5 rounded-xl border border-zinc-200 text-xs font-bold text-zinc-600 hover:bg-zinc-100 transition-all cursor-pointer"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  <span>Back</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(3)}
-                  disabled={!gstinVerified || !signatureUploaded}
-                  className="flex h-12 items-center gap-2 px-7 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold shadow-lg shadow-indigo-600/20 transition-all cursor-pointer disabled:opacity-50"
-                >
-                  <span>Next: Store & Bank Setup →</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3: Store & Bank Account Setup */}
-          {currentStep === 3 && (
-            <div className="space-y-6 animate-fadeIn">
-              <StoreDetailsSection
-                initialDisplayName={sellerData?.seller?.store?.displayName}
-                initialDescription={sellerData?.seller?.store?.description}
-                initialStreet={sellerData?.seller?.store?.address?.street1}
-                initialCity={sellerData?.seller?.store?.address?.city}
-                initialState={sellerData?.seller?.store?.address?.state}
-                initialPostalCode={sellerData?.seller?.store?.address?.postalCode}
-                initialBankName={sellerData?.seller?.bankAccounts?.[0]?.bankName}
-                initialAccountNumber={sellerData?.seller?.bankAccounts?.[0]?.accountNumber}
-                initialIfscCode={sellerData?.seller?.bankAccounts?.[0]?.ifscCode}
-                initialHolderName={sellerData?.seller?.bankAccounts?.[0]?.accountHolderName}
-                storeCompleted={isStoreCompleted}
-                bankCompleted={isBankCompleted}
-                onSaveStore={handleSaveStore}
-                onSaveBank={handleSaveBank}
-              />
-
-              <div className="flex justify-between items-center pt-2">
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(2)}
-                  className="flex h-11 items-center gap-2 px-5 rounded-xl border border-zinc-200 text-xs font-bold text-zinc-600 hover:bg-zinc-100 transition-all cursor-pointer"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  <span>Back</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(4)}
-                  disabled={!isStoreCompleted || !isBankCompleted}
-                  className="flex h-12 items-center gap-2 px-7 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold shadow-lg shadow-indigo-600/20 transition-all cursor-pointer disabled:opacity-50"
-                >
-                  <span>Proceed to Final Review →</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 4: Final Review & Submission */}
-          {currentStep === 4 && (
-            <ReviewSummarySection
-              userName={userData?.user?.firstName ? `${userData.user.firstName} ${userData.user.lastName || ""}`.trim() : "Seller Partner"}
-              email={userData?.user?.email}
-              phone={sellerData?.seller?.contactPhone || "+91 85911 51528"}
-              businessName={sellerData?.seller?.businessName}
-              businessType={sellerData?.seller?.businessType}
-              gstin={sellerData?.seller?.gstin || "Verified GSTIN"}
-              signatureAttached={!!signatureUploaded}
-              storeName={sellerData?.seller?.store?.displayName}
-              pickupAddress={sellerData?.seller?.store?.address ? `${sellerData.seller.store.address.street1}, ${sellerData.seller.store.address.city}, ${sellerData.seller.store.address.state}` : "Configured"}
-              bankName={sellerData?.seller?.bankAccounts?.[0]?.bankName}
-              accountNumber={sellerData?.seller?.bankAccounts?.[0]?.accountNumber}
-              isSubmitting={isSubmitting}
-              onPrevStep={() => setCurrentStep(3)}
-              onSubmitOnboarding={handleGoToDashboard}
+          <div className="w-20 bg-zinc-100 rounded-full h-2 overflow-hidden border border-zinc-200">
+            <div
+              className="bg-indigo-600 h-full rounded-full transition-all duration-300"
+              style={{
+                width:
+                  currentStep === 1
+                    ? "33%"
+                    : currentStep === 2
+                    ? "66%"
+                    : "100%",
+              }}
             />
-          )}
+          </div>
         </div>
+      </header>
 
-        {/* Right Column: Widgets (col-span-3) */}
-        <div className="lg:col-span-3">
-          <RightPanel
-            onPreviewStore={() => router.push(`/store/${sellerData?.seller?.store?.slug || "draft"}`)}
-            onGoToDashboard={handleGoToDashboard}
-            isDashboardEnabled={isFormValid}
+      {/* CENTERED STEP CONTENT CONTAINER (NO CLUTTERED CARDS) */}
+      <main className="flex-1 max-w-xl mx-auto w-full px-4 sm:px-6 pt-8 space-y-6 text-left">
+        {/* Error Notice */}
+        {errorMsg && (
+          <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-700 flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+            <span>{errorMsg}</span>
+          </div>
+        )}
+
+        {/* Success Notice */}
+        {successMsg && (
+          <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-700 flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+            <span>{successMsg}</span>
+          </div>
+        )}
+
+        {/* STEP 1: BUSINESS GSTIN & E-SIGNATURE */}
+        {currentStep === 1 && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="space-y-1">
+              <h2 className="text-2xl font-extrabold text-zinc-900">
+                1. Business & GSTIN Verification
+              </h2>
+              <p className="text-xs text-zinc-500 font-medium">
+                Verify your 15-digit GSTIN legal entity and attach an e-signature.
+              </p>
+            </div>
+
+            <OnboardGstinVerification
+              gstin={gstin}
+              setGstin={setGstin}
+              onVerify={handleVerifyGstin}
+              isVerifying={isVerifyingGstin}
+              verified={gstinVerified}
+              details={gstinDetails}
+            />
+
+            <OnboardSignaturePad
+              signatureUploaded={signatureUploaded}
+              canvasSignature={canvasSignature}
+              onUploadFile={handleUploadSignatureFile}
+              onSaveCanvasSignature={saveCanvasSignature}
+              clearCanvas={clearCanvas}
+              isUploading={isUploading}
+              canvasRef={canvasRef}
+              startDrawing={startDrawing}
+              draw={draw}
+              stopDrawing={stopDrawing}
+            />
+
+            <div className="flex items-center justify-between pt-4 border-t border-zinc-200">
+              <button
+                type="button"
+                onClick={handleCancelOnboarding}
+                className="text-xs font-bold text-zinc-500 hover:text-zinc-800 cursor-pointer"
+              >
+                Cancel & Exit
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleStepChange(2)}
+                disabled={!gstinVerified || !signatureUploaded}
+                className="h-12 px-8 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold shadow-md shadow-indigo-600/20 transition-all cursor-pointer disabled:opacity-50 flex items-center gap-2"
+              >
+                <span>Proceed to Bank Details</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 2: BANK ACCOUNT DETAILS */}
+        {currentStep === 2 && (
+          <OnboardBankForm
+            accountHolderName={accountHolderName}
+            setAccountHolderName={setAccountHolderName}
+            bankName={bankName}
+            setBankName={setBankName}
+            accountNumber={accountNumber}
+            setAccountNumber={setAccountNumber}
+            ifscCode={ifscCode}
+            setIfscCode={setIfscCode}
+            isSaving={isSavingBank}
+            onSubmit={handleSaveBankSubmit}
+            onBack={() => handleStepChange(1)}
           />
-        </div>
+        )}
+
+        {/* STEP 3: LEGAL REVIEW & PROCEED TO STOREFRONT SETUP */}
+        {currentStep === 3 && (
+          <OnboardLegalReview
+            tradeName={
+              gstinDetails?.tradeName || sellerData?.seller?.businessName
+            }
+            gstin={gstin}
+            bankName={bankName}
+            accountNumber={accountNumber}
+            onBack={() => handleStepChange(2)}
+            onProceed={handleProceedToStoreSetup}
+          />
+        )}
       </main>
 
-      {/* Floating help toggle */}
       <HelpFloatingButton />
     </div>
+  );
+}
+
+export default function SellerOnboardingPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-zinc-500 font-sans">
+          <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mb-2" />
+          <span className="text-xs font-semibold">Loading Seller Portal...</span>
+        </div>
+      }
+    >
+      <OnboardingContent />
+    </Suspense>
   );
 }

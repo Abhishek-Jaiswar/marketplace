@@ -14,8 +14,8 @@ const HeaderFooter = ({ children }: { children: React.ReactNode }) => {
     pathname === "/register" ||
     pathname === "/verify-otp"
 
-  // Onboard page has its own custom header and no footer
-  const isOnboard = pathname === "/onboard"
+  // Onboard & Store Setup pages have their own custom header and no footer
+  const isOnboard = pathname === "/onboard" || pathname === "/store-setup"
 
   const isDashboard = pathname.startsWith("/dashboard")
 

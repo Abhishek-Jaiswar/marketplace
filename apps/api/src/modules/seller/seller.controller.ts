@@ -226,6 +226,8 @@ class SellerController {
       next(error)
     }
   }
+
+  
 }
 
 export const sellerController = new SellerController()

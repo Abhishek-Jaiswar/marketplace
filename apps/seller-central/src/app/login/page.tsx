@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useLoginMutation } from "@workspace/store";
+import { useLoginMutation, useLazyGetSellerMeQuery } from "@workspace/store";
 import {
   User,
   Lock,
@@ -25,6 +26,7 @@ import Logo from "@/components/logo";
 export default function LoginPage() {
   const router = useRouter();
   const [login, { isLoading }] = useLoginMutation();
+  const [getSellerMe] = useLazyGetSellerMeQuery();
 
   // Form Fields
   const [emailOrPhone, setEmailOrPhone] = useState("");
@@ -46,7 +48,24 @@ export default function LoginPage() {
 
     try {
       await login({ email: emailOrPhone.trim(), password }).unwrap();
-      // Always redirect seller directly to onboarding page after successful login
+      
+      // Fetch seller profile to determine correct redirect target
+      try {
+        const sellerRes = await getSellerMe(undefined).unwrap();
+        const seller = sellerRes?.seller;
+        if (
+          seller &&
+          (seller.status === "APPROVED" ||
+            seller.status === "UNDER_REVIEW" ||
+            Boolean(seller.store?.addressId))
+        ) {
+          router.push("/dashboard");
+          return;
+        }
+      } catch {
+        // Seller profile fetch failed or doesn't exist yet
+      }
+
       router.push("/onboard");
     } catch (err: any) {
       const msg = err?.data?.message || err?.message || "Invalid credentials.";
@@ -73,10 +92,11 @@ export default function LoginPage() {
           {/* Hero Image Section */}
           <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm p-3 shadow-2xl">
             <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-slate-900">
-              <img
+              <Image
                 src="/login-side-img.png"
                 alt="CBS Seller Central Dashboard"
-                className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500"
+                fill
+                className="object-cover object-top hover:scale-105 transition-transform duration-500"
               />
             </div>
           </div>
@@ -138,11 +158,13 @@ export default function LoginPage() {
               "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop",
               "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&fit=crop",
             ].map((src, idx) => (
-              <img
+              <Image
                 key={idx}
                 className="inline-block h-7 w-7 rounded-full ring-2 ring-indigo-900 object-cover"
                 src={src}
                 alt="Seller avatar"
+                width={28}
+                height={28}
               />
             ))}
           </div>
