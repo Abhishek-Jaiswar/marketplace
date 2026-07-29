@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import {
   useAppSelector,
   useGetMeQuery,
@@ -26,6 +26,7 @@ import {
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
+  const pathname = usePathname()
   const { user: cachedUser } = useAppSelector((state) => state.auth)
   const { data: userData } = useGetMeQuery()
   const [logout] = useLogoutMutation()
@@ -62,7 +63,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <SidebarProvider>
-      <AppSidebar data={sidebarData} onLogout={handleLogout} />
+      <AppSidebar data={sidebarData} onLogout={handleLogout} currentPath={pathname} />
       <SidebarInset>
         <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between gap-2 border-b border-slate-200/80 dark:border-slate-800/80 bg-background/80 backdrop-blur-md px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2">

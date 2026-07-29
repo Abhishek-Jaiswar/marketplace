@@ -37,6 +37,7 @@ export interface SidebarData {
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   data?: SidebarData
   onLogout?: () => void
+  currentPath?: string
 }
 
 const defaultData: SidebarData = {
@@ -57,7 +58,12 @@ const defaultData: SidebarData = {
   ],
 }
 
-export function AppSidebar({ data = defaultData, onLogout, ...props }: AppSidebarProps) {
+export function AppSidebar({
+  data = defaultData,
+  onLogout,
+  currentPath,
+  ...props
+}: AppSidebarProps) {
   const { toggleSidebar } = useSidebar()
 
   return (
@@ -98,12 +104,16 @@ export function AppSidebar({ data = defaultData, onLogout, ...props }: AppSideba
 
       {/* Main Navigation Content */}
       <SidebarContent className="scrollbar-none px-3 py-2">
-        <NavMain groups={data.groups} items={data.navMain} />
+        <NavMain
+          groups={data.groups}
+          items={data.navMain}
+          currentPath={currentPath}
+        />
 
         {/* Bottom Utility Items */}
         {data.bottomItems && data.bottomItems.length > 0 && (
           <div className="mt-auto border-t border-slate-200/60 pt-4 dark:border-slate-800/60">
-            <NavMain items={data.bottomItems} />
+            <NavMain items={data.bottomItems} currentPath={currentPath} />
           </div>
         )}
       </SidebarContent>

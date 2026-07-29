@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 
 import Logo from "@/components/logo";
+import { getSellerOnboardingRedirect } from "@/lib/onboarding";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -53,15 +54,13 @@ export default function LoginPage() {
       try {
         const sellerRes = await getSellerMe(undefined).unwrap();
         const seller = sellerRes?.seller;
-        if (
-          seller &&
-          (seller.status === "APPROVED" ||
-            seller.status === "UNDER_REVIEW" ||
-            Boolean(seller.store?.addressId))
-        ) {
-          router.push("/dashboard");
+        const redirectTarget = getSellerOnboardingRedirect(seller);
+        if (redirectTarget) {
+          router.push(redirectTarget);
           return;
         }
+        router.push("/dashboard");
+        return;
       } catch {
         // Seller profile fetch failed or doesn't exist yet
       }

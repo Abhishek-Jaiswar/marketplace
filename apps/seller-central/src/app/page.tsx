@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAppSelector, useGetMeQuery, useGetSellerMeQuery } from "@workspace/store";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { getSellerOnboardingRedirect } from "@/lib/onboarding";
 import Hero from "@/components/landing/hero";
 import Features from "@/components/landing/features";
 import CTA from "@/components/landing/cta";
@@ -19,21 +20,21 @@ export default function LandingPage() {
     skip: !user,
   });
 
-  const hasSellerProfile = Boolean(sellerData?.seller);
+  const redirectTarget = getSellerOnboardingRedirect(sellerData?.seller);
 
   const handleStartSelling = () => {
     if (user) {
-      if (hasSellerProfile) {
-        router.push("/dashboard");
+      if (redirectTarget) {
+        router.push(redirectTarget);
       } else {
-        router.push("/onboard");
+        router.push("/dashboard");
       }
     } else {
       router.push("/register");
     }
   };
 
-  const showOnboardingBanner = Boolean(user && !hasSellerProfile && !isSellerLoading);
+  const showOnboardingBanner = Boolean(user && redirectTarget && !isSellerLoading);
 
   return (
     <div className="flex-1 w-full bg-[#f9fafb] flex flex-col text-left font-sans">
@@ -49,7 +50,7 @@ export default function LandingPage() {
             </span>
           </div>
           <Link
-            href="/onboard"
+            href={redirectTarget || "/onboard"}
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-indigo-950 font-extrabold text-xs shadow-md transition-all shrink-0"
           >
             <span>Complete Onboarding</span>

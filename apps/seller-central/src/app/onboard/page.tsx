@@ -146,7 +146,7 @@ function OnboardingContent() {
       if (
         seller.status === "APPROVED" ||
         seller.status === "UNDER_REVIEW" ||
-        Boolean(seller.store?.addressId)
+        seller.status === "REJECTED"
       ) {
         router.push("/dashboard");
       } else if (
@@ -155,8 +155,8 @@ function OnboardingContent() {
         seller.bankAccounts.length > 0
       ) {
         router.push("/store-setup");
-      } else if (seller.gstin && sigDoc && !searchParams.get("step")) {
-        // If GSTIN and Signature are done and no explicit URL step is set, resume at Step 2 (Bank Details)
+      } else if (seller.gstin && !searchParams.get("step")) {
+        // If Business details (GSTIN) are done and no explicit URL step is set, resume at Step 2 (Bank Details)
         dispatch(setWelcomeView(false));
         dispatch(setOnboardingStep(2));
         const params = new URLSearchParams(searchParams.toString());
@@ -386,7 +386,7 @@ function OnboardingContent() {
         <Logo iconSize={24} subtitle="Seller Onboarding" />
 
         <div className="flex items-center gap-3">
-          <div className="flex flex-col text-right hidden sm:block">
+          <div className="flex flex-col text-right sm:block space-x-10">
             <span className="text-xs font-bold text-zinc-800">
               Step {currentStep} of 3
             </span>

@@ -377,7 +377,17 @@ class SellerRepository {
     sellerId: string,
     status: VerificationStatus,
     reviewedBy?: string,
-    remarks?: string
+    remarks?: string,
+    stepData?: {
+      businessStatus?: VerificationStatus
+      businessRejectionReason?: string | null
+      storeStatus?: VerificationStatus
+      storeRejectionReason?: string | null
+      bankStatus?: VerificationStatus
+      bankRejectionReason?: string | null
+      documentsStatus?: VerificationStatus
+      documentsRejectionReason?: string | null
+    }
   ) {
     const verification = await this.getOrCreateVerification(sellerId)
 
@@ -385,6 +395,7 @@ class SellerRepository {
       status,
       reviewedBy: reviewedBy ?? null,
       remarks: remarks ?? null,
+      ...(stepData || {}),
     }
     if (status === "UNDER_REVIEW") {
       updateData.submittedAt = new Date()

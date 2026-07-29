@@ -118,6 +118,18 @@ model SellerVerification {
 
   status VerificationStatus @default(PENDING)
 
+  businessStatus VerificationStatus @default(PENDING)
+  businessRejectionReason String?
+
+  storeStatus VerificationStatus @default(PENDING)
+  storeRejectionReason String?
+
+  bankStatus VerificationStatus @default(PENDING)
+  bankRejectionReason String?
+
+  documentsStatus VerificationStatus @default(PENDING)
+  documentsRejectionReason String?
+
   submittedAt DateTime?
 
   reviewedAt DateTime?

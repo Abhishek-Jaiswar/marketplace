@@ -188,13 +188,12 @@ class SellerController {
 
       const seller = await sellerService.verifySellerAdmin(
         sellerId as string,
-        parseResult.data.status,
-        parseResult.data.remarks,
+        parseResult.data,
         reviewerId
       )
 
       res.status(200).json({
-        message: `Seller status updated to ${parseResult.data.status} successfully.`,
+        message: `Seller verification updated successfully.`,
         seller,
       })
     } catch (error) {

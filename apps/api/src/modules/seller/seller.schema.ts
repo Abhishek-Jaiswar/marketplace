@@ -66,7 +66,22 @@ export const bankAccountSchema = z.object({
   bankName: z.string().trim().min(1, { message: "Bank name is required" }),
 })
 
+const stepDecisionSchema = z.object({
+  status: z.enum(["PENDING", "UNDER_REVIEW", "APPROVED", "REJECTED"]),
+  rejectionReason: z.string().trim().optional().nullable(),
+})
+
 export const verifySellerSchema = z.object({
-  status: z.enum(["APPROVED", "REJECTED"]),
-  remarks: z.string().trim().optional(),
+  status: z.enum(["APPROVED", "REJECTED", "UNDER_REVIEW"]).optional(),
+  remarks: z.string().trim().optional().nullable(),
+  stepDecisions: z
+    .object({
+      business: stepDecisionSchema.optional(),
+      store: stepDecisionSchema.optional(),
+      bank: stepDecisionSchema.optional(),
+      documents: stepDecisionSchema.optional(),
+    })
+    .optional(),
+  reviveStep: z.enum(["business", "store", "bank", "documents"]).optional(),
+  reviveSeller: z.boolean().optional(),
 })

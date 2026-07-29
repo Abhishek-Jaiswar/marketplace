@@ -9,9 +9,6 @@ import {
   BellIcon,
   HelpCircleIcon,
   UserPlusIcon,
-  ClockIcon,
-  CheckCircle2Icon,
-  AlertTriangleIcon,
 } from "lucide-react"
 
 export const adminSidebarData: SidebarData = {
@@ -26,32 +23,11 @@ export const adminSidebarData: SidebarData = {
           title: "Dashboard",
           url: "/dashboard",
           icon: <LayoutDashboardIcon />,
-          isActive: true,
         },
         {
           title: "Seller Approvals",
           url: "/dashboard/sellers",
           icon: <StoreIcon />,
-          items: [
-            {
-              title: "Pending KYC",
-              url: "/dashboard/sellers?status=pending",
-              icon: <ClockIcon />,
-              badge: 18,
-            },
-            {
-              title: "In Review",
-              url: "/dashboard/sellers?status=review",
-              icon: <AlertTriangleIcon />,
-              badge: 4,
-            },
-            {
-              title: "Approved Merchants",
-              url: "/dashboard/sellers?status=approved",
-              icon: <CheckCircle2Icon />,
-              badge: 1842,
-            },
-          ],
         },
       ],
     },

@@ -65,6 +65,30 @@ export default function StoreSetupPage() {
   useEffect(() => {
     if (sellerData?.seller) {
       const seller = sellerData.seller;
+
+      if (
+        seller.status === "APPROVED" ||
+        seller.status === "UNDER_REVIEW" ||
+        seller.status === "REJECTED"
+      ) {
+        router.push("/dashboard");
+        return;
+      }
+
+      // Guard: Ensure user completed Step 1 (GSTIN) & Step 2 (Bank details) before accessing store-setup
+      const hasBusinessDetails = Boolean(seller.gstin);
+      const hasBankAccounts = Boolean(
+        seller.bankAccounts && seller.bankAccounts.length > 0
+      );
+      if (!hasBusinessDetails) {
+        router.push("/onboard?step=1");
+        return;
+      }
+      if (!hasBankAccounts) {
+        router.push("/onboard?step=2");
+        return;
+      }
+
       const existingStore = seller.store;
 
       // Prefill Display Name: Use existing store name OR fallback to GSTIN businessName
@@ -94,7 +118,7 @@ export default function StoreSetupPage() {
         if (addr.postalCode) setPostalCode(addr.postalCode);
       }
     }
-  }, [sellerData]);
+  }, [sellerData, router]);
 
   // Handle Display Name change & Auto Slugification
   const handleNameChange = (val: string) => {

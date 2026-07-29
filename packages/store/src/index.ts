@@ -90,6 +90,8 @@ export type {
   OnboardRequest,
   UpdateStoreRequest,
   BankAccountRequest,
+  VerificationStepKey,
+  StepDecision,
   VerifySellerRequest,
   PaginatedSellersResponse,
 } from "./api/seller/seller-api.types";

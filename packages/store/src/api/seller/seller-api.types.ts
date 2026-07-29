@@ -83,10 +83,25 @@ export interface SellerDocument {
   media: Media;
 }
 
+export type VerificationStepKey = "business" | "store" | "bank" | "documents";
+
+export interface StepDecision {
+  status: VerificationStatus;
+  rejectionReason?: string | null;
+}
+
 export interface SellerVerification {
   id: string;
   sellerId: string;
   status: VerificationStatus;
+  businessStatus?: VerificationStatus;
+  businessRejectionReason?: string | null;
+  storeStatus?: VerificationStatus;
+  storeRejectionReason?: string | null;
+  bankStatus?: VerificationStatus;
+  bankRejectionReason?: string | null;
+  documentsStatus?: VerificationStatus;
+  documentsRejectionReason?: string | null;
   submittedAt?: string | null;
   reviewedAt?: string | null;
   reviewedBy?: string | null;
@@ -152,8 +167,11 @@ export interface BankAccountRequest {
 }
 
 export interface VerifySellerRequest {
-  status: "APPROVED" | "REJECTED";
+  status?: "APPROVED" | "REJECTED" | "UNDER_REVIEW";
   remarks?: string;
+  stepDecisions?: Partial<Record<VerificationStepKey, StepDecision>>;
+  reviveStep?: VerificationStepKey;
+  reviveSeller?: boolean;
 }
 
 export interface PaginatedSellersResponse {

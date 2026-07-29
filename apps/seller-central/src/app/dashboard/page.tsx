@@ -116,22 +116,50 @@ export default function SellerDashboard() {
       )}
 
       {isRejected && (
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-900 dark:text-rose-200">
-          <div className="flex items-center gap-3">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/20 text-rose-600 dark:text-rose-400">
-              <XCircleIcon className="size-5" />
+        <div className="flex flex-col gap-4 p-5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-900 dark:text-rose-200">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/20 text-rose-600 dark:text-rose-400">
+                <XCircleIcon className="size-5" />
+              </div>
+              <div>
+                <div className="font-bold text-sm">Action Needed: Application Revision Requested</div>
+                <p className="text-xs text-rose-700 dark:text-rose-300 mt-0.5 font-medium">
+                  Admin Remarks: &quot;{rejectionRemarks}&quot;
+                </p>
+              </div>
             </div>
-            <div>
-              <div className="font-bold text-sm">Action Needed: Application Revision Requested</div>
-              <p className="text-xs text-rose-700 dark:text-rose-300 mt-0.5 font-medium">
-                Admin Remarks: &quot;{rejectionRemarks}&quot;
-              </p>
-            </div>
+            <Button render={<Link href="/onboard" />} size="sm" variant="destructive" className="shrink-0 gap-1.5">
+              Update Application Details
+              <ArrowRightIcon className="size-3.5" />
+            </Button>
           </div>
-          <Button render={<Link href="/onboard" />} size="sm" variant="destructive" className="shrink-0 gap-1.5">
-            Update Application Details
-            <ArrowRightIcon className="size-3.5" />
-          </Button>
+
+          {/* Granular Step Rejection Feedback Breakdown */}
+          {seller?.verification && (
+            <div className="grid gap-2 pt-2 border-t border-rose-500/20 text-xs sm:grid-cols-2">
+              {seller.verification.businessStatus === "REJECTED" && (
+                <div className="rounded-lg p-2.5 bg-rose-500/10 border border-rose-500/20 text-rose-800 dark:text-rose-300 font-medium">
+                  <strong>Business Details:</strong> {seller.verification.businessRejectionReason || "Needs attention"}
+                </div>
+              )}
+              {seller.verification.storeStatus === "REJECTED" && (
+                <div className="rounded-lg p-2.5 bg-rose-500/10 border border-rose-500/20 text-rose-800 dark:text-rose-300 font-medium">
+                  <strong>Store & Address:</strong> {seller.verification.storeRejectionReason || "Needs attention"}
+                </div>
+              )}
+              {seller.verification.bankStatus === "REJECTED" && (
+                <div className="rounded-lg p-2.5 bg-rose-500/10 border border-rose-500/20 text-rose-800 dark:text-rose-300 font-medium">
+                  <strong>Bank Account:</strong> {seller.verification.bankRejectionReason || "Needs attention"}
+                </div>
+              )}
+              {seller.verification.documentsStatus === "REJECTED" && (
+                <div className="rounded-lg p-2.5 bg-rose-500/10 border border-rose-500/20 text-rose-800 dark:text-rose-300 font-medium">
+                  <strong>Documents:</strong> {seller.verification.documentsRejectionReason || "Needs attention"}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 

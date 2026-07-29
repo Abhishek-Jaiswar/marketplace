@@ -11,6 +11,7 @@ import {
   Settings,
 } from "lucide-react"
 import Logo from "../logo"
+import { getSellerOnboardingRedirect } from "@/lib/onboarding"
 import {
   useAppSelector,
   useGetMeQuery,
@@ -52,6 +53,7 @@ export default function Header() {
   const router = useRouter()
 
   const hasSellerProfile = Boolean(sellerData?.seller)
+  const redirectTarget = getSellerOnboardingRedirect(sellerData?.seller)
 
   const handleLogout = async () => {
     try {
@@ -164,11 +166,11 @@ export default function Header() {
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
                       <DropdownMenuItem
-                        onClick={() => router.push("/dashboard")}
+                        onClick={() => router.push(redirectTarget || "/dashboard")}
                         className="cursor-pointer text-xs font-medium gap-2 py-2"
                       >
                         <LayoutDashboard className="h-4 w-4 text-zinc-500" />
-                        <span>Dashboard</span>
+                        <span>{redirectTarget ? "Complete Onboarding" : "Dashboard"}</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => router.push("/dashboard/settings")}
@@ -194,7 +196,7 @@ export default function Header() {
               </div>
             ) : (
               <Link
-                href="/onboard"
+                href={redirectTarget || "/onboard"}
                 className="inline-flex animate-pulse items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-bold text-white shadow-md shadow-indigo-600/20 transition-all hover:bg-indigo-700"
               >
                 <Sparkles className="h-4 w-4" />

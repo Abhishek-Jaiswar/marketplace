@@ -265,45 +265,186 @@ class SellerService {
     return this.getSellerProfile(userId)
   }
 
-  async verifySellerAdmin(sellerId: string, status: "APPROVED" | "REJECTED", remarks?: string, reviewerId?: string) {
+  async verifySellerAdmin(
+    sellerId: string,
+    payload: {
+      status?: "APPROVED" | "REJECTED" | "UNDER_REVIEW" | undefined
+      remarks?: string | null | undefined
+      stepDecisions?: {
+        business?: { status: "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"; rejectionReason?: string | null | undefined } | undefined
+        store?: { status: "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"; rejectionReason?: string | null | undefined } | undefined
+        bank?: { status: "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"; rejectionReason?: string | null | undefined } | undefined
+        documents?: { status: "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"; rejectionReason?: string | null | undefined } | undefined
+      } | undefined
+      reviveStep?: "business" | "store" | "bank" | "documents" | undefined
+      reviveSeller?: boolean | undefined
+    },
+    reviewerId?: string
+  ) {
     const seller = await sellerRepository.findSellerById(sellerId)
     if (!seller) {
       throw new NotFoundError("Seller not found")
     }
 
-    // Update verification
+    const verification = await sellerRepository.getOrCreateVerification(sellerId)
+
+    let businessStatus = verification.businessStatus || "PENDING"
+    let businessRejectionReason = verification.businessRejectionReason || null
+
+    let storeStatus = verification.storeStatus || "PENDING"
+    let storeRejectionReason = verification.storeRejectionReason || null
+
+    let bankStatus = verification.bankStatus || "PENDING"
+    let bankRejectionReason = verification.bankRejectionReason || null
+
+    let documentsStatus = verification.documentsStatus || "PENDING"
+    let documentsRejectionReason = verification.documentsRejectionReason || null
+
+    // 1. Process Step Decisions if provided
+    if (payload.stepDecisions) {
+      if (payload.stepDecisions.business) {
+        businessStatus = payload.stepDecisions.business.status as any
+        businessRejectionReason =
+          payload.stepDecisions.business.status === "REJECTED"
+            ? payload.stepDecisions.business.rejectionReason || "Business details rejected"
+            : null
+      }
+      if (payload.stepDecisions.store) {
+        storeStatus = payload.stepDecisions.store.status as any
+        storeRejectionReason =
+          payload.stepDecisions.store.status === "REJECTED"
+            ? payload.stepDecisions.store.rejectionReason || "Store & address details rejected"
+            : null
+      }
+      if (payload.stepDecisions.bank) {
+        bankStatus = payload.stepDecisions.bank.status as any
+        bankRejectionReason =
+          payload.stepDecisions.bank.status === "REJECTED"
+            ? payload.stepDecisions.bank.rejectionReason || "Bank account details rejected"
+            : null
+      }
+      if (payload.stepDecisions.documents) {
+        documentsStatus = payload.stepDecisions.documents.status as any
+        documentsRejectionReason =
+          payload.stepDecisions.documents.status === "REJECTED"
+            ? payload.stepDecisions.documents.rejectionReason || "Verification documents / signature rejected"
+            : null
+      }
+    }
+
+    // 2. Process Progressive Step Revive
+    if (payload.reviveStep) {
+      if (payload.reviveStep === "business") {
+        businessStatus = "PENDING"
+        businessRejectionReason = null
+      } else if (payload.reviveStep === "store") {
+        storeStatus = "PENDING"
+        storeRejectionReason = null
+      } else if (payload.reviveStep === "bank") {
+        bankStatus = "PENDING"
+        bankRejectionReason = null
+      } else if (payload.reviveStep === "documents") {
+        documentsStatus = "PENDING"
+        documentsRejectionReason = null
+      }
+    }
+
+    // 3. Evaluate Overall Status
+    let overallStatus: "APPROVED" | "REJECTED" | "UNDER_REVIEW" = "UNDER_REVIEW"
+
+    if (payload.reviveSeller) {
+      overallStatus = "UNDER_REVIEW"
+    } else if (payload.status) {
+      overallStatus = payload.status
+    } else {
+      const stepStatuses = [businessStatus, storeStatus, bankStatus, documentsStatus]
+      if (stepStatuses.includes("REJECTED")) {
+        overallStatus = "REJECTED"
+      } else if (stepStatuses.every((s) => s === "APPROVED")) {
+        overallStatus = "APPROVED"
+      } else {
+        overallStatus = "UNDER_REVIEW"
+      }
+    }
+
+    // If whole application is approved directly, mark all steps as approved
+    if (payload.status === "APPROVED") {
+      businessStatus = "APPROVED"
+      businessRejectionReason = null
+      storeStatus = "APPROVED"
+      storeRejectionReason = null
+      bankStatus = "APPROVED"
+      bankRejectionReason = null
+      documentsStatus = "APPROVED"
+      documentsRejectionReason = null
+    }
+
+    // Build remarks
+    let finalRemarks = payload.remarks
+    if (!finalRemarks && overallStatus === "REJECTED") {
+      const rejections: string[] = []
+      if (businessStatus === "REJECTED" && businessRejectionReason) {
+        rejections.push(`Business Details: ${businessRejectionReason}`)
+      }
+      if (storeStatus === "REJECTED" && storeRejectionReason) {
+        rejections.push(`Store Details: ${storeRejectionReason}`)
+      }
+      if (bankStatus === "REJECTED" && bankRejectionReason) {
+        rejections.push(`Bank Account: ${bankRejectionReason}`)
+      }
+      if (documentsStatus === "REJECTED" && documentsRejectionReason) {
+        rejections.push(`Documents: ${documentsRejectionReason}`)
+      }
+      finalRemarks = rejections.length > 0 ? rejections.join(" | ") : "Merchant application rejected"
+    }
+
+    // Update verification in db
     await sellerRepository.updateVerificationStatus(
       seller.id,
-      status === "APPROVED" ? "APPROVED" : "REJECTED",
+      overallStatus as any,
       reviewerId,
-      remarks
+      finalRemarks ?? undefined,
+      {
+        businessStatus: businessStatus as any,
+        businessRejectionReason,
+        storeStatus: storeStatus as any,
+        storeRejectionReason,
+        bankStatus: bankStatus as any,
+        bankRejectionReason,
+        documentsStatus: documentsStatus as any,
+        documentsRejectionReason,
+      }
     )
 
-    // Update bank accounts status (approve all pending ones on seller approval)
-    if (status === "APPROVED") {
+    // Update bank accounts & documents status
+    if (bankStatus === "APPROVED") {
       await db.bankAccount.updateMany({
-        where: { sellerId: seller.id, status: "PENDING" },
+        where: { sellerId: seller.id },
         data: { status: "APPROVED", verifiedAt: new Date() },
       })
+    } else if (bankStatus === "REJECTED") {
+      await db.bankAccount.updateMany({
+        where: { sellerId: seller.id },
+        data: { status: "REJECTED", rejectionReason: bankRejectionReason },
+      })
+    }
+
+    if (documentsStatus === "APPROVED") {
       await db.sellerDocument.updateMany({
-        where: { verification: { sellerId: seller.id }, status: "PENDING" },
+        where: { verification: { sellerId: seller.id } },
         data: { status: "APPROVED", verifiedAt: new Date() },
       })
-    } else {
-      await db.bankAccount.updateMany({
-        where: { sellerId: seller.id, status: "PENDING" },
-        data: { status: "REJECTED" },
-      })
+    } else if (documentsStatus === "REJECTED") {
       await db.sellerDocument.updateMany({
-        where: { verification: { sellerId: seller.id }, status: "PENDING" },
-        data: { status: "REJECTED" },
+        where: { verification: { sellerId: seller.id } },
+        data: { status: "REJECTED", rejectionReason: documentsRejectionReason },
       })
     }
 
     // Update seller status
     const updatedSeller = await sellerRepository.updateSellerProfile(seller.id, {
-      status: status === "APPROVED" ? "APPROVED" : "REJECTED",
-      approvedAt: status === "APPROVED" ? new Date() : null,
+      status: overallStatus === "APPROVED" ? "APPROVED" : overallStatus === "REJECTED" ? "REJECTED" : "UNDER_REVIEW",
+      approvedAt: overallStatus === "APPROVED" ? new Date() : null,
     })
 
     await sellerCache.invalidateUser(seller.ownerUserId)

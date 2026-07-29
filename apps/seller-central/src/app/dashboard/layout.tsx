@@ -1,14 +1,17 @@
 "use client"
 
 import React from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import {
   useAppSelector,
   useGetMeQuery,
+  useGetSellerMeQuery,
   useLogoutMutation,
 } from "@workspace/store"
 import { AppSidebar } from "@workspace/ui/components/app-sidebar"
 import { sellerSidebarData } from "@/config/sidebar-data"
+import { getSellerOnboardingRedirect } from "@/lib/onboarding"
+import { Loader2 } from "lucide-react"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -26,11 +29,51 @@ import {
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
+  const pathname = usePathname()
   const { user: cachedUser } = useAppSelector((state) => state.auth)
-  const { data: userData } = useGetMeQuery()
+  const { data: userData, isLoading: userLoading } = useGetMeQuery()
+  const { data: sellerData, isLoading: sellerLoading } = useGetSellerMeQuery(
+    undefined,
+    {
+      skip: !userData?.user,
+    }
+  )
   const [logout] = useLogoutMutation()
 
   const user = userData?.user || cachedUser
+
+  // Onboarding Guard: Redirect to pending onboarding step if incomplete
+  React.useEffect(() => {
+    if (!userLoading && !userData?.user) {
+      router.push("/login")
+      return
+    }
+    if (!userLoading && !sellerLoading && userData?.user) {
+      const redirectTarget = getSellerOnboardingRedirect(sellerData?.seller)
+      if (redirectTarget) {
+        router.push(redirectTarget)
+      }
+    }
+  }, [userData, userLoading, sellerData, sellerLoading, router])
+
+  if (userLoading || (userData?.user && sellerLoading)) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-zinc-500 font-sans">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mb-2" />
+        <span className="text-xs font-semibold">Loading Seller Portal...</span>
+      </div>
+    )
+  }
+
+  const redirectTarget = getSellerOnboardingRedirect(sellerData?.seller)
+  if (redirectTarget) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-zinc-500 font-sans">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mb-2" />
+        <span className="text-xs font-semibold">Redirecting to Seller Onboarding...</span>
+      </div>
+    )
+  }
 
   const handleLogout = async () => {
     try {
@@ -62,7 +105,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <SidebarProvider>
-      <AppSidebar data={sidebarData} onLogout={handleLogout} />
+      <AppSidebar data={sidebarData} onLogout={handleLogout} currentPath={pathname} />
       <SidebarInset>
         <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between gap-2 border-b border-slate-200/80 dark:border-slate-800/80 bg-background/80 backdrop-blur-md px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2">
