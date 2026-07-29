@@ -72,4 +72,21 @@ export const adminSidebarData: SidebarData = {
       icon: <UserPlusIcon />,
     },
   ],
+  userMenuItems: [
+    {
+      label: "Platform Settings",
+      href: "/dashboard/settings",
+      icon: <SettingsIcon className="size-3.5 text-muted-foreground" />,
+    },
+    {
+      label: "Financials & Payouts",
+      href: "/dashboard/financials",
+      icon: <CreditCardIcon className="size-3.5 text-muted-foreground" />,
+    },
+    {
+      label: "System Alerts",
+      href: "/dashboard/alerts",
+      icon: <BellIcon className="size-3.5 text-muted-foreground" />,
+    },
+  ],
 }

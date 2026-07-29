@@ -47,6 +47,9 @@ export const sellerApi = baseApi.injectEndpoints({
       query: () => "/sellers/me",
       providesTags: ["Seller"],
     }),
+    getPublicStoreBySlug: builder.query<{ store: Store & { seller?: Seller } }, string>({
+      query: (slug) => `/sellers/store-public/${slug}`,
+    }),
     updateSellerProfile: builder.mutation<{ message: string; seller: Seller }, OnboardRequest>({
       query: (payload) => ({
         url: "/sellers/profile",
@@ -113,6 +116,8 @@ export const {
   useOnboardSellerMutation,
   useGetSellerMeQuery,
   useLazyGetSellerMeQuery,
+  useGetPublicStoreBySlugQuery,
+  useLazyGetPublicStoreBySlugQuery,
   useUpdateSellerProfileMutation,
   useUpdateStoreMutation,
   useAddBankAccountMutation,

@@ -485,6 +485,14 @@ class SellerService {
       status: "ACTIVE",
     }
   }
+
+  async getPublicStoreBySlug(slug: string) {
+    const store = await sellerRepository.findStoreBySlug(slug)
+    if (!store) {
+      throw new NotFoundError("Store not found")
+    }
+    return store
+  }
 }
 
 export const sellerService = new SellerService()

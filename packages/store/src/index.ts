@@ -105,6 +105,8 @@ export {
   useOnboardSellerMutation,
   useGetSellerMeQuery,
   useLazyGetSellerMeQuery,
+  useGetPublicStoreBySlugQuery,
+  useLazyGetPublicStoreBySlugQuery,
   useUpdateSellerProfileMutation,
   useUpdateStoreMutation,
   useAddBankAccountMutation,

@@ -6,7 +6,7 @@ import {
   SidebarNavGroup,
   SidebarNavItem,
 } from "@workspace/ui/components/nav-main"
-import { NavUser } from "@workspace/ui/components/nav-user"
+import { NavUser, UserMenuItem } from "@workspace/ui/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
@@ -32,6 +32,7 @@ export interface SidebarData {
     email: string
     avatar: string
   }
+  userMenuItems?: UserMenuItem[]
 }
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -121,7 +122,11 @@ export function AppSidebar({
       {/* Footer User Profile */}
       {data.user && (
         <SidebarFooter className="p-3 pt-2">
-          <NavUser user={data.user} onLogout={onLogout} />
+          <NavUser
+            user={data.user}
+            items={data.userMenuItems}
+            onLogout={onLogout}
+          />
         </SidebarFooter>
       )}
       <SidebarRail />

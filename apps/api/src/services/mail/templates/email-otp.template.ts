@@ -1,27 +1,15 @@
 export function verifyEmailOtpTemplate(otp: string): string {
-  return `Dear Customer,
+  return `Hi,
 
-Welcome to CBS Marketplace!
+Your verification code for CBS Marketplace is:
 
-We received a request to register a new account under this email address. To complete the registration process and verify your identity, please use the following One-Time Password (OTP):
+${otp}
 
---------------------------------------------------
-Verification Code: ${otp}
---------------------------------------------------
+This code will expire in 10 minutes.
 
-Important security information:
-- This OTP is valid for exactly 10 minutes from the time it was requested.
-- For your security, never share this code with anyone. CBS Marketplace staff or support will never ask you for your OTP.
-- If the verification is not completed within this timeframe, the registration request will expire and you will need to restart the process.
+If you didn't request this code, you can safely ignore this email.
 
-If you did not request this registration, please ignore this email. No account has been created yet. If you have concerns about the security of your identity, please contact our Security Operations Center at security@cbsmarketplace.com.
-
-Best regards,
-The CBS Marketplace Identity & Access Management Team
-
---------------------------------------------------
-This is an automated system email. Please do not reply to this message.
-© 2026 CBS Marketplace Ltd. All rights reserved.
-100 Enterprise Parkway, Suite 500, Tech City.
-`
+Thanks,
+CBS Marketplace`
 }
+

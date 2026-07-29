@@ -295,6 +295,20 @@ class SellerRepository {
   async findStoreBySlug(slug: string) {
     return db.store.findUnique({
       where: { slug },
+      include: {
+        address: true,
+        seller: {
+          select: {
+            id: true,
+            businessName: true,
+            businessType: true,
+            contactEmail: true,
+            contactPhone: true,
+            status: true,
+            createdAt: true,
+          },
+        },
+      },
     })
   }
 

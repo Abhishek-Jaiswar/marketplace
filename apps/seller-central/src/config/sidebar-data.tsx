@@ -109,4 +109,21 @@ export const sellerSidebarData: SidebarData = {
       icon: <UserPlusIcon />,
     },
   ],
+  userMenuItems: [
+    {
+      label: "Store Settings",
+      href: "/dashboard/settings",
+      icon: <SettingsIcon className="size-3.5 text-muted-foreground" />,
+    },
+    {
+      label: "Billing & Payouts",
+      href: "/dashboard/payouts",
+      icon: <BarChart3Icon className="size-3.5 text-muted-foreground" />,
+    },
+    {
+      label: "Notifications",
+      href: "/dashboard/notifications",
+      icon: <BellIcon className="size-3.5 text-muted-foreground" />,
+    },
+  ],
 }

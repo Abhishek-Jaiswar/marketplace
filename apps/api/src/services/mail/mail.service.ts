@@ -20,15 +20,17 @@ class MailService {
   async sendEmail(
     to: string,
     subject: string,
-    html: string,
+    content: string,
     attachments?: nodemailer.SendMailOptions["attachments"]
   ) {
     try {
+      const htmlContent = `<div style="font-family: sans-serif; font-size: 15px; line-height: 1.6; color: #111; white-space: pre-line;">${content}</div>`
       const info = await this.transporter.sendMail({
         from: `"CBS Marketplace" <${Env.MAIL_USER}>`,
         to,
         subject,
-        html,
+        text: content,
+        html: htmlContent,
         attachments,
       })
 

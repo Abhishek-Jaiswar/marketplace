@@ -226,7 +226,19 @@ class SellerController {
     }
   }
 
-  
+  getPublicStoreBySlug = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const slugParam = req.params.slug
+      const slug = Array.isArray(slugParam) ? slugParam[0] : slugParam
+      if (!slug || typeof slug !== "string") {
+        throw new BadRequestError("Store slug is required")
+      }
+      const store = await sellerService.getPublicStoreBySlug(slug)
+      res.status(200).json({ store })
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 export const sellerController = new SellerController()

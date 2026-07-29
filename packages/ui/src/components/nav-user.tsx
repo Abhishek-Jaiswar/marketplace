@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import {
   Avatar,
   AvatarFallback,
@@ -22,17 +23,46 @@ import {
 } from "@workspace/ui/components/sidebar"
 import { ChevronsUpDownIcon, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon } from "lucide-react"
 
-export function NavUser({
-  user,
-  onLogout,
-}: {
+export interface UserMenuItem {
+  label: string
+  href?: string
+  icon?: React.ReactNode
+  onClick?: () => void
+}
+
+export interface NavUserProps {
   user: {
     name: string
     email: string
     avatar: string
   }
+  items?: UserMenuItem[]
   onLogout?: () => void
-}) {
+}
+
+const defaultUserMenuItems: UserMenuItem[] = [
+  {
+    label: "Account Settings",
+    href: "/dashboard/settings",
+    icon: <BadgeCheckIcon className="size-3.5 text-muted-foreground" />,
+  },
+  {
+    label: "Billing & Payouts",
+    href: "/dashboard/billing",
+    icon: <CreditCardIcon className="size-3.5 text-muted-foreground" />,
+  },
+  {
+    label: "Notifications",
+    href: "/dashboard/notifications",
+    icon: <BellIcon className="size-3.5 text-muted-foreground" />,
+  },
+]
+
+export function NavUser({
+  user,
+  items,
+  onLogout,
+}: NavUserProps) {
   const { isMobile } = useSidebar()
   const initials = user.name
     ? user.name
@@ -43,6 +73,8 @@ export function NavUser({
         .slice(0, 2)
     : "US"
 
+  const menuItems = items && items.length > 0 ? items : defaultUserMenuItems
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -51,7 +83,7 @@ export function NavUser({
             render={
               <SidebarMenuButton
                 size="lg"
-                className="w-full justify-start gap-2.5 rounded-xl px-2.5 py-2 hover:bg-slate-200/60 dark:hover:bg-slate-800/50 transition-colors"
+                className="w-full justify-start gap-2.5 rounded-xl px-2.5 py-2 hover:bg-slate-200/60 dark:hover:bg-slate-800/50 transition-colors cursor-pointer"
               />
             }
           >
@@ -98,18 +130,17 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator className="my-1" />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2 text-xs py-2 rounded-lg">
-                <BadgeCheckIcon className="size-3.5 text-muted-foreground" />
-                Account Settings
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-2 text-xs py-2 rounded-lg">
-                <CreditCardIcon className="size-3.5 text-muted-foreground" />
-                Billing & Payouts
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-2 text-xs py-2 rounded-lg">
-                <BellIcon className="size-3.5 text-muted-foreground" />
-                Notifications
-              </DropdownMenuItem>
+              {menuItems.map((item, index) => (
+                <DropdownMenuItem
+                  key={index}
+                  render={item.href ? <a href={item.href} /> : undefined}
+                  onClick={item.onClick}
+                  className="gap-2 text-xs py-2 rounded-lg cursor-pointer"
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator className="my-1" />
             <DropdownMenuItem
@@ -125,3 +156,4 @@ export function NavUser({
     </SidebarMenu>
   )
 }
+
