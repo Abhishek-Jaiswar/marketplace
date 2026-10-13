@@ -50,7 +50,7 @@ export function SellerCtaBanner() {
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <a
-              href="http://localhost:3002"
+              href={process.env.NEXT_PUBLIC_SELLER_CENTRAL_URL || "http://localhost:3001"}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-blue-500/10 backdrop-blur-md border border-blue-500/30 text-white font-bold text-sm hover:bg-blue-500/20 transition-all"

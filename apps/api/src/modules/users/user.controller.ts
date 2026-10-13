@@ -1,4 +1,5 @@
-import type { Request, Response, NextFunction } from "express"
+import type { CookieOptions, Request, Response, NextFunction } from "express"
+import { isProduction } from "../../config/env.config.js"
 import { userService } from "./user.service.js"
 import {
   registerSchema,
@@ -8,6 +9,13 @@ import {
   resetPasswordSchema,
 } from "./user.schema.js"
 import { BadRequestError, UnauthorizedError } from "../../utils/errors/index.js"
+
+const getRefreshTokenCookieOptions = (maxAge?: number): CookieOptions => ({
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+  ...(maxAge ? { maxAge } : {}),
+})
 
 class UserController {
   register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -79,12 +87,7 @@ class UserController {
         req.ip
       )
 
-      res.cookie("refreshToken", result.refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-      })
+      res.cookie("refreshToken", result.refreshToken, getRefreshTokenCookieOptions(30 * 24 * 60 * 60 * 1000))
 
       res.status(200).json({
         accessToken: result.accessToken,
@@ -102,11 +105,7 @@ class UserController {
         await userService.logoutUser(refreshToken)
       }
 
-      res.clearCookie("refreshToken", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-      })
+      res.clearCookie("refreshToken", getRefreshTokenCookieOptions())
 
       res.status(200).json({ message: "Logged out successfully" })
     } catch (error) {
@@ -127,12 +126,7 @@ class UserController {
         req.ip
       )
 
-      res.cookie("refreshToken", result.refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-      })
+      res.cookie("refreshToken", result.refreshToken, getRefreshTokenCookieOptions(30 * 24 * 60 * 60 * 1000))
 
       res.status(200).json({
         accessToken: result.accessToken,

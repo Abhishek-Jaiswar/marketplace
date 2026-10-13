@@ -163,7 +163,7 @@ export function MobileMenu() {
               {/* Conditional Seller Central */}
               {isAuthenticated && user?.roles.includes("SELLER") && (
                 <Link
-                  href="http://localhost:3001"
+                  href={process.env.NEXT_PUBLIC_SELLER_CENTRAL_URL || "http://localhost:3001"}
                   target="_blank"
                   className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all font-medium mt-2"
                 >
@@ -175,7 +175,7 @@ export function MobileMenu() {
               {/* Conditional Admin Central */}
               {isAuthenticated && user?.roles.includes("ADMIN") && (
                 <Link
-                  href="http://localhost:3002"
+                  href={process.env.NEXT_PUBLIC_ADMIN_CENTRAL_URL || "http://localhost:3002"}
                   target="_blank"
                   className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all font-medium"
                 >

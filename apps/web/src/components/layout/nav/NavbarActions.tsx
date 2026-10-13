@@ -98,7 +98,12 @@ export function NavbarActions() {
             {/* Seller Central shortcut if role exists */}
             {user.roles.includes("SELLER") && (
               <DropdownMenuItem
-                render={<Link href="http://localhost:3001" target="_blank" />}
+                render={
+                  <Link
+                    href={process.env.NEXT_PUBLIC_SELLER_CENTRAL_URL || "http://localhost:3001"}
+                    target="_blank"
+                  />
+                }
                 className="focus:bg-muted rounded-lg p-2 transition-colors cursor-pointer text-xs flex items-center gap-2"
               >
                 <LayoutDashboard className="w-4 h-4 text-foreground" />
@@ -109,7 +114,12 @@ export function NavbarActions() {
             {/* Admin Dashboard shortcut if role exists */}
             {user.roles.includes("ADMIN") && (
               <DropdownMenuItem
-                render={<Link href="http://localhost:3002" target="_blank" />}
+                render={
+                  <Link
+                    href={process.env.NEXT_PUBLIC_ADMIN_CENTRAL_URL || "http://localhost:3002"}
+                    target="_blank"
+                  />
+                }
                 className="focus:bg-muted rounded-lg p-2 transition-colors cursor-pointer text-xs flex items-center gap-2"
               >
                 <Shield className="w-4 h-4 text-foreground" />

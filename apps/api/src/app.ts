@@ -21,7 +21,6 @@ export function createApp(): Application {
   app.use(cookieParser())
   app.use(express.json({ limit: Env.JSON_BODY_LIMIT }))
   app.use(express.urlencoded({ extended: true, limit: Env.JSON_BODY_LIMIT }))
-  app.use(requestLogger)
 
   app.get("/", (_request, response) => {
     response.status(200).json({

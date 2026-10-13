@@ -11,7 +11,7 @@ const envSchema = z.object({
       (value) =>
         value
           ?.split(",")
-          .map((origin) => origin.trim())
+          .map((origin) => origin.trim().replace(/\/+$/, ""))
           .filter(Boolean) ?? []
     ),
   JSON_BODY_LIMIT: z.string().default("1mb"),
