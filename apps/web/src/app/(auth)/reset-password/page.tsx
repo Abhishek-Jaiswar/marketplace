@@ -51,13 +51,13 @@ function ResetPasswordForm() {
         router.push("/login?reset=true");
       }, 2000);
     } catch (err: unknown) {
-      const errorPayload = err as { data?: { message?: string }; message?: string };
-      setLocalError(errorPayload.data?.message || errorPayload.message || "Failed to reset password.");
+      const errorPayload = err as { data?: { message?: string; error?: { message?: string } }; message?: string };
+      setLocalError(errorPayload.data?.error?.message || errorPayload.data?.message || errorPayload.message || "Failed to reset password.");
     }
   };
 
-  const errorPayload = error as { data?: { message?: string }; message?: string } | undefined;
-  const errorMessage = localError || (errorPayload?.data?.message || (errorPayload ? "Something went wrong." : ""));
+  const errorPayload = error as { data?: { message?: string; error?: { message?: string } }; message?: string } | undefined;
+  const errorMessage = localError || (errorPayload?.data?.error?.message || errorPayload?.data?.message || (errorPayload ? "Something went wrong." : ""));
 
   return (
     <div className="space-y-6">

@@ -32,12 +32,11 @@ class UserService {
     const otp = generateOtp()
     await userCache.setEmailVerificationOtp(user.email, otp)
 
-    try {
-      await mailService.sendOtpEmail(user.email, otp)
-      logger.info(`Verification OTP sent successfully to ${user.email}`)
-    } catch (err) {
-      logger.error(`Failed to send verification OTP email to ${user.email}`, err)
-    }
+    // Send verification email in background without blocking HTTP response
+    mailService
+      .sendOtpEmail(user.email, otp)
+      .then(() => logger.info(`Verification OTP sent successfully to ${user.email}`))
+      .catch((err) => logger.error(`Failed to send verification OTP email to ${user.email}`, err))
 
     return {
       message: "User registered successfully. Please verify your email using the OTP sent.",
@@ -197,12 +196,10 @@ class UserService {
     const otp = generateOtp()
     await userCache.setEmailVerificationOtp(email, otp)
 
-    try {
-      await mailService.sendOtpEmail(email, otp)
-      logger.info(`Resent verification OTP successfully to ${email}`)
-    } catch (err) {
-      logger.error(`Failed to resend verification OTP email to ${email}`, err)
-    }
+    mailService
+      .sendOtpEmail(email, otp)
+      .then(() => logger.info(`Resent verification OTP successfully to ${email}`))
+      .catch((err) => logger.error(`Failed to resend verification OTP email to ${email}`, err))
 
     return {
       message: "If the email is registered and unverified, a new OTP has been sent.",
@@ -219,12 +216,10 @@ class UserService {
     const otp = generateOtp()
     await userCache.setUserOtp(email, otp)
 
-    try {
-      await mailService.sendResetPasswordOtp(email, otp)
-      logger.info(`Password reset OTP sent successfully to ${email}`)
-    } catch (err) {
-      logger.error(`Failed to send password reset OTP email to ${email}`, err)
-    }
+    mailService
+      .sendResetPasswordOtp(email, otp)
+      .then(() => logger.info(`Password reset OTP sent successfully to ${email}`))
+      .catch((err) => logger.error(`Failed to send password reset OTP email to ${email}`, err))
 
     return {
       message: "If the email is registered, a password reset OTP has been sent.",

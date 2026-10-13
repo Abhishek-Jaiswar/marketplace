@@ -16,6 +16,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [localError, setLocalError] = useState("");
+  const [isNavigating, setIsNavigating] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,16 +40,33 @@ export default function RegisterPage() {
         password,
       }).unwrap();
       
+      setIsNavigating(true);
       // Redirect to OTP verification page on success
       router.push(`/verify-otp?email=${encodeURIComponent(email.trim())}&purpose=REGISTER`);
     } catch (err: unknown) {
-      const errorPayload = err as { data?: { message?: string }; message?: string };
-      setLocalError(errorPayload.data?.message || errorPayload.message || "Failed to create account.");
+      setIsNavigating(false);
+      const errorPayload = err as {
+        data?: { message?: string; error?: { message?: string } };
+        message?: string;
+      };
+      setLocalError(
+        errorPayload.data?.error?.message ||
+        errorPayload.data?.message ||
+        errorPayload.message ||
+        "Failed to create account."
+      );
     }
   };
 
-  const errorPayload = error as { data?: { message?: string }; message?: string } | undefined;
-  const errorMessage = localError || (errorPayload?.data?.message || (errorPayload ? "Something went wrong." : ""));
+  const errorPayload = error as {
+    data?: { message?: string; error?: { message?: string } };
+    message?: string;
+  } | undefined;
+  const errorMessage =
+    localError ||
+    (errorPayload?.data?.error?.message ||
+      errorPayload?.data?.message ||
+      (errorPayload ? "Something went wrong." : ""));
 
   return (
     <div className="space-y-6">
@@ -164,13 +182,13 @@ export default function RegisterPage() {
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isNavigating}
           className="w-full h-11 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-zinc-50 dark:text-zinc-950 font-bold text-sm rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
         >
-          {isLoading ? (
+          {isLoading || isNavigating ? (
             <>
               <Loader2 className="w-4.5 h-4.5 animate-spin" />
-              <span>Registering account...</span>
+              <span>{isNavigating ? "Redirecting to verification..." : "Registering account..."}</span>
             </>
           ) : (
             <>

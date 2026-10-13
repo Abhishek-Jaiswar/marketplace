@@ -14,6 +14,9 @@ class MailService {
         user: Env.MAIL_USER,
         pass: Env.MAIL_PASS,
       },
+      connectionTimeout: 8000,
+      greetingTimeout: 8000,
+      socketTimeout: 10000,
     })
   }
 

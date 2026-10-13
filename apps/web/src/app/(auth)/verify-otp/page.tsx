@@ -44,8 +44,8 @@ function VerifyOtpForm() {
         router.push("/login?verified=true");
       }, 2000);
     } catch (err: unknown) {
-      const errorPayload = err as { data?: { message?: string }; message?: string };
-      setLocalError(errorPayload.data?.message || errorPayload.message || "Invalid or expired OTP code.");
+      const errorPayload = err as { data?: { message?: string; error?: { message?: string } }; message?: string };
+      setLocalError(errorPayload.data?.error?.message || errorPayload.data?.message || errorPayload.message || "Invalid or expired OTP code.");
     }
   };
 
@@ -59,13 +59,13 @@ function VerifyOtpForm() {
       setLocalSuccess("A new OTP code has been sent to your email.");
       setCooldown(60); // reset cooldown
     } catch (err: unknown) {
-      const errorPayload = err as { data?: { message?: string }; message?: string };
-      setLocalError(errorPayload.data?.message || errorPayload.message || "Failed to resend OTP.");
+      const errorPayload = err as { data?: { message?: string; error?: { message?: string } }; message?: string };
+      setLocalError(errorPayload.data?.error?.message || errorPayload.data?.message || errorPayload.message || "Failed to resend OTP.");
     }
   };
 
-  const errorPayload = error as { data?: { message?: string }; message?: string } | undefined;
-  const errorMessage = localError || (errorPayload?.data?.message || (errorPayload ? "Something went wrong." : ""));
+  const errorPayload = error as { data?: { message?: string; error?: { message?: string } }; message?: string } | undefined;
+  const errorMessage = localError || (errorPayload?.data?.error?.message || errorPayload?.data?.message || (errorPayload ? "Something went wrong." : ""));
 
   return (
     <div className="space-y-6">

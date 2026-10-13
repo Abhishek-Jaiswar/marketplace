@@ -32,8 +32,8 @@ function LoginForm() {
       // Redirect to home page on success
       router.push("/");
     } catch (err: unknown) {
-      const errorPayload = err as { data?: { message?: string }; message?: string };
-      const msg = errorPayload.data?.message || errorPayload.message || "";
+      const errorPayload = err as { data?: { message?: string; error?: { message?: string } }; message?: string };
+      const msg = errorPayload.data?.error?.message || errorPayload.data?.message || errorPayload.message || "";
       if (msg.toLowerCase().includes("not verified") || msg.toLowerCase().includes("verify your email")) {
         router.push(`/verify-otp?email=${encodeURIComponent(email.trim())}&purpose=REGISTER`);
       } else {
@@ -42,8 +42,8 @@ function LoginForm() {
     }
   };
 
-  const errorPayload = error as { data?: { message?: string }; message?: string } | undefined;
-  const errorMessage = localError || (errorPayload?.data?.message || (errorPayload ? "Something went wrong." : ""));
+  const errorPayload = error as { data?: { message?: string; error?: { message?: string } }; message?: string } | undefined;
+  const errorMessage = localError || (errorPayload?.data?.error?.message || errorPayload?.data?.message || (errorPayload ? "Something went wrong." : ""));
 
   return (
     <div className="space-y-6">
