@@ -2,7 +2,15 @@
 "use client";
 
 import { useRef } from "react";
-import { Provider, setupListeners, makeStore, AppStore } from "@workspace/store";
+import { Provider, setupListeners, makeStore, AppStore, useGetMeQuery, useGetSellerMeQuery } from "@workspace/store";
+
+function SellerPreloader() {
+  const { data: userData } = useGetMeQuery();
+  useGetSellerMeQuery(undefined, {
+    skip: !userData?.user,
+  });
+  return null;
+}
 
 export default function StoreProvider({ children }: { children: React.ReactNode }) {
   const storeRef = useRef<AppStore>(undefined);
@@ -12,5 +20,10 @@ export default function StoreProvider({ children }: { children: React.ReactNode 
     setupListeners(storeRef.current.dispatch);
   }
 
-  return <Provider store={storeRef.current}>{children}</Provider>;
+  return (
+    <Provider store={storeRef.current}>
+      <SellerPreloader />
+      {children}
+    </Provider>
+  );
 }

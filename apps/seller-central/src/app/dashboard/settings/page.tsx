@@ -224,17 +224,6 @@ export default function SettingsPage() {
     }
   }
 
-  if (sellerLoading || userLoading) {
-    return (
-      <div className="flex h-[70vh] flex-col items-center justify-center gap-3 text-slate-500">
-        <Loader2Icon className="size-8 animate-spin text-indigo-600 dark:text-indigo-400" />
-        <span className="text-xs font-medium tracking-wide">
-          Loading Seller Settings...
-        </span>
-      </div>
-    )
-  }
-
   const statusColorMap: Record<string, string> = {
     APPROVED: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
     UNDER_REVIEW: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",

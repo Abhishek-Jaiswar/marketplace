@@ -231,6 +231,8 @@ class UserService {
     }
   }
 
+  
+
   async resetPassword(payload: TResetPassword) {
     const { email, otp, newPassword } = payload
 

@@ -11,7 +11,7 @@ import {
 import { AppSidebar } from "@workspace/ui/components/app-sidebar"
 import { sellerSidebarData } from "@/config/sidebar-data"
 import { getSellerOnboardingRedirect } from "@/lib/onboarding"
-import { Loader2 } from "lucide-react"
+import DashboardLoading from "./loading"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -55,25 +55,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       }
     }
   }, [userData, userLoading, sellerData, sellerLoading, router])
-
-  if (userLoading || (userData?.user && sellerLoading)) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-zinc-500 font-sans">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mb-2" />
-        <span className="text-xs font-semibold">Loading Seller Portal...</span>
-      </div>
-    )
-  }
-
-  const redirectTarget = getSellerOnboardingRedirect(sellerData?.seller)
-  if (redirectTarget) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-zinc-500 font-sans">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mb-2" />
-        <span className="text-xs font-semibold">Redirecting to Seller Onboarding...</span>
-      </div>
-    )
-  }
 
   const handleLogout = async () => {
     try {
@@ -134,7 +115,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-6 p-6">{children}</div>
+        <div className="flex flex-1 flex-col gap-6 p-6">
+          <React.Suspense fallback={<DashboardLoading />}>
+            {children}
+          </React.Suspense>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

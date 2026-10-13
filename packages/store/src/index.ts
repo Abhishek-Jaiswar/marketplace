@@ -139,4 +139,42 @@ export {
   useSetDefaultBillingAddressMutation,
 } from "./api/customer/customer-api";
 
+// Category API Types
+export type {
+  Category,
+  CategoryParentInfo,
+  CategoryTreeNode,
+  GetCategoryTreeParams,
+  GetCategoryTreeResponse,
+  ListCategoriesParams,
+  ListCategoriesResponse,
+  GetCategoryByIdResponse,
+  GetCategoryBySlugResponse,
+  CreateCategoryRequest,
+  CreateCategoryResponse,
+  UpdateCategoryRequest,
+  UpdateCategoryResponse,
+  ToggleCategoryStatusRequest,
+  ToggleCategoryStatusResponse,
+  DeleteCategoryResponse,
+} from "./api/categories/category-api.types";
+
+// Category API and Hooks
+export {
+  categoryApi,
+  useGetCategoryTreeQuery,
+  useLazyGetCategoryTreeQuery,
+  useListCategoriesQuery,
+  useLazyListCategoriesQuery,
+  useGetCategoryByIdQuery,
+  useLazyGetCategoryByIdQuery,
+  useGetCategoryBySlugQuery,
+  useLazyGetCategoryBySlugQuery,
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+  useToggleCategoryStatusMutation,
+  useDeleteCategoryMutation,
+} from "./api/categories/category-api";
+
+
 

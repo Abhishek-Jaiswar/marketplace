@@ -2,7 +2,19 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Menu, ShoppingBag, Home, Package, Heart, LogIn, LayoutDashboard, Shield, LogOut } from "lucide-react";
+import {
+  Menu,
+  ShoppingBag,
+  Home,
+  Package,
+  Heart,
+  LogIn,
+  LayoutDashboard,
+  Shield,
+  LogOut,
+  ChevronDown,
+  Layers,
+} from "lucide-react";
 import {
   Dialog,
   DialogTrigger,
@@ -13,12 +25,17 @@ import {
 import {
   useAppSelector,
   useLogoutMutation,
+  useGetCategoryTreeQuery,
 } from "@workspace/store";
 
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
+  const [expandedCatId, setExpandedCatId] = useState<string | null>(null);
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const [logout] = useLogoutMutation();
+
+  const { data: treeResponse } = useGetCategoryTreeQuery();
+  const categoryTree = treeResponse?.data || [];
 
   const handleLogout = async () => {
     try {
@@ -27,6 +44,10 @@ export function MobileMenu() {
     } catch (err) {
       console.error("Logout failed:", err);
     }
+  };
+
+  const toggleCategory = (catId: string) => {
+    setExpandedCatId((prev) => (prev === catId ? null : catId));
   };
 
   return (
@@ -56,38 +77,97 @@ export function MobileMenu() {
               <Link
                 href="/"
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all font-medium"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all font-medium"
               >
-                <Home className="w-5 h-5 text-muted-foreground" />
+                <Home className="w-4.5 h-4.5 text-muted-foreground" />
                 <span>Home</span>
               </Link>
-              
+
               <Link
                 href="/orders"
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all font-medium"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all font-medium"
               >
-                <Package className="w-5 h-5 text-muted-foreground" />
+                <Package className="w-4.5 h-4.5 text-muted-foreground" />
                 <span>My Orders</span>
               </Link>
 
               <Link
                 href="/wishlist"
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all font-medium"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all font-medium"
               >
-                <Heart className="w-5 h-5 text-muted-foreground" />
+                <Heart className="w-4.5 h-4.5 text-muted-foreground" />
                 <span>Wishlist</span>
               </Link>
+
+              {/* Dynamic Categories Accordion Section */}
+              {categoryTree.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-border/50">
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-muted-foreground font-mono px-3 mb-2 block">
+                    Browse Categories
+                  </span>
+                  <div className="space-y-1">
+                    {categoryTree.map((cat) => {
+                      const isExpanded = expandedCatId === cat.id;
+                      const hasChildren = cat.children && cat.children.length > 0;
+
+                      return (
+                        <div key={cat.id} className="rounded-xl overflow-hidden">
+                          <div className="flex items-center justify-between px-3 py-2 text-sm font-medium text-foreground hover:bg-muted rounded-xl transition-all">
+                            <Link
+                              href={`/products?category=${encodeURIComponent(cat.slug)}`}
+                              onClick={() => setOpen(false)}
+                              className="flex items-center gap-2.5 flex-1 min-w-0"
+                            >
+                              <Layers className="w-4 h-4 text-muted-foreground shrink-0" />
+                              <span className="truncate">{cat.name}</span>
+                            </Link>
+                            {hasChildren && (
+                              <button
+                                onClick={() => toggleCategory(cat.id)}
+                                className="p-1 text-muted-foreground hover:text-foreground rounded-lg"
+                                aria-label="Toggle subcategories"
+                              >
+                                <ChevronDown
+                                  className={`w-4 h-4 transition-transform duration-200 ${
+                                    isExpanded ? "rotate-180" : ""
+                                  }`}
+                                />
+                              </button>
+                            )}
+                          </div>
+
+                          {/* Accordion Subcategories */}
+                          {hasChildren && isExpanded && (
+                            <div className="pl-8 pr-3 py-1 space-y-1 bg-muted/30 rounded-lg my-1">
+                              {cat.children?.map((subCat) => (
+                                <Link
+                                  key={subCat.id}
+                                  href={`/products?category=${encodeURIComponent(subCat.slug)}`}
+                                  onClick={() => setOpen(false)}
+                                  className="block py-1.5 text-xs text-muted-foreground hover:text-primary transition-colors truncate"
+                                >
+                                  {subCat.name}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* Conditional Seller Central */}
               {isAuthenticated && user?.roles.includes("SELLER") && (
                 <Link
                   href="http://localhost:3001"
                   target="_blank"
-                  className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all font-medium"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all font-medium mt-2"
                 >
-                  <LayoutDashboard className="w-5 h-5 text-muted-foreground" />
+                  <LayoutDashboard className="w-4.5 h-4.5 text-muted-foreground" />
                   <span>Seller Central</span>
                 </Link>
               )}
@@ -97,9 +177,9 @@ export function MobileMenu() {
                 <Link
                   href="http://localhost:3002"
                   target="_blank"
-                  className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all font-medium"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all font-medium"
                 >
-                  <Shield className="w-5 h-5 text-muted-foreground" />
+                  <Shield className="w-4.5 h-4.5 text-muted-foreground" />
                   <span>Admin Dashboard</span>
                 </Link>
               )}
@@ -147,4 +227,5 @@ export function MobileMenu() {
     </div>
   );
 }
+
 export default MobileMenu;
