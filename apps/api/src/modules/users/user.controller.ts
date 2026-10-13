@@ -100,7 +100,7 @@ class UserController {
 
   logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const refreshToken = req.cookies.refreshToken || req.body.refreshToken
+      const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken
       if (refreshToken) {
         await userService.logoutUser(refreshToken)
       }
@@ -115,7 +115,7 @@ class UserController {
 
   refresh = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const refreshToken = req.cookies.refreshToken || req.body.refreshToken
+      const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken
       if (!refreshToken) {
         throw new UnauthorizedError("Refresh token is required")
       }
