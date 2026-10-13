@@ -33,8 +33,19 @@ class SimpleMutex {
 
 const mutex = new SimpleMutex();
 
+const getBaseApiUrl = (): string => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
+  const defaultUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://marketplace-2zmv.onrender.com/api"
+      : "http://localhost:4000/api";
+  const url = envUrl || defaultUrl;
+  const sanitized = url.replace(/\/+$/, "");
+  return sanitized.endsWith("/api") ? sanitized : `${sanitized}/api`;
+};
+
 const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api",
+  baseUrl: getBaseApiUrl(),
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as any).auth?.accessToken;

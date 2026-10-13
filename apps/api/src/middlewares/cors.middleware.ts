@@ -8,12 +8,27 @@ export const corsMiddleware = cors({
       return callback(null, true)
     }
 
+    const normalizedOrigin = origin.replace(/\/+$/, "")
+
     // Allow all if no origins configured
     if (Env.CORS_ORIGINS.length === 0) {
       return callback(null, true)
     }
 
-    const normalizedOrigin = origin.replace(/\/+$/, "")
+    // Allow any Vercel deployment domain (*.vercel.app)
+    if (
+      normalizedOrigin.startsWith("https://") &&
+      (normalizedOrigin.endsWith(".vercel.app") || normalizedOrigin === "https://vercel.app")
+    ) {
+      return callback(null, true)
+    }
+
+    // Allow localhost in development
+    if (/^https?:\/\/localhost(:\d+)?$/.test(normalizedOrigin)) {
+      return callback(null, true)
+    }
+
+    // Allow explicitly configured origins in CORS_ORIGINS
     if (Env.CORS_ORIGINS.includes(normalizedOrigin)) {
       return callback(null, true)
     }
