@@ -4,6 +4,21 @@ import { Env } from "../config/env.config.js"
 
 export const redis = new Redis(Env.REDIS_URL, {
   lazyConnect: true,
+  maxRetriesPerRequest: 1,
+  enableOfflineQueue: false,
+  retryStrategy(times) {
+    if (times > 3) {
+      // Stop retrying after 3 failed attempts to avoid log flooding
+      return null
+    }
+    return Math.min(times * 1000, 3000)
+  },
+})
+
+redis.on("error", (error) => {
+  logger.warn("Redis connection error:", {
+    error: error instanceof Error ? error.message : String(error),
+  })
 })
 
 export const testRedisConnection = async (): Promise<void> => {
