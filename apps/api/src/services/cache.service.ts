@@ -3,7 +3,13 @@ import { redis } from "../lib/redis.js"
 
 
 class CacheService {
+  private isAvailable(): boolean {
+    return redis.status === "ready"
+  }
+
   async set(key: string, value: string, ttlSeconds: number) {
+    if (!this.isAvailable()) return
+
     try {
       await redis.set(key, value, "EX", ttlSeconds)
     } catch (error) {
@@ -15,6 +21,8 @@ class CacheService {
   }
 
   async get(key: string) {
+    if (!this.isAvailable()) return null
+
     try {
       return await redis.get(key)
     } catch (error) {
@@ -32,6 +40,10 @@ class CacheService {
     ttlSeconds: number,
     producer: () => Promise<T>
   ): Promise<T> {
+    if (!this.isAvailable()) {
+      return await producer()
+    }
+
     try {
       const cachedValue = await redis.get(key)
 
@@ -64,6 +76,8 @@ class CacheService {
   }
 
   async getNumber(key: string, fallback: number): Promise<number> {
+    if (!this.isAvailable()) return fallback
+
     try {
       const value = await redis.get(key)
       const parsedValue = Number(value ?? fallback)
@@ -80,6 +94,8 @@ class CacheService {
   }
 
   async increment(key: string): Promise<number | null> {
+    if (!this.isAvailable()) return null
+
     try {
       return await redis.incr(key)
     } catch (error) {
@@ -93,7 +109,7 @@ class CacheService {
   }
 
   async delete(...keys: string[]): Promise<number> {
-    if (keys.length === 0) {
+    if (!this.isAvailable() || keys.length === 0) {
       return 0
     }
 

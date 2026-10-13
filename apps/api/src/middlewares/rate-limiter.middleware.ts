@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from "express"
+import { logger } from "@workspace/logger"
 import { redis } from "../lib/redis.js"
 import { TooManyRequestsError } from "../utils/errors/index.js"
 
@@ -13,6 +14,11 @@ export function rateLimiter(options: RateLimitOptions) {
   const { limit, windowSeconds, keyPrefix, keyGenerator } = options
 
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    // If Redis is not ready, bypass rate limiter rather than crashing the request
+    if (redis.status !== "ready") {
+      return next()
+    }
+
     try {
       const identifier = keyGenerator ? keyGenerator(req) : req.ip || "unknown"
       const key = `rate_limit:${keyPrefix}:${identifier}`
@@ -55,7 +61,15 @@ export function rateLimiter(options: RateLimitOptions) {
 
       next()
     } catch (error) {
-      next(error)
+      if (error instanceof TooManyRequestsError) {
+        return next(error)
+      }
+
+      logger.warn("Rate limiter failed or Redis query error, failing open:", {
+        keyPrefix,
+        error: error instanceof Error ? error.message : String(error),
+      })
+      next()
     }
   }
 }
