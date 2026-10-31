@@ -10,7 +10,7 @@
     "lint": "turbo lint",
     "format": "turbo format",
     "typecheck": "turbo typecheck",
-    "db:generate": "pnpm --filter @workspace/db db:generate",
+    "db:contract": "pnpm --filter @workspace/db contract:emit",
     "db:init": "pnpm --filter @workspace/db db:init",
     "db:update": "pnpm --filter @workspace/db db:update",
     "db:migrate": "pnpm --filter @workspace/db db:migrate",
