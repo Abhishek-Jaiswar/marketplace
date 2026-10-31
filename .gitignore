@@ -42,6 +42,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -49,3 +50,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# assistants and tool caches
+.claude
+.cursor
+.devin
+.windsurf
+
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/codebase-structure-guidelines/
+**/.agents/

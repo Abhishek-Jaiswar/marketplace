@@ -1,13 +1,19 @@
-const databaseUrl = process.env.DATABASE_URL
+import path from "node:path"
+import dotenv from "dotenv"
 
-if (!databaseUrl) {
-  throw new Error("DATABASE_URL is required for @workspace/db")
+for (const candidate of [
+  path.resolve(process.cwd(), "../../.env"),
+  path.resolve(process.cwd(), ".env"),
+  path.resolve(process.cwd(), "../../../.env"),
+]) {
+  dotenv.config({ path: candidate })
 }
 
 export const dbEnv = {
-  DATABASE_URL: databaseUrl,
-  SLOW_QUERY_THRESHOLD: Number.parseInt(
-    process.env.SLOW_QUERY_THRESHOLD_MS ?? "500",
-    10,
-  ),
+  get DATABASE_URL(): string {
+    return process.env.DATABASE_URL ?? ""
+  },
+  get SLOW_QUERY_THRESHOLD(): number {
+    return Number.parseInt(process.env.SLOW_QUERY_THRESHOLD_MS ?? "500", 10)
+  },
 }

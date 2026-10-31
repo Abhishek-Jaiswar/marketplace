@@ -10,7 +10,8 @@
     "SLOW_QUERY_THRESHOLD_MS",
     "NEXT_RUNTIME",
     "DISABLE_FILE_LOGGING",
-    "NODE_ENV"
+    "NODE_ENV",
+    "PRISMA_ENV"
   ],
   "tasks": {
     "db:generate": {

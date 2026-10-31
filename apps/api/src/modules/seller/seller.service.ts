@@ -2,7 +2,7 @@ import { logger } from "@workspace/logger"
 import { sellerRepository } from "./seller.repository.js"
 import { userRepository } from "../users/user.repository.js"
 import { userCache } from "../users/user.cache.js"
-import { db } from "@workspace/db"
+import { db, type UserRole } from "@workspace/db"
 import {
   hashPassword,
   generateOtp,
@@ -64,9 +64,14 @@ class SellerService {
     }
 
     // Add SELLER role if not present
-    const updatedRoles = Array.from(new Set([...user.roles, "SELLER"]))
+    const updatedRoles: UserRole[] = Array.from(
+      new Set<UserRole>([...user.roles, "SELLER"]),
+    )
 
     const updatedUser = await sellerRepository.updateUserRoles(userId, updatedRoles)
+    if (!updatedUser) {
+      throw new NotFoundError("User not found")
+    }
 
     seller = await sellerRepository.createSeller(
       userId,
@@ -84,7 +89,7 @@ class SellerService {
     const accessToken = signAccessToken({
       userId: updatedUser.id,
       email: updatedUser.email,
-      roles: updatedUser.roles as string[],
+      roles: updatedUser.roles,
     })
 
     return {
@@ -418,27 +423,29 @@ class SellerService {
 
     // Update bank accounts & documents status
     if (bankStatus === "APPROVED") {
-      await db.bankAccount.updateMany({
-        where: { sellerId: seller.id },
-        data: { status: "APPROVED", verifiedAt: new Date() },
-      })
+      await db.orm.public.BankAccount
+        .where((bankAccount) => bankAccount.sellerId.eq(seller.id))
+        .updateAll({ status: "APPROVED", verifiedAt: new Date().toISOString() })
     } else if (bankStatus === "REJECTED") {
-      await db.bankAccount.updateMany({
-        where: { sellerId: seller.id },
-        data: { status: "REJECTED", rejectionReason: bankRejectionReason },
-      })
+      await db.orm.public.BankAccount
+        .where((bankAccount) => bankAccount.sellerId.eq(seller.id))
+        .updateAll({
+          status: "REJECTED",
+          rejectionReason: bankRejectionReason,
+        })
     }
 
     if (documentsStatus === "APPROVED") {
-      await db.sellerDocument.updateMany({
-        where: { verification: { sellerId: seller.id } },
-        data: { status: "APPROVED", verifiedAt: new Date() },
-      })
+      await db.orm.public.SellerDocument
+        .where((document) => document.verificationId.eq(verification.id))
+        .updateAll({ status: "APPROVED", verifiedAt: new Date().toISOString() })
     } else if (documentsStatus === "REJECTED") {
-      await db.sellerDocument.updateMany({
-        where: { verification: { sellerId: seller.id } },
-        data: { status: "REJECTED", rejectionReason: documentsRejectionReason },
-      })
+      await db.orm.public.SellerDocument
+        .where((document) => document.verificationId.eq(verification.id))
+        .updateAll({
+          status: "REJECTED",
+          rejectionReason: documentsRejectionReason,
+        })
     }
 
     // Update seller status

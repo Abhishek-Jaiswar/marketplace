@@ -1,25 +1,33 @@
-import { config } from "dotenv"
-import { defineConfig, env } from "prisma/config"
+import fs from 'node:fs';
+import path from 'node:path';
+import dotenv from 'dotenv';
+import { definePrismaConfig } from '@prisma/cli-engine';
+import { defineConfig as ormConfig } from '@prisma/orm-postgres/config';
+import type { PrismaNextConfig } from '@prisma/orm-framework/config/config-types';
 
-if (process.env.PRISMA_ENV === "production") {
-  config({ path: "../../.env.production", override: true })
-} else {
-  config({ path: "../../.env" })
+for (const candidate of [
+  path.resolve(process.cwd(), '../../.env'),
+  path.resolve(process.cwd(), '.env'),
+]) {
+  dotenv.config({ path: candidate });
 }
 
-const databaseUrl = process.env.DATABASE_URL
+const schemaDir = path.resolve(process.cwd(), 'src/prisma/schema');
+const schemaFiles = fs
+  .readdirSync(schemaDir)
+  .filter((f) => f.endsWith('.prisma'))
+  .map((f) => `./src/prisma/schema/${f}`);
 
-if (!databaseUrl) {
-  throw new Error("DATABASE_URL is required")
+const orm: PrismaNextConfig<'sql', 'postgres'> = ormConfig({
+  contract: './src/prisma/contract.prisma',
+  output: './src/prisma',
+  db: {
+    connection: process.env['DATABASE_URL']!,
+  },
+});
+
+if (orm.contract) {
+  (orm.contract.source as unknown as { inputs: string[] }).inputs = schemaFiles;
 }
 
-export default defineConfig({
-  schema: "prisma/schema",
-  migrations: {
-    path: "prisma/migrations",
-    seed: "tsx prisma/seed.ts",
-  },
-  datasource: {
-    url: env("DATABASE_URL"),
-  },
-})
+export default definePrismaConfig({ orm });

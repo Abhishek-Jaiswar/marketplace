@@ -1,54 +1,30 @@
-import { db, type Prisma } from "@workspace/db"
+import { and, db, or, type Condition } from "@workspace/db"
 import type {
   CreateCategoryInput,
   ListCategoriesQuery,
   UpdateCategoryInput,
 } from "./category.types.js"
 
+type CategoryWhereInput = NonNullable<
+  Parameters<typeof db.orm.public.Category.first>[0]
+>
+
 class CategoryRepository {
   async findById(id: string) {
-    return await db.category.findUnique({
-      where: { id },
-      include: {
-        parent: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        _count: {
-          select: {
-            children: true,
-          },
-        },
-      },
-    })
+    return await db.orm.public.Category
+      .include("parent", (parent) => parent.select("id", "name", "slug"))
+      .include("children", (children) => children.count())
+      .first({ id })
   }
 
   async findBySlug(slug: string) {
-    return await db.category.findUnique({
-      where: { slug },
-      include: {
-        parent: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        children: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            excerpt: true,
-            image: true,
-            isActive: true,
-          },
-        },
-      },
-    })
+    return await db.orm.public.Category
+      .include("parent", (parent) => parent.select("id", "name", "slug"))
+      .include("children", (children) =>
+        children.select("id", "name", "slug", "excerpt", "image", "isActive"),
+      )
+      .where({ slug })
+      .first()
   }
 
   async findMany(params: ListCategoriesQuery) {
@@ -56,98 +32,102 @@ class CategoryRepository {
     const limit = params.limit ?? 20
     const skip = (page - 1) * limit
 
-    const where: Prisma.CategoryWhereInput = {}
+    const isActive = params.isActive
+    const parentId =
+      params.parentId === "null" || params.parentId === ""
+        ? null
+        : params.parentId
+    const search = params.search
 
-    if (params.isActive !== undefined) {
-      where.isActive = params.isActive
+    const where: CategoryWhereInput = (category) => {
+      const conditions: Condition[] = []
+
+      if (isActive !== undefined) {
+        conditions.push(category.isActive.eq(isActive))
+      }
+
+      if (parentId !== undefined) {
+        conditions.push(
+          parentId === null
+            ? category.parentId.isNull()
+            : category.parentId.eq(parentId),
+        )
+      }
+
+      if (search) {
+        const term = `%${search}%`
+        conditions.push(
+          or(
+            category.name.ilike(term),
+            category.slug.ilike(term),
+            category.excerpt.ilike(term),
+          ),
+        )
+      }
+
+      return conditions.length > 0 ? and(...conditions) : and()
     }
 
-    if (params.parentId !== undefined) {
-      where.parentId = params.parentId === "null" || params.parentId === "" ? null : params.parentId
-    }
+    const query = db.orm.public.Category
+      .where(where)
+      .orderBy((category) => category.name.asc())
+      .offset(skip)
+      .limit(limit)
+      .include("parent", (parent) => parent.select("id", "name", "slug"))
+      .include("children", (children) => children.count())
 
-    if (params.search) {
-      where.OR = [
-        { name: { contains: params.search, mode: "insensitive" } },
-        { slug: { contains: params.search, mode: "insensitive" } },
-        { excerpt: { contains: params.search, mode: "insensitive" } },
-      ]
-    }
-
-    const [items, total] = await Promise.all([
-      db.category.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { name: "asc" },
-        include: {
-          parent: {
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-            },
-          },
-          _count: {
-            select: {
-              children: true,
-            },
-          },
-        },
-      }),
-      db.category.count({ where }),
+    const [items, totals] = await Promise.all([
+      query.all(),
+      db.orm.public.Category
+        .where(where)
+        .aggregate((aggregate) => ({ total: aggregate.count() })),
     ])
 
     return {
       items,
-      total,
+      total: totals.total,
       page,
       limit,
-      totalPages: Math.ceil(total / limit),
+      totalPages: Math.ceil(totals.total / limit),
     }
   }
 
   async findTree(includeInactive = false) {
-    const where: Prisma.CategoryWhereInput = {
-      parentId: null,
+    if (includeInactive) {
+      return await db.orm.public.Category
+        .where((category) => category.parentId.isNull())
+        .orderBy((category) => category.name.asc())
+        .include("children", (children) =>
+          children
+            .orderBy((category) => category.name.asc())
+            .include("children", (grandchildren) =>
+              grandchildren.orderBy((category) => category.name.asc()),
+            ),
+        )
+        .all()
     }
 
-    if (!includeInactive) {
-      where.isActive = true
-    }
-
-    const childrenInclude = includeInactive
-      ? {
-          orderBy: { name: "asc" as const },
-          include: {
-            children: {
-              orderBy: { name: "asc" as const },
-            },
-          },
-        }
-      : {
-          where: { isActive: true },
-          orderBy: { name: "asc" as const },
-          include: {
-            children: {
-              where: { isActive: true },
-              orderBy: { name: "asc" as const },
-            },
-          },
-        }
-
-    return await db.category.findMany({
-      where,
-      orderBy: { name: "asc" },
-      include: {
-        children: childrenInclude,
-      },
-    })
+    return await db.orm.public.Category
+      .where((category) => category.parentId.isNull())
+      .where((category) => category.isActive.eq(true))
+      .orderBy((category) => category.name.asc())
+      .include("children", (children) =>
+        children
+          .where((category) => category.isActive.eq(true))
+          .orderBy((category) => category.name.asc())
+          .include("children", (grandchildren) =>
+            grandchildren
+              .where((category) => category.isActive.eq(true))
+              .orderBy((category) => category.name.asc()),
+          ),
+      )
+      .all()
   }
 
   async create(data: CreateCategoryInput) {
-    return await db.category.create({
-      data: {
+    return await db.orm.public.Category
+      .include("parent", (parent) => parent.select("id", "name", "slug"))
+      .create({
         name: data.name,
         slug: data.slug!,
         excerpt: data.excerpt ?? null,
@@ -156,62 +136,42 @@ class CategoryRepository {
         altText: data.altText,
         isActive: data.isActive ?? true,
         parentId: data.parentId ?? null,
-      },
-      include: {
-        parent: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-      },
-    })
+      })
   }
 
   async update(id: string, data: UpdateCategoryInput) {
-    const updateData: Prisma.CategoryUpdateInput = {}
+    const parentId = data.parentId
 
-    if (data.name !== undefined) updateData.name = data.name
-    if (data.slug !== undefined) updateData.slug = data.slug
-    if (data.excerpt !== undefined) updateData.excerpt = data.excerpt ?? null
-    if (data.image !== undefined) updateData.image = data.image
-    if (data.storageKey !== undefined) updateData.storageKey = data.storageKey
-    if (data.altText !== undefined) updateData.altText = data.altText
-    if (data.isActive !== undefined) updateData.isActive = data.isActive
-    if (data.parentId !== undefined) {
-      if (data.parentId === null || data.parentId === "") {
-        updateData.parent = { disconnect: true }
-      } else {
-        updateData.parent = { connect: { id: data.parentId } }
-      }
-    }
-
-    return await db.category.update({
-      where: { id },
-      data: updateData,
-      include: {
-        parent: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-      },
-    })
+    return await db.orm.public.Category
+      .include("parent", (parent) => parent.select("id", "name", "slug"))
+      .where({ id })
+      .update({
+        ...(data.name !== undefined && { name: data.name }),
+        ...(data.slug !== undefined && { slug: data.slug }),
+        ...(data.excerpt !== undefined && { excerpt: data.excerpt ?? null }),
+        ...(data.image !== undefined && { image: data.image }),
+        ...(data.storageKey !== undefined && { storageKey: data.storageKey }),
+        ...(data.altText !== undefined && { altText: data.altText }),
+        ...(data.isActive !== undefined && { isActive: data.isActive }),
+        ...(parentId !== undefined && {
+          parent: (parent) =>
+            parentId === null || parentId === ""
+              ? parent.disconnect()
+              : parent.connect({ id: parentId }),
+        }),
+      })
   }
 
   async delete(id: string) {
-    return await db.category.delete({
-      where: { id },
-    })
+    return await db.orm.public.Category.where({ id }).delete()
   }
 
   async countChildren(parentId: string): Promise<number> {
-    return await db.category.count({
-      where: { parentId },
-    })
+    const result = await db.orm.public.Category
+      .where({ parentId })
+      .aggregate((aggregate) => ({ count: aggregate.count() }))
+
+    return result.count
   }
 
   async getAllCategoryAncestors(id: string): Promise<string[]> {
@@ -219,13 +179,14 @@ class CategoryRepository {
     let currentId: string | null = id
 
     while (currentId) {
-      const cat: { parentId: string | null } | null = await db.category.findUnique({
-        where: { id: currentId },
-        select: { parentId: true },
-      })
-      if (!cat || !cat.parentId) break
-      ancestors.push(cat.parentId)
-      currentId = cat.parentId
+      const categoryRecord: { parentId: string | null } | null =
+        await db.orm.public.Category
+          .select("parentId")
+          .first({ id: currentId })
+
+      if (!categoryRecord || !categoryRecord.parentId) break
+      ancestors.push(categoryRecord.parentId)
+      currentId = categoryRecord.parentId
     }
 
     return ancestors

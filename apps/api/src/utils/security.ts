@@ -6,7 +6,7 @@ import { Env } from "../config/env.config.js"
 export interface AccessTokenPayload {
   userId: string
   email: string
-  roles: string[]
+  roles: readonly string[] | string[]
 }
 
 export async function hashPassword(password: string): Promise<string> {

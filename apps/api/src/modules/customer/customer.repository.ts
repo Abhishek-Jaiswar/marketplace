@@ -1,116 +1,94 @@
 import { db } from "@workspace/db"
-import { TCreateAddress, TUpdateAddress, TUpdateProfile } from "./customer.types.js"
+import {
+  TCreateAddress,
+  TUpdateAddress,
+  TUpdateProfile,
+} from "./customer.types.js"
 
 class CustomerRepository {
   async findCustomerByUserId(userId: string) {
-    return db.customer.findUnique({
-      where: {
-        userId,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            status: true,
-            roles: true,
-            avatar: true,
-          },
-        },
-        defaultShippingAddress: true,
-        defaultBillingAddress: true,
-        addresses: true,
-      },
-    })
+    return db.orm.public.Customer
+      .include("user", (user) =>
+        user.select(
+          "id",
+          "firstName",
+          "lastName",
+          "email",
+          "status",
+          "roles",
+          "avatar",
+        ),
+      )
+      .include("defaultShippingAddress")
+      .include("defaultBillingAddress")
+      .include("addresses")
+      .where({ userId })
+      .first()
   }
 
   async updateCustomerProfile(userId: string, data: TUpdateProfile) {
-    const updateData: any = {}
-    if (data.phoneNumber !== undefined) {
-      updateData.phoneNumber = data.phoneNumber ?? null
-    }
-
-    return db.customer.update({
-      where: {
-        userId,
-      },
-      data: updateData,
-    })
+    return db.orm.public.Customer
+      .where({ userId })
+      .update({
+        ...(data.phoneNumber !== undefined && {
+          phoneNumber: data.phoneNumber ?? null,
+        }),
+      })
   }
 
   async findAddressById(addressId: string) {
-    return db.address.findUnique({
-      where: {
-        id: addressId,
-      },
-    })
+    return db.orm.public.Address.first({ id: addressId })
   }
 
   async createAddress(customerId: string, data: TCreateAddress) {
-    return db.address.create({
-      data: {
-        street1: data.street1,
-        street2: data.street2 ?? null,
-        landmark: data.landmark ?? null,
-        city: data.city,
-        state: data.state,
-        postalCode: data.postalCode,
-        country: data.country,
-        phoneNumber: data.phoneNumber ?? null,
-        customerId,
-      },
+    return db.orm.public.Address.create({
+      street1: data.street1,
+      street2: data.street2 ?? null,
+      landmark: data.landmark ?? null,
+      city: data.city,
+      state: data.state,
+      postalCode: data.postalCode,
+      country: data.country,
+      phoneNumber: data.phoneNumber ?? null,
+      customerId,
     })
   }
 
   async updateAddress(addressId: string, data: TUpdateAddress) {
-    const updateData: any = {}
-    if (data.street1 !== undefined) updateData.street1 = data.street1
-    if (data.street2 !== undefined) updateData.street2 = data.street2 ?? null
-    if (data.landmark !== undefined) updateData.landmark = data.landmark ?? null
-    if (data.city !== undefined) updateData.city = data.city
-    if (data.state !== undefined) updateData.state = data.state
-    if (data.postalCode !== undefined) updateData.postalCode = data.postalCode
-    if (data.country !== undefined) updateData.country = data.country
-    if (data.phoneNumber !== undefined) updateData.phoneNumber = data.phoneNumber ?? null
-
-    return db.address.update({
-      where: {
-        id: addressId,
-      },
-      data: updateData,
-    })
+    return db.orm.public.Address
+      .where({ id: addressId })
+      .update({
+        ...(data.street1 !== undefined && { street1: data.street1 }),
+        ...(data.street2 !== undefined && { street2: data.street2 ?? null }),
+        ...(data.landmark !== undefined && { landmark: data.landmark ?? null }),
+        ...(data.city !== undefined && { city: data.city }),
+        ...(data.state !== undefined && { state: data.state }),
+        ...(data.postalCode !== undefined && { postalCode: data.postalCode }),
+        ...(data.country !== undefined && { country: data.country }),
+        ...(data.phoneNumber !== undefined && {
+          phoneNumber: data.phoneNumber ?? null,
+        }),
+      })
   }
 
   async deleteAddress(addressId: string) {
-    return db.address.delete({
-      where: {
-        id: addressId,
-      },
-    })
+    return db.orm.public.Address.where({ id: addressId }).delete()
   }
 
   async setDefaultShippingAddress(userId: string, addressId: string | null) {
-    return db.customer.update({
-      where: {
-        userId,
-      },
-      data: {
+    return db.orm.public.Customer
+      .where({ userId })
+      .update({
         defaultShippingAddressId: addressId,
-      },
-    })
+      })
   }
 
   async setDefaultBillingAddress(userId: string, addressId: string | null) {
-    return db.customer.update({
-      where: {
-        userId,
-      },
-      data: {
+    return db.orm.public.Customer
+      .where({ userId })
+      .update({
         defaultBillingAddressId: addressId,
-      },
-    })
+      })
   }
 }
 

@@ -12,7 +12,7 @@ const categoryMutationLimiter = rateLimiter({
   keyPrefix: "category-mutation",
 })
 
-// Public Read Routes (Cached)
+// Public Read Routes (Cached)z 
 router.get("/tree", categoryController.getCategoryTree)
 router.get("/slug/:slug", categoryController.getCategoryBySlug)
 router.get("/:id", categoryController.getCategoryById)

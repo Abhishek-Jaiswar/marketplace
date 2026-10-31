@@ -1,119 +1,89 @@
 import {
   db,
-  type SellerStatus,
   type BusinessType,
-  type VerificationStatus,
-  type SellerDocumentType,
   type MediaType,
+  type SellerDocumentType,
+  type SellerStatus,
   type StorageProvider,
+  type UserRole,
+  type VerificationStatus,
 } from "@workspace/db"
 
 class SellerRepository {
   async findAllSellers(page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit
-    const [total, items] = await Promise.all([
-      db.seller.count(),
-      db.seller.findMany({
-        skip,
-        take: limit,
-        orderBy: { createdAt: "desc" },
-        include: {
-          owner: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              email: true,
-              status: true,
-              roles: true,
-            },
-          },
-          bankAccounts: true,
-          store: {
-            include: {
-              address: true,
-            },
-          },
-          verification: {
-            include: {
-              documents: {
-                include: {
-                  media: true,
-                },
-              },
-            },
-          },
-        },
-      }),
+
+    const [totals, items] = await Promise.all([
+      db.orm.public.Seller.aggregate((aggregate) => ({
+        total: aggregate.count(),
+      })),
+      db.orm.public.Seller
+        .orderBy((seller) => seller.createdAt.desc())
+        .offset(skip)
+        .limit(limit)
+        .include("owner", (owner) =>
+          owner.select(
+            "id",
+            "firstName",
+            "lastName",
+            "email",
+            "status",
+            "roles",
+          ),
+        )
+        .include("bankAccounts")
+        .include("store", (store) => store.include("address"))
+        .include("verification", (verification) =>
+          verification.include("documents", (documents) =>
+            documents.include("media"),
+          ),
+        )
+        .all(),
     ])
 
     return {
-      total,
+      total: totals.total,
       page,
       limit,
-      totalPages: Math.ceil(total / limit),
+      totalPages: Math.ceil(totals.total / limit),
       data: items,
     }
   }
 
   async findSellerById(sellerId: string) {
-    return db.seller.findUnique({
-      where: {
-        id: sellerId,
-      },
-      include: {
-        owner: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            status: true,
-            roles: true,
-          },
-        },
-        bankAccounts: true,
-        store: {
-          include: {
-            address: true,
-          },
-        },
-        verification: {
-          include: {
-            documents: {
-              include: {
-                media: true,
-              },
-            },
-          },
-        },
-      },
-    })
+    return db.orm.public.Seller
+      .include("owner", (owner) =>
+        owner.select(
+          "id",
+          "firstName",
+          "lastName",
+          "email",
+          "status",
+          "roles",
+        ),
+      )
+      .include("bankAccounts")
+      .include("store", (store) => store.include("address"))
+      .include("verification", (verification) =>
+        verification.include("documents", (documents) =>
+          documents.include("media"),
+        ),
+      )
+      .where({ id: sellerId })
+      .first()
   }
 
   async findSellerByOwnerId(ownerUserId: string) {
-    return db.seller.findUnique({
-      where: {
-        ownerUserId,
-      },
-      include: {
-        bankAccounts: true,
-        store: {
-          include: {
-            address: true,
-          },
-        },
-        verification: {
-          include: {
-            documents: {
-              include: {
-                media: true,
-              },
-            },
-          },
-        },
-      },
-    })
+    return db.orm.public.Seller
+      .include("bankAccounts")
+      .include("store", (store) => store.include("address"))
+      .include("verification", (verification) =>
+        verification.include("documents", (documents) =>
+          documents.include("media"),
+        ),
+      )
+      .where({ ownerUserId })
+      .first()
   }
 
   async createSeller(
@@ -122,10 +92,27 @@ class SellerRepository {
     businessType: BusinessType,
     contactEmail?: string,
     contactPhone?: string,
-    gstin?: string
+    gstin?: string,
   ) {
-    return db.seller.create({
-      data: {
+    return db.orm.public.Seller
+      .include("owner", (owner) =>
+        owner.select(
+          "id",
+          "firstName",
+          "lastName",
+          "email",
+          "status",
+          "roles",
+        ),
+      )
+      .include("bankAccounts")
+      .include("store", (store) => store.include("address"))
+      .include("verification", (verification) =>
+        verification.include("documents", (documents) =>
+          documents.include("media"),
+        ),
+      )
+      .create({
         ownerUserId,
         businessName,
         businessType,
@@ -133,35 +120,7 @@ class SellerRepository {
         contactEmail: contactEmail ?? null,
         contactPhone: contactPhone ?? null,
         status: "DRAFT",
-      },
-      include: {
-        owner: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            status: true,
-            roles: true,
-          },
-        },
-        bankAccounts: true,
-        store: {
-          include: {
-            address: true,
-          },
-        },
-        verification: {
-          include: {
-            documents: {
-              include: {
-                media: true,
-              },
-            },
-          },
-        },
-      },
-    })
+      })
   }
 
   async updateSellerProfile(
@@ -173,40 +132,50 @@ class SellerRepository {
       contactEmail?: string
       contactPhone?: string
       status?: SellerStatus
-      approvedAt?: Date | null
-    }
+      approvedAt?: Date | string | null
+    },
   ) {
-    const updateData: any = {}
-    if (data.businessName !== undefined) updateData.businessName = data.businessName
-    if (data.businessType !== undefined) updateData.businessType = data.businessType
-    if (data.gstin !== undefined) updateData.gstin = data.gstin ?? null
-    if (data.contactEmail !== undefined) updateData.contactEmail = data.contactEmail ?? null
-    if (data.contactPhone !== undefined) updateData.contactPhone = data.contactPhone ?? null
-    if (data.status !== undefined) updateData.status = data.status
-    if (data.approvedAt !== undefined) updateData.approvedAt = data.approvedAt
-
-    return db.seller.update({
-      where: { id: sellerId },
-      data: updateData,
-    })
+    return db.orm.public.Seller
+      .where({ id: sellerId })
+      .update({
+        ...(data.businessName !== undefined && {
+          businessName: data.businessName,
+        }),
+        ...(data.businessType !== undefined && {
+          businessType: data.businessType,
+        }),
+        ...(data.gstin !== undefined && { gstin: data.gstin ?? null }),
+        ...(data.contactEmail !== undefined && {
+          contactEmail: data.contactEmail ?? null,
+        }),
+        ...(data.contactPhone !== undefined && {
+          contactPhone: data.contactPhone ?? null,
+        }),
+        ...(data.status !== undefined && { status: data.status }),
+        ...(data.approvedAt !== undefined && {
+          approvedAt:
+            data.approvedAt instanceof Date
+              ? data.approvedAt.toISOString()
+              : data.approvedAt,
+        }),
+      })
   }
 
-  async updateUserRoles(userId: string, roles: any[]) {
-    return db.user.update({
-      where: { id: userId },
-      data: {
+  async updateUserRoles(userId: string, roles: UserRole[]) {
+    return db.orm.public.User
+      .select(
+        "id",
+        "firstName",
+        "lastName",
+        "email",
+        "status",
+        "roles",
+        "emailVerified",
+      )
+      .where({ id: userId })
+      .update({
         roles,
-      },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        status: true,
-        roles: true,
-        emailVerified: true,
-      },
-    })
+      })
   }
 
   async upsertStore(
@@ -225,21 +194,20 @@ class SellerRepository {
         country: string
         phoneNumber?: string
       }
-    }
+    },
   ) {
-    // 1. Handle Address first if provided
     let addressId: string | undefined
 
     if (storeData.address) {
-      const existingStore = await db.store.findUnique({
-        where: { sellerId },
-        select: { addressId: true },
-      })
+      const existingStore = await db.orm.public.Store
+        .select("addressId")
+        .where({ sellerId })
+        .first()
 
       if (existingStore?.addressId) {
-        const updatedAddress = await db.address.update({
-          where: { id: existingStore.addressId },
-          data: {
+        const updatedAddress = await db.orm.public.Address
+          .where({ id: existingStore.addressId })
+          .update({
             street1: storeData.address.street1,
             street2: storeData.address.street2 ?? null,
             landmark: storeData.address.landmark ?? null,
@@ -248,31 +216,28 @@ class SellerRepository {
             postalCode: storeData.address.postalCode,
             country: storeData.address.country,
             phoneNumber: storeData.address.phoneNumber ?? null,
-          },
-        })
-        addressId = updatedAddress.id
+          })
+
+        addressId = updatedAddress?.id
       } else {
-        const newAddress = await db.address.create({
-          data: {
-            street1: storeData.address.street1,
-            street2: storeData.address.street2 ?? null,
-            landmark: storeData.address.landmark ?? null,
-            city: storeData.address.city,
-            state: storeData.address.state,
-            postalCode: storeData.address.postalCode,
-            country: storeData.address.country,
-            phoneNumber: storeData.address.phoneNumber ?? null,
-          },
+        const newAddress = await db.orm.public.Address.create({
+          street1: storeData.address.street1,
+          street2: storeData.address.street2 ?? null,
+          landmark: storeData.address.landmark ?? null,
+          city: storeData.address.city,
+          state: storeData.address.state,
+          postalCode: storeData.address.postalCode,
+          country: storeData.address.country,
+          phoneNumber: storeData.address.phoneNumber ?? null,
         })
+
         addressId = newAddress.id
       }
     }
 
     const finalSlug = storeData.slug || `store-${sellerId.substring(0, 6)}`
 
-    // 2. Upsert Store
-    return db.store.upsert({
-      where: { sellerId },
+    return db.orm.public.Store.include("address").upsert({
       create: {
         sellerId,
         displayName: storeData.displayName,
@@ -286,30 +251,26 @@ class SellerRepository {
         description: storeData.description ?? null,
         addressId: addressId !== undefined ? addressId : null,
       },
-      include: {
-        address: true,
-      },
+      conflictOn: { sellerId },
     })
   }
 
   async findStoreBySlug(slug: string) {
-    return db.store.findUnique({
-      where: { slug },
-      include: {
-        address: true,
-        seller: {
-          select: {
-            id: true,
-            businessName: true,
-            businessType: true,
-            contactEmail: true,
-            contactPhone: true,
-            status: true,
-            createdAt: true,
-          },
-        },
-      },
-    })
+    return db.orm.public.Store
+      .include("address")
+      .include("seller", (seller) =>
+        seller.select(
+          "id",
+          "businessName",
+          "businessType",
+          "contactEmail",
+          "contactPhone",
+          "status",
+          "createdAt",
+        ),
+      )
+      .where({ slug })
+      .first()
   }
 
   async addBankAccount(
@@ -319,72 +280,55 @@ class SellerRepository {
       accountNumber: string
       ifscCode: string
       bankName: string
-    }
+    },
   ) {
-    const existing = await db.bankAccount.findFirst({
-      where: { sellerId, isPrimary: true },
-    })
+    const existing = await db.orm.public.BankAccount
+      .where({ sellerId, isPrimary: true })
+      .first()
 
     if (existing) {
-      return db.bankAccount.update({
-        where: { id: existing.id },
-        data: {
+      return db.orm.public.BankAccount
+        .where({ id: existing.id })
+        .update({
           accountHolderName: bankData.accountHolderName,
           accountNumber: bankData.accountNumber,
           ifscCode: bankData.ifscCode,
           bankName: bankData.bankName,
           status: "PENDING",
-        },
-      })
+        })
     }
 
-    await db.bankAccount.updateMany({
-      where: { sellerId },
-      data: { isPrimary: false },
-    })
+    await db.orm.public.BankAccount
+      .where({ sellerId })
+      .updateAll({ isPrimary: false })
 
-    return db.bankAccount.create({
-      data: {
-        sellerId,
-        accountHolderName: bankData.accountHolderName,
-        accountNumber: bankData.accountNumber,
-        ifscCode: bankData.ifscCode,
-        bankName: bankData.bankName,
-        isPrimary: true,
-        status: "PENDING",
-      },
+    return db.orm.public.BankAccount.create({
+      sellerId,
+      accountHolderName: bankData.accountHolderName,
+      accountNumber: bankData.accountNumber,
+      ifscCode: bankData.ifscCode,
+      bankName: bankData.bankName,
+      isPrimary: true,
+      status: "PENDING",
     })
   }
 
   async getOrCreateVerification(sellerId: string) {
-    const existing = await db.sellerVerification.findUnique({
-      where: { sellerId },
-      include: {
-        documents: {
-          include: {
-            media: true,
-          },
-        },
-      },
-    })
+    const existing = await db.orm.public.SellerVerification
+      .include("documents", (documents) => documents.include("media"))
+      .where({ sellerId })
+      .first()
 
     if (existing) {
       return existing
     }
 
-    return db.sellerVerification.create({
-      data: {
+    return db.orm.public.SellerVerification
+      .include("documents", (documents) => documents.include("media"))
+      .create({
         sellerId,
         status: "PENDING",
-      },
-      include: {
-        documents: {
-          include: {
-            media: true,
-          },
-        },
-      },
-    })
+      })
   }
 
   async updateVerificationStatus(
@@ -401,27 +345,22 @@ class SellerRepository {
       bankRejectionReason?: string | null
       documentsStatus?: VerificationStatus
       documentsRejectionReason?: string | null
-    }
+    },
   ) {
     const verification = await this.getOrCreateVerification(sellerId)
 
-    const updateData: any = {
-      status,
-      reviewedBy: reviewedBy ?? null,
-      remarks: remarks ?? null,
-      ...(stepData || {}),
-    }
-    if (status === "UNDER_REVIEW") {
-      updateData.submittedAt = new Date()
-    }
-    if (["APPROVED", "REJECTED"].includes(status)) {
-      updateData.reviewedAt = new Date()
-    }
-
-    return db.sellerVerification.update({
-      where: { id: verification.id },
-      data: updateData,
-    })
+    return db.orm.public.SellerVerification
+      .where({ id: verification.id })
+      .update({
+        status,
+        reviewedBy: reviewedBy ?? null,
+        remarks: remarks ?? null,
+        ...(stepData ?? {}),
+        ...(status === "UNDER_REVIEW" && { submittedAt: new Date().toISOString() }),
+        ...(["APPROVED", "REJECTED"].includes(status) && {
+          reviewedAt: new Date().toISOString(),
+        }),
+      })
   }
 
   async createMedia(mediaData: {
@@ -436,119 +375,90 @@ class SellerRepository {
     url: string
     uploadedById?: string
   }) {
-    return db.media.create({
-      data: {
-        fileName: mediaData.fileName,
-        originalName: mediaData.originalName,
-        mimeType: mediaData.mimeType,
-        extension: mediaData.extension,
-        size: mediaData.size,
-        mediaType: mediaData.mediaType,
-        provider: mediaData.provider,
-        storageKey: mediaData.storageKey,
-        url: mediaData.url,
-        uploadedById: mediaData.uploadedById ?? null,
-      },
+    return db.orm.public.Media.create({
+      fileName: mediaData.fileName,
+      originalName: mediaData.originalName,
+      mimeType: mediaData.mimeType,
+      extension: mediaData.extension,
+      size: mediaData.size,
+      mediaType: mediaData.mediaType,
+      provider: mediaData.provider,
+      storageKey: mediaData.storageKey,
+      url: mediaData.url,
+      uploadedById: mediaData.uploadedById ?? null,
     })
   }
 
   async addDocument(
     verificationId: string,
     mediaId: string,
-    type: SellerDocumentType
+    type: SellerDocumentType,
   ) {
-    // If a document of the same type already exists for this verification, delete it first
-    const existing = await db.sellerDocument.findFirst({
-      where: {
-        verificationId,
-        type,
-      },
-    })
+    const existing = await db.orm.public.SellerDocument
+      .where({ verificationId, type })
+      .first()
 
     if (existing) {
-      await db.sellerDocument.delete({
-        where: { id: existing.id },
-      })
+      await db.orm.public.SellerDocument.where({ id: existing.id }).delete()
     }
 
-    return db.sellerDocument.create({
-      data: {
+    return db.orm.public.SellerDocument
+      .include("media")
+      .create({
         verificationId,
         mediaId,
         type,
         status: "PENDING",
-      },
-      include: {
-        media: true,
-      },
-    })
+      })
   }
 
   async registerSellerTransaction(payload: any, passwordHash: string) {
-    return db.$transaction(async (tx) => {
-      const user = await tx.user.create({
-        data: {
+    return db.transaction(async (tx) => {
+      const user = await tx.orm.public.User
+        .select(
+          "id",
+          "firstName",
+          "lastName",
+          "email",
+          "status",
+          "roles",
+          "createdAt",
+        )
+        .create({
           firstName: payload.firstName,
           lastName: payload.lastName || null,
           email: payload.email,
           roles: ["CUSTOMER", "SELLER"],
           status: "UNVERIFIED",
-          credential: {
-            create: {
-              passwordHash,
-            },
-          },
-          customer: {
-            create: {},
-          },
-        },
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          email: true,
-          status: true,
-          roles: true,
-          createdAt: true,
-        },
-      })
+          credential: (credential) => credential.create({ passwordHash }),
+          customer: (customer) => customer.create({}),
+        })
 
-      const seller = await tx.seller.create({
-        data: {
+      const seller = await tx.orm.public.Seller
+        .include("owner", (owner) =>
+          owner.select(
+            "id",
+            "firstName",
+            "lastName",
+            "email",
+            "status",
+            "roles",
+          ),
+        )
+        .include("bankAccounts")
+        .include("store", (store) => store.include("address"))
+        .include("verification", (verification) =>
+          verification.include("documents", (documents) =>
+            documents.include("media"),
+          ),
+        )
+        .create({
           ownerUserId: user.id,
           businessName: payload.businessName || `${payload.firstName}'s Store`,
           businessType: payload.businessType || "INDIVIDUAL",
           contactEmail: payload.email,
           status: "DRAFT",
-        },
-        include: {
-          owner: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              email: true,
-              status: true,
-              roles: true,
-            },
-          },
-          bankAccounts: true,
-          store: {
-            include: {
-              address: true,
-            },
-          },
-          verification: {
-            include: {
-              documents: {
-                include: {
-                  media: true,
-                },
-              },
-            },
-          },
-        },
-      })
+        })
 
       return { user, seller }
     })

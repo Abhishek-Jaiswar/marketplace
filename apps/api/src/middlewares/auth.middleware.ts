@@ -9,7 +9,7 @@ declare global {
       user?: {
         userId: string
         email: string
-        roles: string[]
+        roles: readonly string[] | string[]
       }
     }
   }

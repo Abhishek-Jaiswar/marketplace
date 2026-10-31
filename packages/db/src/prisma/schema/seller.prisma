@@ -1,0 +1,164 @@
+// use prisma-8
+
+model Seller {
+  id String @id @onCreate(cuid(2))
+
+  ownerUserId String @unique
+  owner       User   @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+
+  businessName String
+  businessType BusinessType
+
+  gstin String? @unique
+
+  contactEmail String?
+  contactPhone String?
+
+  status SellerStatus @default(DRAFT)
+
+  approvedAt TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  store        Store?
+  verification SellerVerification?
+  bankAccounts BankAccount[]
+
+  @@index([status])
+}
+
+model Store {
+  id String @id @onCreate(cuid(2))
+
+  sellerId String @unique
+  seller   Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  displayName String
+
+  slug String @unique
+
+  logoMediaId   String?
+  bannerMediaId String?
+  addressId     String? @unique
+
+  description String?
+
+  logo    Media?   @relation("StoreLogo", fields: [logoMediaId], references: [id], onDelete: SetNull)
+  banner  Media?   @relation("StoreBanner", fields: [bannerMediaId], references: [id], onDelete: SetNull)
+  address Address? @relation(fields: [addressId], references: [id], onDelete: SetNull)
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([logoMediaId])
+  @@index([bannerMediaId])
+}
+
+model BankAccount {
+  id String @id @onCreate(cuid(2))
+
+  sellerId String
+  seller   Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  accountHolderName String
+  accountNumber     String
+  ifscCode          String
+  bankName          String
+  isPrimary         Boolean            @default(false)
+  status            VerificationStatus @default(PENDING)
+  verifiedAt        TimestampString(3)?
+  rejectionReason   String?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([sellerId])
+  @@index([status])
+}
+
+model SellerVerification {
+  id String @id @onCreate(cuid(2))
+
+  sellerId String @unique
+  seller   Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  status VerificationStatus @default(PENDING)
+
+  businessStatus           VerificationStatus @default(PENDING)
+  businessRejectionReason  String?
+
+  storeStatus              VerificationStatus @default(PENDING)
+  storeRejectionReason     String?
+
+  bankStatus               VerificationStatus @default(PENDING)
+  bankRejectionReason      String?
+
+  documentsStatus          VerificationStatus @default(PENDING)
+  documentsRejectionReason String?
+
+  submittedAt TimestampString(3)?
+  reviewedAt  TimestampString(3)?
+  reviewedBy  String?
+  remarks     String?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  documents SellerDocument[]
+
+  @@index([status])
+}
+
+model SellerDocument {
+  id String @id @onCreate(cuid(2))
+
+  verificationId String
+  verification   SellerVerification @relation(fields: [verificationId], references: [id], onDelete: Cascade)
+
+  mediaId String
+  media   Media  @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  type SellerDocumentType
+
+  status VerificationStatus @default(PENDING)
+
+  rejectionReason String?
+
+  verifiedAt TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([verificationId])
+  @@index([mediaId])
+  @@index([type])
+  @@index([status])
+}
+
+model Media {
+  id           String          @id @onCreate(cuid(2))
+  fileName     String
+  originalName String
+  mimeType     String
+  extension    String?
+  size         Int
+  mediaType    MediaType
+  provider     StorageProvider
+  storageKey   String
+  url          String
+  checksum     String?
+
+  uploadedById String?
+  uploadedBy   User?   @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  sellerDocuments SellerDocument[]
+  storeLogos      Store[]          @relation("StoreLogo")
+  storeBanners    Store[]          @relation("StoreBanner")
+  productImages   Product[]
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+
+  @@index([uploadedById])
+  @@index([mediaType])
+}

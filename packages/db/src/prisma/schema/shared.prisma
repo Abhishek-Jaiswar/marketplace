@@ -1,0 +1,82 @@
+// use prisma-8
+
+enum UserStatus {
+  @@type("pg/text@1")
+  ACTIVE       = "ACTIVE"
+  UNVERIFIED   = "UNVERIFIED"
+  SUSPENDED    = "SUSPENDED"
+}
+
+enum UserRole {
+  @@type("pg/text@1")
+  CUSTOMER = "CUSTOMER"
+  SELLER   = "SELLER"
+  ADMIN    = "ADMIN"
+}
+
+enum VerificationTokenType {
+  @@type("pg/text@1")
+  EMAIL_VERIFICATION = "EMAIL_VERIFICATION"
+  PASSWORD_RESET     = "PASSWORD_RESET"
+}
+
+enum AuthProvider {
+  @@type("pg/text@1")
+  CREDENTIALS = "CREDENTIALS"
+  GOOGLE      = "GOOGLE"
+  GITHUB      = "GITHUB"
+  APPLE       = "APPLE"
+}
+
+enum SellerStatus {
+  @@type("pg/text@1")
+  DRAFT              = "DRAFT"
+  DOCUMENTS_PENDING  = "DOCUMENTS_PENDING"
+  UNDER_REVIEW       = "UNDER_REVIEW"
+  APPROVED           = "APPROVED"
+  REJECTED           = "REJECTED"
+  SUSPENDED          = "SUSPENDED"
+}
+
+enum BusinessType {
+  @@type("pg/text@1")
+  INDIVIDUAL          = "INDIVIDUAL"
+  SOLE_PROPRIETORSHIP = "SOLE_PROPRIETORSHIP"
+  PARTNERSHIP         = "PARTNERSHIP"
+  LLP                 = "LLP"
+  PRIVATE_LIMITED     = "PRIVATE_LIMITED"
+  PUBLIC_LIMITED      = "PUBLIC_LIMITED"
+}
+
+enum VerificationStatus {
+  @@type("pg/text@1")
+  PENDING      = "PENDING"
+  UNDER_REVIEW = "UNDER_REVIEW"
+  APPROVED     = "APPROVED"
+  REJECTED     = "REJECTED"
+}
+
+enum SellerDocumentType {
+  @@type("pg/text@1")
+  GST_CERTIFICATE   = "GST_CERTIFICATE"
+  PAN_CARD          = "PAN_CARD"
+  BUSINESS_LICENSE  = "BUSINESS_LICENSE"
+  ADDRESS_PROOF     = "ADDRESS_PROOF"
+  CANCELLED_CHEQUE  = "CANCELLED_CHEQUE"
+  SIGNATURE         = "SIGNATURE"
+  OTHER             = "OTHER"
+}
+
+enum MediaType {
+  @@type("pg/text@1")
+  IMAGE    = "IMAGE"
+  VIDEO    = "VIDEO"
+  DOCUMENT = "DOCUMENT"
+}
+
+enum StorageProvider {
+  @@type("pg/text@1")
+  CLOUDINARY = "CLOUDINARY"
+  S3         = "S3"
+  LOCAL      = "LOCAL"
+}

@@ -1,0 +1,83 @@
+// use prisma-8
+
+model User {
+  id              String     @id @onCreate(cuid(2))
+  firstName       String
+  lastName        String?
+  email           String     @unique
+  avatar          String?
+  status          UserStatus @default(UNVERIFIED)
+  roles           UserRole[] @default([CUSTOMER])
+  emailVerified   Boolean    @default(false)
+
+  emailVerifiedAt TimestampString(3)?
+  deletedAt       TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  credential         Credential?
+  sessions           Session[]
+  verificationTokens VerificationToken[]
+  seller             Seller?
+  customer           Customer?
+  uploadedMedia      Media[]
+
+  @@index([status])
+}
+
+model Credential {
+  id String @id @onCreate(cuid(2))
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  provider AuthProvider @default(CREDENTIALS)
+
+  passwordHash      String
+  passwordChangedAt TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+}
+
+model Session {
+  id String @id @onCreate(cuid(2))
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  refreshTokenHash String @unique
+
+  expiresAt    TimestampString(3)
+  lastActivity TimestampString(3) @default(now())
+
+  ipAddress String?
+  userAgent String?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model VerificationToken {
+  id String @id @onCreate(cuid(2))
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tokenHash String                @unique
+  type      VerificationTokenType
+
+  expiresAt TimestampString(3)
+  usedAt    TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([expiresAt])
+}

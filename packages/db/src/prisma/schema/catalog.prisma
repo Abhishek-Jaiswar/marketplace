@@ -1,0 +1,46 @@
+// use prisma-8
+
+model Category {
+  id      String  @id @onCreate(cuid(2))
+  slug    String  @unique
+  name    String
+  excerpt String?
+
+  image      String
+  storageKey String
+  altText    String
+
+  isActive Boolean @default(true)
+
+  parentId String?
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Restrict)
+  children Category[] @relation("CategoryHierarchy")
+
+  products Product[]
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([parentId])
+  @@index([isActive])
+}
+
+model Product {
+  id          String  @id @onCreate(cuid(2))
+  name        String  @unique
+  excerpt     String
+  description String
+  price       Int
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  mediaId String?
+  images  Media?   @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([categoryId])
+  @@index([mediaId])
+}

@@ -4,8 +4,17 @@ packages:
 
 allowBuilds:
   '@prisma/engines': true
+  builds: true
   esbuild: true
   msw: false
   prisma: true
   sharp: true
   unrs-resolver: true
+
+permissions:
+  argon2:
+    build: true
+  builds:
+    skills: true
+  dotenv:
+    skills: true

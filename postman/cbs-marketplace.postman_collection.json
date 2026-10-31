@@ -1,0 +1,1106 @@
+{
+  "info": {
+    "_postman_id": "cbs-marketplace-collection-v1",
+    "name": "CBS Marketplace API",
+    "description": "Production-grade Postman collection for testing the CBS Marketplace REST API endpoints with automated token capture and role-based testing.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminAccessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sellerAccessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "categoryId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sellerId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "addressId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & System",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Verify server health and API status."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authentication & Users",
+      "item": [
+        {
+          "name": "1. Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"customer@cbsmarketplace.com\",\n  \"password\": \"CustomerPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "register"]
+            },
+            "description": "Register a new user account with CUSTOMER role."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@cbsmarketplace.com\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "verify"]
+            },
+            "description": "Verify account email with the 6-digit OTP received."
+          },
+          "response": []
+        },
+        {
+          "name": "3. Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const data = pm.response.json();",
+                  "    if (data.accessToken) {",
+                  "        pm.collectionVariables.set(\"adminAccessToken\", data.accessToken);",
+                  "        pm.collectionVariables.set(\"accessToken\", data.accessToken);",
+                  "        console.log(\"Saved adminAccessToken\");",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@cbsmarketplace.com\",\n  \"password\": \"AdminPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "login"]
+            },
+            "description": "Log in with seeded admin credentials. Captures adminAccessToken automatically."
+          },
+          "response": []
+        },
+        {
+          "name": "4. Login (Seller)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const data = pm.response.json();",
+                  "    if (data.accessToken) {",
+                  "        pm.collectionVariables.set(\"sellerAccessToken\", data.accessToken);",
+                  "        console.log(\"Saved sellerAccessToken\");",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"seller@cbsmarketplace.com\",\n  \"password\": \"SellerPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "login"]
+            },
+            "description": "Log in with seeded seller credentials. Captures sellerAccessToken automatically."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Login (Customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const data = pm.response.json();",
+                  "    if (data.accessToken) {",
+                  "        pm.collectionVariables.set(\"accessToken\", data.accessToken);",
+                  "        console.log(\"Saved customer accessToken\");",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@cbsmarketplace.com\",\n  \"password\": \"CustomerPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "login"]
+            },
+            "description": "Log in with customer credentials."
+          },
+          "response": []
+        },
+        {
+          "name": "6. Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const data = pm.response.json();",
+                  "    if (data.accessToken) {",
+                  "        pm.collectionVariables.set(\"accessToken\", data.accessToken);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "refresh"]
+            },
+            "description": "Refresh session access token (passes refreshToken via body or automatically sent httpOnly cookie)."
+          },
+          "response": []
+        },
+        {
+          "name": "7. Resend OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@cbsmarketplace.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/resend-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "resend-otp"]
+            },
+            "description": "Request a fresh verification OTP."
+          },
+          "response": []
+        },
+        {
+          "name": "8. Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@cbsmarketplace.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/forgot-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "forgot-password"]
+            },
+            "description": "Trigger password reset OTP to user email."
+          },
+          "response": []
+        },
+        {
+          "name": "9. Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@cbsmarketplace.com\",\n  \"otp\": \"123456\",\n  \"newPassword\": \"NewCustomerPass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "reset-password"]
+            },
+            "description": "Reset password using received OTP."
+          },
+          "response": []
+        },
+        {
+          "name": "10. Get Current User Profile (/me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "me"]
+            },
+            "description": "Retrieve profile for currently authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "11. Get All Users [Admin Only]",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            },
+            "description": "List all registered users (Requires ADMIN role)."
+          },
+          "response": []
+        },
+        {
+          "name": "12. Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "logout"]
+            },
+            "description": "Revoke active session and clear refresh token cookies."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "1. Get Category Tree (Hierarchical)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/tree?includeInactive=false",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "tree"],
+              "query": [
+                {
+                  "key": "includeInactive",
+                  "value": "false"
+                }
+              ]
+            },
+            "description": "Retrieve cached nested category hierarchy for mega menu and catalog browsing."
+          },
+          "response": []
+        },
+        {
+          "name": "2. List Categories (Paginated & Filtered)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories?page=1&limit=20&search=electro&isActive=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "search",
+                  "value": "electro"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true"
+                }
+              ]
+            },
+            "description": "Query categories with pagination, search, and status filtering."
+          },
+          "response": []
+        },
+        {
+          "name": "3. Get Category by Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/slug/electronics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "slug", "electronics"]
+            },
+            "description": "Retrieve a single category by URL slug."
+          },
+          "response": []
+        },
+        {
+          "name": "4. Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "{{categoryId}}"]
+            },
+            "description": "Retrieve category by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Create Category [Admin]",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const data = pm.response.json();",
+                  "    if (data.id) {",
+                  "        pm.collectionVariables.set(\"categoryId\", data.id);",
+                  "        console.log(\"Saved categoryId:\", data.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Smart Wearables\",\n  \"slug\": \"smart-wearables\",\n  \"excerpt\": \"Fitness bands, smart watches, and health trackers.\",\n  \"image\": \"https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=800\",\n  \"storageKey\": \"categories/smart-wearables.jpg\",\n  \"altText\": \"Smart wearables and accessories\",\n  \"isActive\": true,\n  \"parentId\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories"]
+            },
+            "description": "Create a new category (Requires ADMIN role)."
+          },
+          "response": []
+        },
+        {
+          "name": "6. Update Category [Admin]",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Smart Wearables & Audio\",\n  \"excerpt\": \"Fitness trackers, smart watches, and true wireless earbuds.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "{{categoryId}}"]
+            },
+            "description": "Update category properties (Requires ADMIN role)."
+          },
+          "response": []
+        },
+        {
+          "name": "7. Toggle Category Status [Admin]",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/{{categoryId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "{{categoryId}}", "status"]
+            },
+            "description": "Activate or deactivate a category (Requires ADMIN role)."
+          },
+          "response": []
+        },
+        {
+          "name": "8. Delete Category [Admin]",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "{{categoryId}}"]
+            },
+            "description": "Delete a category (Requires ADMIN role)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sellers & Onboarding",
+      "item": [
+        {
+          "name": "1. Register as Seller",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Alice\",\n  \"lastName\": \"Smith\",\n  \"email\": \"new-seller@cbsmarketplace.com\",\n  \"password\": \"SellerPassword123!\",\n  \"businessName\": \"Alice Electronics Store\",\n  \"businessType\": \"SOLE_PROPRIETORSHIP\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sellers", "register"]
+            },
+            "description": "Direct registration endpoint for sellers."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Verify GSTIN (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/verify-gstin?gstin=27AAAAA0000A1Z5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sellers", "verify-gstin"],
+              "query": [
+                {
+                  "key": "gstin",
+                  "value": "27AAAAA0000A1Z5"
+                }
+              ]
+            },
+            "description": "Validate GSTIN number format and structure."
+          },
+          "response": []
+        },
+        {
+          "name": "3. Get Public Store by Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/store-public/test-seller-store",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sellers", "store-public", "test-seller-store"]
+            },
+            "description": "Public store profile viewable by customers."
+          },
+          "response": []
+        },
+        {
+          "name": "4. Start / Update Onboarding",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"businessName\": \"Alpha Retailers\",\n  \"businessType\": \"PRIVATE_LIMITED\",\n  \"gstin\": \"27ABCDE1234F1Z5\",\n  \"contactPhone\": \"+919876543210\",\n  \"contactEmail\": \"contact@alpharetailers.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/onboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sellers", "onboard"]
+            },
+            "description": "Initiate seller profile and grant SELLER role to account."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get My Seller Profile (/me)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const data = pm.response.json();",
+                  "    if (data.id) {",
+                  "        pm.collectionVariables.set(\"sellerId\", data.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sellers", "me"]
+            },
+            "description": "Retrieve comprehensive seller verification, bank, and store state."
+          },
+          "response": []
+        },
+        {
+          "name": "6. Update Business Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"businessName\": \"Alpha Retailers Pvt Ltd\",\n  \"contactPhone\": \"+919876543211\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sellers", "profile"]
+            },
+            "description": "Update seller business information."
+          },
+          "response": []
+        },
+        {
+          "name": "7. Update Store & Address",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"displayName\": \"Alpha Flagship Store\",\n  \"slug\": \"alpha-flagship-store\",\n  \"description\": \"Official flagship store for premium consumer electronics.\",\n  \"address\": {\n    \"street1\": \"Plot 42, Tech Park Avenue\",\n    \"street2\": \"Phase 2\",\n    \"landmark\": \"Opposite Cyber Tower\",\n    \"city\": \"Bangalore\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560100\",\n    \"country\": \"India\",\n    \"phoneNumber\": \"+919876543210\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/store",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sellers", "store"]
+            },
+            "description": "Configure storefront display name, slug, and business address."
+          },
+          "response": []
+        },
+        {
+          "name": "8. Add Bank Account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountHolderName\": \"Alpha Retailers Pvt Ltd\",\n  \"accountNumber\": \"98765432109876\",\n  \"ifscCode\": \"HDFC0001234\",\n  \"bankName\": \"HDFC Bank\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/bank-accounts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sellers", "bank-accounts"]
+            },
+            "description": "Register seller bank payout details."
+          },
+          "response": []
+        },
+        {
+          "name": "9. Upload Document (Multipart)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "type",
+                  "value": "GST_CERTIFICATE",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sellers", "documents"]
+            },
+            "description": "Upload seller verification files (GST_CERTIFICATE, PAN_CARD, BUSINESS_LICENSE, ADDRESS_PROOF, CANCELLED_CHEQUE, SIGNATURE)."
+          },
+          "response": []
+        },
+        {
+          "name": "10. Submit Application for Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/submit",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sellers", "submit"]
+            },
+            "description": "Submit all onboarding steps to marketplace admins for review."
+          },
+          "response": []
+        },
+        {
+          "name": "11. List All Sellers [Admin Only]",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sellers"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "List all registered sellers and verification statuses (Requires ADMIN role)."
+          },
+          "response": []
+        },
+        {
+          "name": "12. Verify Seller Step / Application [Admin Only]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"APPROVED\",\n  \"remarks\": \"All documents and business details verified successfully.\",\n  \"stepDecisions\": {\n    \"business\": {\n      \"status\": \"APPROVED\"\n    },\n    \"store\": {\n      \"status\": \"APPROVED\"\n    },\n    \"bank\": {\n      \"status\": \"APPROVED\"\n    },\n    \"documents\": {\n      \"status\": \"APPROVED\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/{{sellerId}}/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sellers", "{{sellerId}}", "verify"]
+            },
+            "description": "Approve or reject seller onboarding application and verification steps (Requires ADMIN role)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Customers & Addresses",
+      "item": [
+        {
+          "name": "1. Get Customer Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers", "profile"]
+            },
+            "description": "Fetch customer details, addresses, and default billing/shipping preferences."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Update Customer Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phoneNumber\": \"+919876543210\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers", "profile"]
+            },
+            "description": "Update customer contact phone."
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Customer Address",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const data = pm.response.json();",
+                  "    if (data.id) {",
+                  "        pm.collectionVariables.set(\"addressId\", data.id);",
+                  "        console.log(\"Saved addressId:\", data.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"street1\": \"Flat 4B, Silicon Heights\",\n  \"street2\": \"100 Feet Road, Indiranagar\",\n  \"landmark\": \"Near Metro Station\",\n  \"city\": \"Bangalore\",\n  \"state\": \"Karnataka\",\n  \"postalCode\": \"560038\",\n  \"country\": \"India\",\n  \"phoneNumber\": \"+919876543210\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/addresses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers", "addresses"]
+            },
+            "description": "Add a new shipping/billing address to customer address book."
+          },
+          "response": []
+        },
+        {
+          "name": "4. Update Customer Address",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"street1\": \"Flat 4B, Silicon Heights (Tower A)\",\n  \"landmark\": \"Behind Metro Station\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/addresses/{{addressId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers", "addresses", "{{addressId}}"]
+            },
+            "description": "Update specific address in customer address book."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Set Default Shipping Address",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/addresses/{{addressId}}/default-shipping",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers", "addresses", "{{addressId}}", "default-shipping"]
+            },
+            "description": "Set address as customer's default shipping destination."
+          },
+          "response": []
+        },
+        {
+          "name": "6. Set Default Billing Address",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/addresses/{{addressId}}/default-billing",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers", "addresses", "{{addressId}}", "default-billing"]
+            },
+            "description": "Set address as customer's default billing destination."
+          },
+          "response": []
+        },
+        {
+          "name": "7. Delete Customer Address",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/addresses/{{addressId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers", "addresses", "{{addressId}}"]
+            },
+            "description": "Remove address from customer address book."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

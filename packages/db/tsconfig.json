@@ -2,9 +2,16 @@
   "extends": "@workspace/typescript-config/node.json",
   "compilerOptions": {
     "incremental": true,
+    "rootDir": ".",
     "outDir": "dist",
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "types": [
+      "node"
+    ]
   },
   "include": ["src/**/*.ts", "prisma.config.ts"],
   "exclude": ["node_modules", "dist"]

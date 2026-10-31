@@ -151,7 +151,7 @@ class UserService {
       throw new UnauthorizedError("Invalid or expired session")
     }
 
-    if (session.expiresAt < new Date()) {
+    if (new Date(session.expiresAt) < new Date()) {
       await userRepository.deleteSessionByHash(hash)
       throw new UnauthorizedError("Session expired")
     }
@@ -169,6 +169,10 @@ class UserService {
       userAgent || session.userAgent || undefined,
       ipAddress || session.ipAddress || undefined
     )
+
+    if (!session.user) {
+      throw new UnauthorizedError("Session user not found")
+    }
 
     const newAccessToken = signAccessToken({
       userId: session.user.id,

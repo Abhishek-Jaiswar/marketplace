@@ -185,3 +185,15 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 }
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+}

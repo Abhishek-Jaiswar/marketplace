@@ -163,6 +163,9 @@ class CategoryService {
     }
 
     const updatedCategory = await categoryRepository.update(id, updatePayload)
+    if (!updatedCategory) {
+      throw new NotFoundError(`Category with ID '${id}' not found`)
+    }
 
     await categoryCache.invalidateCategories()
 
@@ -181,6 +184,9 @@ class CategoryService {
     }
 
     const updatedCategory = await categoryRepository.update(id, { isActive })
+    if (!updatedCategory) {
+      throw new NotFoundError(`Category with ID '${id}' not found`)
+    }
 
     await categoryCache.invalidateCategories()
 
