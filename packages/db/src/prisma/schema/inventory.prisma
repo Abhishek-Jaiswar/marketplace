@@ -1,0 +1,91 @@
+// use prisma-8
+
+model InventoryLocation {
+  id        String       @id @onCreate(cuid(2))
+  sellerId  String?
+  seller    Seller?      @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  name      String
+  code      String       @unique
+  type      LocationType @default(SELLER_WAREHOUSE)
+
+  addressId String?      @unique
+  address   Address?     @relation(fields: [addressId], references: [id], onDelete: SetNull)
+
+  isPrimary Boolean      @default(false)
+  isActive  Boolean      @default(true)
+
+  inventoryItems InventoryItem[]
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([sellerId])
+  @@index([isActive])
+}
+
+model InventoryItem {
+  id                String            @id @onCreate(cuid(2))
+  sellerListingId   String
+  sellerListing     SellerListing     @relation(fields: [sellerListingId], references: [id], onDelete: Cascade)
+
+  locationId        String
+  location          InventoryLocation @relation(fields: [locationId], references: [id], onDelete: Restrict)
+
+  onHand            Int               @default(0)
+  reserved          Int               @default(0)
+  safetyStock       Int               @default(0)
+  lowStockThreshold Int               @default(5)
+
+  reservations      InventoryReservation[]
+  ledgerEntries     InventoryLedger[]
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@unique([sellerListingId, locationId])
+  @@index([sellerListingId])
+  @@index([locationId])
+}
+
+model InventoryReservation {
+  id              String            @id @onCreate(cuid(2))
+  inventoryItemId String
+  inventoryItem   InventoryItem     @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+
+  quantity        Int
+  cartId          String?
+  orderId         String?
+
+  expiresAt       TimestampString(3)
+  status          ReservationStatus @default(PENDING)
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([inventoryItemId])
+  @@index([expiresAt])
+  @@index([status])
+}
+
+model InventoryLedger {
+  id              String                @id @onCreate(cuid(2))
+  inventoryItemId String
+  inventoryItem   InventoryItem         @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+
+  quantityDelta   Int
+  balanceAfter    Int
+  reason          InventoryChangeReason
+  referenceType   String?
+  referenceId     String?
+  note            String?
+
+  performedById   String?
+  performedBy     User?                 @relation(fields: [performedById], references: [id], onDelete: SetNull)
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+
+  @@index([inventoryItemId])
+  @@index([reason])
+  @@index([createdAt])
+}

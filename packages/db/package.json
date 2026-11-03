@@ -38,6 +38,7 @@
     "@types/node": "^22",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
+    "eslint": "^9",
     "prisma": "8.0.0-rc.29",
     "tsx": "^4.19.2",
     "typescript": "^5"

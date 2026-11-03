@@ -22,6 +22,14 @@ export type SellerDocument = Scalars<Models.public_SellerDocument>
 export type Media = Scalars<Models.public_Media>
 export type Address = Scalars<Models.public_Address>
 export type Product = Scalars<Models.public_Product>
+export type Brand = Scalars<Models.public_Brand>
+export type ProductVariant = Scalars<Models.public_ProductVariant>
+export type ProductMedia = Scalars<Models.public_ProductMedia>
+export type SellerListing = Scalars<Models.public_SellerListing>
+export type InventoryLocation = Scalars<Models.public_InventoryLocation>
+export type InventoryItem = Scalars<Models.public_InventoryItem>
+export type InventoryReservation = Scalars<Models.public_InventoryReservation>
+export type InventoryLedger = Scalars<Models.public_InventoryLedger>
 
 export type UserStatus = Models.public_User["status"]
 export type UserRole = Models.public_User["roles"][number]
@@ -33,6 +41,13 @@ export type VerificationStatus = Models.public_SellerVerification["status"]
 export type SellerDocumentType = Models.public_SellerDocument["type"]
 export type MediaType = Models.public_Media["mediaType"]
 export type StorageProvider = Models.public_Media["provider"]
+export type ProductStatus = Models.public_Product["status"]
+export type VariantStatus = Models.public_ProductVariant["status"]
+export type ListingStatus = Models.public_SellerListing["status"]
+export type ItemCondition = Models.public_SellerListing["condition"]
+export type LocationType = Models.public_InventoryLocation["type"]
+export type InventoryChangeReason = Models.public_InventoryLedger["reason"]
+export type ReservationStatus = Models.public_InventoryReservation["status"]
 
 export async function testConnection(): Promise<{ count: number }> {
   try {

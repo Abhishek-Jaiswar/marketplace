@@ -672,11 +672,19 @@ async function main() {
   await db.orm.public.Address.where((row) => row.id.isNotNull()).deleteAll()
   await db.orm.public.Customer.where((row) => row.id.isNotNull()).deleteAll()
   await db.orm.public.User.where((row) => row.id.isNotNull()).deleteAll()
+  await db.orm.public.InventoryLedger.where((row) => row.id.isNotNull()).deleteAll()
+  await db.orm.public.InventoryReservation.where((row) => row.id.isNotNull()).deleteAll()
+  await db.orm.public.InventoryItem.where((row) => row.id.isNotNull()).deleteAll()
+  await db.orm.public.InventoryLocation.where((row) => row.id.isNotNull()).deleteAll()
+  await db.orm.public.SellerListing.where((row) => row.id.isNotNull()).deleteAll()
+  await db.orm.public.ProductMedia.where((row) => row.id.isNotNull()).deleteAll()
+  await db.orm.public.ProductVariant.where((row) => row.id.isNotNull()).deleteAll()
+  await db.orm.public.Product.where((row) => row.id.isNotNull()).deleteAll()
+  await db.orm.public.Brand.where((row) => row.id.isNotNull()).deleteAll()
   await db.orm.public.Category.where((row) => row.id.isNotNull()).updateAll({
     parentId: null,
   })
   await db.orm.public.Category.where((row) => row.id.isNotNull()).deleteAll()
-  await db.orm.public.Product.where((row) => row.id.isNotNull()).deleteAll()
   await db.orm.public.Media.where((row) => row.id.isNotNull()).deleteAll()
 
   const adminPasswordHash = await argon2.hash("AdminPassword123!")

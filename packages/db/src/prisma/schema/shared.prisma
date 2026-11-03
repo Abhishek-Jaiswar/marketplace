@@ -80,3 +80,63 @@ enum StorageProvider {
   S3         = "S3"
   LOCAL      = "LOCAL"
 }
+
+enum ProductStatus {
+  @@type("pg/text@1")
+  DRAFT          = "DRAFT"
+  PENDING_REVIEW = "PENDING_REVIEW"
+  APPROVED       = "APPROVED"
+  REJECTED       = "REJECTED"
+  ARCHIVED       = "ARCHIVED"
+}
+
+enum VariantStatus {
+  @@type("pg/text@1")
+  ACTIVE       = "ACTIVE"
+  INACTIVE     = "INACTIVE"
+  DISCONTINUED = "DISCONTINUED"
+}
+
+enum ListingStatus {
+  @@type("pg/text@1")
+  ACTIVE       = "ACTIVE"
+  INACTIVE     = "INACTIVE"
+  OUT_OF_STOCK = "OUT_OF_STOCK"
+  SUSPENDED    = "SUSPENDED"
+}
+
+enum ItemCondition {
+  @@type("pg/text@1")
+  NEW           = "NEW"
+  REFURBISHED   = "REFURBISHED"
+  USED_LIKE_NEW = "USED_LIKE_NEW"
+  USED_GOOD     = "USED_GOOD"
+  USED_FAIR     = "USED_FAIR"
+}
+
+enum LocationType {
+  @@type("pg/text@1")
+  SELLER_WAREHOUSE            = "SELLER_WAREHOUSE"
+  PLATFORM_FULFILLMENT_CENTER = "PLATFORM_FULFILLMENT_CENTER"
+  STORE_RETAIL_POINT          = "STORE_RETAIL_POINT"
+}
+
+enum InventoryChangeReason {
+  @@type("pg/text@1")
+  RESTOCK                    = "RESTOCK"
+  ORDER_RESERVED             = "ORDER_RESERVED"
+  ORDER_FULFILLED            = "ORDER_FULFILLED"
+  ORDER_CANCELLED_RESTOCK    = "ORDER_CANCELLED_RESTOCK"
+  RETURN_RESTOCK             = "RETURN_RESTOCK"
+  DAMAGE_WRITEOFF            = "DAMAGE_WRITEOFF"
+  INVENTORY_AUDIT_ADJUSTMENT = "INVENTORY_AUDIT_ADJUSTMENT"
+  TRANSFER                   = "TRANSFER"
+}
+
+enum ReservationStatus {
+  @@type("pg/text@1")
+  PENDING   = "PENDING"
+  COMMITTED = "COMMITTED"
+  RELEASED  = "RELEASED"
+  EXPIRED   = "EXPIRED"
+}

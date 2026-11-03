@@ -25,22 +25,133 @@ model Category {
   @@index([isActive])
 }
 
-model Product {
+model Brand {
   id          String  @id @onCreate(cuid(2))
   name        String  @unique
-  excerpt     String
-  description String
-  price       Int
+  slug        String  @unique
+  description String?
+  website     String?
+  logoMediaId String?
+  logo        Media?  @relation("BrandLogo", fields: [logoMediaId], references: [id], onDelete: SetNull)
+  isVerified  Boolean @default(false)
+
+  products Product[]
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([logoMediaId])
+  @@index([isVerified])
+}
+
+model Product {
+  id             String        @id @onCreate(cuid(2))
+  title          String
+  slug           String        @unique
+  description    String
+  highlights     String[]
+  specifications Json?
 
   categoryId String
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  category   Category      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 
-  mediaId String?
-  images  Media?   @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+  brandId String?
+  brand   Brand?        @relation(fields: [brandId], references: [id], onDelete: SetNull)
+
+  status         ProductStatus @default(DRAFT)
+  reviewFeedback String?
+  approvedAt     TimestampString(3)?
+
+  createdById String?
+  createdBy   User?         @relation("ProductCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  reviewedById String?
+  reviewedBy   User?         @relation("ProductReviewedBy", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  variants ProductVariant[]
+  media    ProductMedia[]
 
   createdAt TimestampString(3) @default(now()) @onCreate(now())
   updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
 
   @@index([categoryId])
+  @@index([brandId])
+  @@index([status])
+  @@index([createdById])
+  @@index([reviewedById])
+}
+
+model ProductVariant {
+  id         String        @id @onCreate(cuid(2))
+  productId  String
+  product    Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  sku        String        @unique
+  barcode    String?       @unique
+  attributes Json
+  status     VariantStatus @default(ACTIVE)
+
+  weightGrams Int?
+  dimensions  Json?
+
+  listings SellerListing[]
+  media    ProductMedia[]
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([productId])
+  @@index([status])
+}
+
+model ProductMedia {
+  id        String          @id @onCreate(cuid(2))
+  productId String
+  product   Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  variantId String?
+  variant   ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  mediaId   String
+  media     Media           @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  isPrimary Boolean         @default(false)
+  sortOrder Int             @default(0)
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+
+  @@index([productId])
+  @@index([variantId])
   @@index([mediaId])
+}
+
+model SellerListing {
+  id               String        @id @onCreate(cuid(2))
+  sellerId         String
+  seller           Seller        @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  variantId        String
+  variant          ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  sellerSku        String
+  mrpPrice         Int
+  sellingPrice     Int
+  currency         String        @default("INR")
+
+  condition        ItemCondition @default(NEW)
+  conditionNote    String?
+  handlingTimeDays Int           @default(1)
+  warranty         String?
+  status           ListingStatus @default(ACTIVE)
+
+  inventoryItems   InventoryItem[]
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@unique([sellerId, variantId])
+  @@unique([sellerId, sellerSku])
+  @@index([sellerId])
+  @@index([variantId])
+  @@index([status])
 }

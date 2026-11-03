@@ -35,6 +35,7 @@ model Address {
   updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
 
   store Store?
+  inventoryLocation InventoryLocation?
 
   customerId String?
   customer   Customer? @relation("CustomerAddresses", fields: [customerId], references: [id], onDelete: Cascade)

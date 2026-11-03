@@ -22,6 +22,9 @@ model User {
   seller             Seller?
   customer           Customer?
   uploadedMedia      Media[]
+  createdProducts    Product[]           @relation("ProductCreatedBy")
+  reviewedProducts   Product[]           @relation("ProductReviewedBy")
+  inventoryLedgers   InventoryLedger[]
 
   @@index([status])
 }

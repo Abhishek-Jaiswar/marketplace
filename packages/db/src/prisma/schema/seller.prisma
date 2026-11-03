@@ -21,9 +21,11 @@ model Seller {
   createdAt TimestampString(3) @default(now()) @onCreate(now())
   updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
 
-  store        Store?
-  verification SellerVerification?
-  bankAccounts BankAccount[]
+  store              Store?
+  verification       SellerVerification?
+  bankAccounts       BankAccount[]
+  listings           SellerListing[]
+  inventoryLocations InventoryLocation[]
 
   @@index([status])
 }
@@ -155,7 +157,8 @@ model Media {
   sellerDocuments SellerDocument[]
   storeLogos      Store[]          @relation("StoreLogo")
   storeBanners    Store[]          @relation("StoreBanner")
-  productImages   Product[]
+  brandLogos      Brand[]          @relation("BrandLogo")
+  productMedia    ProductMedia[]
 
   createdAt TimestampString(3) @default(now()) @onCreate(now())
 
