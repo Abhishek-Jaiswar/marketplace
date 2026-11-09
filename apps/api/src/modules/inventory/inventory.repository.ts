@@ -21,6 +21,8 @@ interface ReservationOptions {
   orderId?: string | null | undefined
 }
 
+type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0]
+
 interface SellerScope {
   sellerId?: string | undefined
 }
@@ -304,48 +306,60 @@ class InventoryRepository {
       const reservations = []
 
       for (const request of orderedRequests) {
-        const candidates = await tx.orm.public.InventoryItem.where({
-          sellerListingId: request.sellerListingId,
-        })
-          .orderBy((item) => item.id.asc())
-          .limit(MAX_LOCATIONS)
-          .forNoKeyUpdate()
-          .all()
-
-        const target = pickReservationItem(
-          candidates,
-          request.preferredLocationId
-        )
-        if (!target) {
-          throw new BadRequestError(
-            `No stocked inventory location found for listing '${request.sellerListingId}'`
-          )
-        }
-
-        const available = availableStock(target)
-        if (available < request.quantity) {
-          throw new BadRequestError(
-            `Insufficient available stock for reservation. Requested: ${request.quantity}, Available: ${Math.max(0, available)}`
-          )
-        }
-
-        await tx.orm.public.InventoryItem.where({ id: target.id }).update({
-          reserved: target.reserved + request.quantity,
-        })
-
         reservations.push(
-          await tx.orm.public.InventoryReservation.create({
-            inventoryItemId: target.id,
-            quantity: request.quantity,
-            cartId: cartId ?? null,
-            orderId: orderId ?? null,
-            expiresAt: expiresAt.toISOString(),
-            status: "PENDING",
-          })
+          await this.reserveLine(tx, request, { expiresAt, cartId, orderId })
         )
       }
 
       return reservations
+    })
+  }
+
+  /** Locks a listing's stock and holds one line within the caller's transaction. */
+  async reserveLine(
+    tx: Transaction,
+    request: ReserveStockInput["items"][number],
+    {
+      expiresAt,
+      cartId,
+      orderId,
+      orderItemId,
+    }: ReservationOptions & { orderItemId?: string }
+  ) {
+    const candidates = await tx.orm.public.InventoryItem.where({
+      sellerListingId: request.sellerListingId,
+    })
+      .orderBy((item) => item.id.asc())
+      .limit(MAX_LOCATIONS)
+      .forNoKeyUpdate()
+      .all()
+
+    const target = pickReservationItem(candidates, request.preferredLocationId)
+    if (!target) {
+      throw new BadRequestError(
+        `No stocked inventory location found for listing '${request.sellerListingId}'`
+      )
+    }
+
+    const available = availableStock(target)
+    if (available < request.quantity) {
+      throw new ConflictError(
+        `Insufficient available stock for reservation. Requested: ${request.quantity}, Available: ${Math.max(0, available)}`
+      )
+    }
+
+    await tx.orm.public.InventoryItem.where({ id: target.id }).update({
+      reserved: target.reserved + request.quantity,
+    })
+
+    return await tx.orm.public.InventoryReservation.create({
+      inventoryItemId: target.id,
+      orderItemId: orderItemId ?? null,
+      quantity: request.quantity,
+      cartId: cartId ?? null,
+      orderId: orderId ?? null,
+      expiresAt: expiresAt.toISOString(),
+      status: "PENDING",
     })
   }
 

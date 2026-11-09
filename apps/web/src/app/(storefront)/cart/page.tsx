@@ -1,20 +1,25 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
+import { getApiErrorMessage } from "@workspace/store"
 import { Button } from "@workspace/ui/components/button"
 import { EmptyState } from "@workspace/ui/components/states"
 import { discountPercent, formatInr } from "@workspace/ui/lib/money"
 
 import { ProductImage } from "../../../components/product-image"
-import { setQuantity, useCart } from "../../../lib/mock-cart"
-
-const FREE_DELIVERY_PAISE = 49900
-const DELIVERY_FEE_PAISE = 4900
+import { PriceSummary } from "../../../components/storefront/price-summary"
+import { useStorefrontCart, type DisplayLine } from "../../../lib/use-cart"
 
 export default function CartPage() {
-  const lines = useCart()
+  const cart = useStorefrontCart()
+  const [error, setError] = useState<string>()
 
-  if (lines.length === 0) {
+  if (cart.isLoading) {
+    return <p className="p-6 text-muted-foreground">Loading your cart.</p>
+  }
+
+  if (cart.lines.length === 0) {
     return (
       <div className="bg-card sm:rounded-lg">
         <EmptyState
@@ -28,25 +33,30 @@ export default function CartPage() {
     )
   }
 
-  const itemCount = lines.reduce((total, line) => total + line.quantity, 0)
-  const mrpTotal = lines.reduce(
-    (total, line) => total + line.mrp * line.quantity,
-    0
-  )
-  const subtotal = lines.reduce(
-    (total, line) => total + line.price * line.quantity,
-    0
-  )
-  const delivery = subtotal >= FREE_DELIVERY_PAISE ? 0 : DELIVERY_FEE_PAISE
+  const change = async (line: DisplayLine, quantity: number) => {
+    setError(undefined)
+    try {
+      await cart.setQuantity(line, quantity)
+    } catch (failure) {
+      setError(getApiErrorMessage(failure, "Could not update your cart."))
+    }
+  }
+
+  const blocked = cart.lines.some((line) => !line.isPurchasable)
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-2 sm:gap-3 lg:grid-cols-[minmax(0,1fr)_22rem]">
       <section className="bg-card p-3 sm:rounded-lg sm:p-4">
         <h1 className="text-xl font-semibold">
-          Cart ({itemCount} {itemCount === 1 ? "item" : "items"})
+          Cart ({cart.itemCount} {cart.itemCount === 1 ? "item" : "items"})
         </h1>
+        {error ? (
+          <p role="alert" className="mt-2 text-destructive">
+            {error}
+          </p>
+        ) : null}
         <ul className="mt-2 divide-y divide-border">
-          {lines.map((line) => (
+          {cart.lines.map((line) => (
             <li key={line.key} className="flex gap-3 py-3">
               <Link
                 href={`/products/${line.slug}`}
@@ -84,12 +94,24 @@ export default function CartPage() {
                     </>
                   ) : null}
                 </p>
+                {line.priceChanged ? (
+                  <p className="text-sm font-medium">
+                    The price changed since you added this.
+                  </p>
+                ) : null}
+                {!line.isPurchasable ? (
+                  <p className="text-sm font-medium text-destructive">
+                    {line.availableStock
+                      ? `Only ${line.availableStock} left. Reduce the quantity to continue.`
+                      : "Not available. Remove it to continue."}
+                  </p>
+                ) : null}
                 <div className="mt-2 flex items-center gap-3">
                   <div className="flex items-center rounded-md border border-input">
                     <button
                       aria-label={`Decrease quantity of ${line.title}`}
                       className="size-8"
-                      onClick={() => setQuantity(line.key, line.quantity - 1)}
+                      onClick={() => change(line, line.quantity - 1)}
                     >
                       −
                     </button>
@@ -99,14 +121,14 @@ export default function CartPage() {
                     <button
                       aria-label={`Increase quantity of ${line.title}`}
                       className="size-8"
-                      onClick={() => setQuantity(line.key, line.quantity + 1)}
+                      onClick={() => change(line, line.quantity + 1)}
                     >
                       +
                     </button>
                   </div>
                   <button
                     className="text-sm underline"
-                    onClick={() => setQuantity(line.key, 0)}
+                    onClick={() => change(line, 0)}
                   >
                     Remove
                   </button>
@@ -118,40 +140,37 @@ export default function CartPage() {
       </section>
 
       <aside className="self-start bg-card p-4 sm:rounded-lg lg:sticky lg:top-28">
-        <h2 className="font-semibold">Price details</h2>
-        <dl className="mt-2 space-y-1.5">
-          <div className="flex justify-between">
-            <dt>Price, MRP</dt>
-            <dd className="tabular-nums">{formatInr(mrpTotal)}</dd>
-          </div>
-          <div className="flex justify-between">
-            <dt>Discount</dt>
-            <dd className="text-discount tabular-nums">
-              −{formatInr(mrpTotal - subtotal)}
-            </dd>
-          </div>
-          <div className="flex justify-between">
-            <dt>Delivery</dt>
-            <dd className="tabular-nums">
-              {delivery === 0 ? "Free" : formatInr(delivery)}
-            </dd>
-          </div>
-          <div className="flex justify-between border-t border-border pt-2 text-lg font-bold">
-            <dt>Total</dt>
-            <dd className="tabular-nums">{formatInr(subtotal + delivery)}</dd>
-          </div>
-        </dl>
-        <Button
-          variant="action"
-          size="lg"
-          className="mt-4 h-11 w-full"
-          disabled
-        >
-          Proceed to checkout
-        </Button>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Checkout opens once payments are connected.
-        </p>
+        <PriceSummary
+          mrpTotal={cart.mrpTotal}
+          subtotal={cart.subtotal}
+          shippingTotal={cart.shippingTotal}
+          total={cart.total}
+        />
+        {blocked ? (
+          <Button
+            variant="action"
+            size="lg"
+            className="mt-4 h-11 w-full"
+            disabled
+          >
+            Proceed to checkout
+          </Button>
+        ) : (
+          <Button
+            variant="action"
+            size="lg"
+            className="mt-4 h-11 w-full"
+            render={
+              <Link
+                href={
+                  cart.isAuthenticated ? "/checkout" : "/login?next=%2Fcheckout"
+                }
+              />
+            }
+          >
+            Proceed to checkout
+          </Button>
+        )}
       </aside>
     </div>
   )

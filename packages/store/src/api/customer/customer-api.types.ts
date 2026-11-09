@@ -1,5 +1,6 @@
 export interface Address {
   id: string
+  recipientName?: string | null
   street1: string
   street2?: string | null
   landmark?: string | null
@@ -42,6 +43,7 @@ export interface UpdateCustomerProfileRequest {
 }
 
 export interface CreateAddressRequest {
+  recipientName?: string
   street1: string
   street2?: string
   landmark?: string

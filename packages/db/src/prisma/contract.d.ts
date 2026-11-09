@@ -1198,7 +1198,8 @@ export namespace Models {
     id: FieldOutputTypes['public']['Cart']['id'];
     updatedAt: FieldOutputTypes['public']['Cart']['updatedAt'];
     customer: public_Customer | null;
-    readonly [RelationKeys]?: 'customer';
+    items: public_CartItem[];
+    readonly [RelationKeys]?: 'customer' | 'items';
   };
   export type public_CartItem = {
     cartId: FieldOutputTypes['public']['CartItem']['cartId'];
@@ -1485,7 +1486,9 @@ export namespace Models {
     taxTotal: FieldOutputTypes['public']['Order']['taxTotal'];
     updatedAt: FieldOutputTypes['public']['Order']['updatedAt'];
     customer: public_Customer;
-    readonly [RelationKeys]?: 'customer';
+    payments: public_Payment[];
+    sellerOrders: public_SellerOrder[];
+    readonly [RelationKeys]?: 'customer' | 'payments' | 'sellerOrders';
   };
   export type public_OrderEvent = {
     actorType: FieldOutputTypes['public']['OrderEvent']['actorType'];
@@ -1820,10 +1823,11 @@ export namespace Models {
     taxTotal: FieldOutputTypes['public']['SellerOrder']['taxTotal'];
     total: FieldOutputTypes['public']['SellerOrder']['total'];
     updatedAt: FieldOutputTypes['public']['SellerOrder']['updatedAt'];
+    items: public_OrderItem[];
     order: public_Order;
     pickupLocation: public_InventoryLocation | null;
     seller: public_Seller;
-    readonly [RelationKeys]?: 'order' | 'pickupLocation' | 'seller';
+    readonly [RelationKeys]?: 'items' | 'order' | 'pickupLocation' | 'seller';
   };
   export type public_SellerRating = {
     comment: FieldOutputTypes['public']['SellerRating']['comment'];
@@ -9344,6 +9348,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly items: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CartItem';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['cartId'];
+                };
+              };
             };
             readonly storage: {
               readonly table: 'Cart';
@@ -11106,6 +11121,28 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['customerId'];
                   readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly payments: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Payment';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['orderId'];
+                };
+              };
+              readonly sellerOrders: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'SellerOrder';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['orderId'];
                 };
               };
             };
@@ -13239,6 +13276,17 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
+              readonly items: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'OrderItem';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['sellerOrderId'];
+                };
+              };
               readonly order: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;

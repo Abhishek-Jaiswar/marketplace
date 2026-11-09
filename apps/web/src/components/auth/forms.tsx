@@ -73,7 +73,13 @@ function Submit({
   )
 }
 
-export function LoginForm({ notice }: { notice?: string | undefined }) {
+export function LoginForm({
+  notice,
+  next = "/",
+}: {
+  notice?: string | undefined
+  next?: string
+}) {
   const router = useRouter()
   const [login, { isLoading }] = useLoginMutation()
   const [email, setEmail] = useState("")
@@ -85,7 +91,7 @@ export function LoginForm({ notice }: { notice?: string | undefined }) {
     setError(undefined)
     try {
       await login({ email: email.trim(), password }).unwrap()
-      router.push("/")
+      router.push(next)
     } catch (failure) {
       const message = getApiErrorMessage(
         failure,

@@ -27,7 +27,10 @@ export function AccountLink() {
 
   return (
     <div className="flex items-center gap-3 whitespace-nowrap">
-      <span className="font-medium">{user.firstName}</span>
+      <Link href="/orders" className="font-medium hover:underline">
+        Orders
+      </Link>
+      <span className="hidden font-medium sm:inline">{user.firstName}</span>
       <button onClick={() => logout()} className="underline">
         Sign out
       </button>

@@ -31,6 +31,9 @@ model Order {
   placedAt    TimestampString(3)?
   cancelledAt TimestampString(3)?
 
+  sellerOrders SellerOrder[]
+  payments     Payment[]
+
   createdAt TimestampString(3) @default(now()) @onCreate(now())
   updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
 
@@ -70,6 +73,8 @@ model SellerOrder {
   cancelledAt  TimestampString(3)?
   cancelledBy  ActorType?
   cancelReason String?
+
+  items OrderItem[]
 
   createdAt TimestampString(3) @default(now()) @onCreate(now())
   updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())

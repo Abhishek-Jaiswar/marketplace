@@ -39,6 +39,7 @@ class CustomerRepository {
 
   async createAddress(customerId: string, data: TCreateAddress) {
     return db.orm.public.Address.create({
+      recipientName: data.recipientName ?? null,
       street1: data.street1,
       street2: data.street2 ?? null,
       landmark: data.landmark ?? null,
@@ -53,6 +54,9 @@ class CustomerRepository {
 
   async updateAddress(addressId: string, data: TUpdateAddress) {
     return db.orm.public.Address.where({ id: addressId }).update({
+      ...(data.recipientName !== undefined && {
+        recipientName: data.recipientName ?? null,
+      }),
       ...(data.street1 !== undefined && { street1: data.street1 }),
       ...(data.street2 !== undefined && { street2: data.street2 ?? null }),
       ...(data.landmark !== undefined && { landmark: data.landmark ?? null }),

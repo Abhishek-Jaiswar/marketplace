@@ -2,6 +2,8 @@ import { pathToFileURL } from "node:url"
 
 import argon2 from "argon2"
 
+import { and } from "@prisma/orm-postgres/orm-client"
+
 import { db } from "./db.js"
 
 /**
@@ -795,6 +797,13 @@ export async function seedCatalog(): Promise<void> {
       await createProduct(product, sellersByKey)
       created += 1
     }
+  }
+
+  const platformRule = await db.orm.public.CommissionRule.where((rule) =>
+    and(rule.sellerId.isNull(), rule.categoryId.isNull())
+  ).first()
+  if (!platformRule) {
+    await db.orm.public.CommissionRule.create({ rateBps: 1000 })
   }
 
   await db.orm.public.Category.where({ slug: "toys-games-baby" }).update({

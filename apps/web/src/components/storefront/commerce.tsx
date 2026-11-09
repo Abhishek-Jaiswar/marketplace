@@ -4,17 +4,20 @@ import { useEffect, useState, type FormEvent } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ShoppingCartIcon } from "lucide-react"
+import { getApiErrorMessage } from "@workspace/store"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 
-import { addToCart, useCart, type CartLine } from "../../lib/mock-cart"
 import { mockDeliveryDate } from "../../lib/mock-data"
-
-type CartItem = Omit<CartLine, "quantity">
+import {
+  useMergeGuestCart,
+  useStorefrontCart,
+  type CartProduct,
+} from "../../lib/use-cart"
 
 export function CartLink() {
-  const lines = useCart()
-  const count = lines.reduce((total, line) => total + line.quantity, 0)
+  useMergeGuestCart()
+  const { itemCount: count } = useStorefrontCart()
 
   return (
     <Link
@@ -33,16 +36,37 @@ export function CartLink() {
   )
 }
 
+function useBuy(item: CartProduct) {
+  const router = useRouter()
+  const cart = useStorefrontCart()
+  const [error, setError] = useState<string>()
+  const [isBusy, setIsBusy] = useState(false)
+  const inCart = cart.lines.some((line) => line.key === item.key)
+
+  const add = async (thenGoToCart: boolean) => {
+    setError(undefined)
+    setIsBusy(true)
+    try {
+      if (!inCart) await cart.add(item)
+      if (thenGoToCart) router.push("/cart")
+    } catch (failure) {
+      setError(getApiErrorMessage(failure, "Could not add this to your cart."))
+    } finally {
+      setIsBusy(false)
+    }
+  }
+
+  return { inCart, add, error, isBusy }
+}
+
 export function BuyButtons({
   item,
   disabled,
 }: {
-  item: CartItem
+  item: CartProduct
   disabled: boolean
 }) {
-  const router = useRouter()
-  const lines = useCart()
-  const inCart = lines.some((line) => line.key === item.key)
+  const { inCart, add, error, isBusy } = useBuy(item)
 
   return (
     <div className="flex flex-col gap-2">
@@ -60,8 +84,8 @@ export function BuyButtons({
           variant="outline"
           size="lg"
           className="h-11 w-full"
-          disabled={disabled}
-          onClick={() => addToCart(item)}
+          disabled={disabled || isBusy}
+          onClick={() => add(false)}
         >
           Add to cart
         </Button>
@@ -70,14 +94,16 @@ export function BuyButtons({
         variant="action"
         size="lg"
         className="h-11 w-full"
-        disabled={disabled}
-        onClick={() => {
-          if (!inCart) addToCart(item)
-          router.push("/cart")
-        }}
+        disabled={disabled || isBusy}
+        onClick={() => add(true)}
       >
         Buy now
       </Button>
+      {error ? (
+        <p role="alert" className="text-sm text-destructive">
+          {error}
+        </p>
+      ) : null}
     </div>
   )
 }
@@ -87,29 +113,32 @@ export function MobileBuyBar({
   disabled,
   priceLabel,
 }: {
-  item: CartItem
+  item: CartProduct
   disabled: boolean
   priceLabel: string
 }) {
   const router = useRouter()
-  const lines = useCart()
-  const inCart = lines.some((line) => line.key === item.key)
+  const { inCart, add, error, isBusy } = useBuy(item)
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-3 bg-card px-3 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-xl md:hidden">
-      <span className="text-lg font-bold tabular-nums">{priceLabel}</span>
-      <Button
-        variant="action"
-        size="lg"
-        className="px-8"
-        disabled={disabled}
-        onClick={() => {
-          if (inCart) router.push("/cart")
-          else addToCart(item)
-        }}
-      >
-        {inCart ? "Go to cart" : "Add to cart"}
-      </Button>
+    <div className="fixed inset-x-0 bottom-0 z-40 bg-card px-3 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-xl md:hidden">
+      {error ? (
+        <p role="alert" className="mb-1 text-sm text-destructive">
+          {error}
+        </p>
+      ) : null}
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-lg font-bold tabular-nums">{priceLabel}</span>
+        <Button
+          variant="action"
+          size="lg"
+          className="px-8"
+          disabled={disabled || isBusy}
+          onClick={() => (inCart ? router.push("/cart") : add(false))}
+        >
+          {inCart ? "Go to cart" : "Add to cart"}
+        </Button>
+      </div>
     </div>
   )
 }

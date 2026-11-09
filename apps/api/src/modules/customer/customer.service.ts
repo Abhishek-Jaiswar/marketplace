@@ -1,4 +1,5 @@
 import { customerRepository } from "./customer.repository.js"
+import { cartRepository } from "../cart/cart.repository.js"
 import { customerCache } from "./customer.cache.js"
 import { NotFoundError, ForbiddenError } from "../../utils/errors/index.js"
 import {
@@ -9,6 +10,7 @@ import {
 
 class CustomerService {
   async getCustomerProfile(userId: string) {
+    await cartRepository.ensureCustomerId(userId)
     return customerCache.getOrSetCustomerDetails(userId, async () => {
       const customer = await customerRepository.findCustomerByUserId(userId)
       if (!customer) {
@@ -34,6 +36,7 @@ class CustomerService {
   }
 
   async createCustomerAddress(userId: string, data: TCreateAddress) {
+    await cartRepository.ensureCustomerId(userId)
     const customer = await customerRepository.findCustomerByUserId(userId)
     if (!customer) {
       throw new NotFoundError("Customer profile not found")

@@ -9,6 +9,11 @@ export const updateProfileSchema = z.object({
 })
 
 export const createAddressSchema = z.object({
+  recipientName: z
+    .string()
+    .trim()
+    .min(1, { message: "Name is required" })
+    .optional(),
   street1: z.string().trim().min(1, { message: "Street 1 is required" }),
   street2: z.string().trim().optional(),
   landmark: z.string().trim().optional(),

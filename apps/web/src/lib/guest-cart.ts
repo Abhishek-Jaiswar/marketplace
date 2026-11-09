@@ -1,10 +1,11 @@
 "use client"
 
 import { useSyncExternalStore } from "react"
+import { MAX_LINE_QUANTITY } from "@workspace/contracts/commerce"
 
-/** Browser-only cart. Replace with the Cart API when it ships (ADR 0006). */
+/** Holds a signed-out shopper's cart until sign-in merges it into their account. */
 
-export interface CartLine {
+export interface GuestLine {
   key: string
   slug: string
   title: string
@@ -16,24 +17,25 @@ export interface CartLine {
   quantity: number
 }
 
-const STORAGE_KEY = "cbs-mock-cart"
-const EMPTY: CartLine[] = []
-const MAX_QUANTITY = 10
+const STORAGE_KEY = "cbs-guest-cart"
+const EMPTY: GuestLine[] = []
 
 const listeners = new Set<() => void>()
-let cached: CartLine[] | null = null
+let cached: GuestLine[] | null = null
 
-function read(): CartLine[] {
+function read(): GuestLine[] {
   if (cached) return cached
   try {
-    cached = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]") as CartLine[]
+    cached = JSON.parse(
+      localStorage.getItem(STORAGE_KEY) ?? "[]"
+    ) as GuestLine[]
   } catch {
     cached = EMPTY
   }
   return cached
 }
 
-function write(lines: CartLine[]) {
+function write(lines: GuestLine[]) {
   cached = lines
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(lines))
@@ -48,29 +50,35 @@ function subscribe(listener: () => void) {
   return () => listeners.delete(listener)
 }
 
-export const useCart = () => useSyncExternalStore(subscribe, read, () => EMPTY)
+export const useGuestCart = () =>
+  useSyncExternalStore(subscribe, read, () => EMPTY)
 
-export function addToCart(line: Omit<CartLine, "quantity">) {
+export function addGuestLine(line: Omit<GuestLine, "quantity">) {
   const lines = read()
   const existing = lines.find((item) => item.key === line.key)
   write(
     existing
       ? lines.map((item) =>
           item.key === line.key
-            ? { ...item, quantity: Math.min(item.quantity + 1, MAX_QUANTITY) }
+            ? {
+                ...item,
+                quantity: Math.min(item.quantity + 1, MAX_LINE_QUANTITY),
+              }
             : item
         )
       : [...lines, { ...line, quantity: 1 }]
   )
 }
 
-export function setQuantity(key: string, quantity: number) {
+export function setGuestQuantity(key: string, quantity: number) {
   write(
     read().flatMap((item) => {
       if (item.key !== key) return [item]
       return quantity <= 0
         ? []
-        : [{ ...item, quantity: Math.min(quantity, MAX_QUANTITY) }]
+        : [{ ...item, quantity: Math.min(quantity, MAX_LINE_QUANTITY) }]
     })
   )
 }
+
+export const clearGuestCart = () => write([])

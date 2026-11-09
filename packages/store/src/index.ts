@@ -215,6 +215,19 @@ export {
   useUpdateListingMutation,
 } from "./api/catalog/catalog-api"
 
+// Cart and orders
+export {
+  commerceApi,
+  useGetCartQuery,
+  useAddCartItemMutation,
+  useUpdateCartItemMutation,
+  useRemoveCartItemMutation,
+  useMergeCartMutation,
+  usePlaceOrderMutation,
+  useGetOrdersQuery,
+  useGetOrderQuery,
+} from "./api/commerce/commerce-api"
+
 // Inventory API Types
 export type {
   InventoryLocation,

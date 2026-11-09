@@ -1,13 +1,12 @@
 /**
  * Placeholder data for features whose APIs do not exist yet. Everything mock
- * in the storefront comes from this file or `mock-cart.ts`.
+ * in the storefront comes from this file.
  *
  * Replace when the API ships (tables already exist, see ADR 0006):
  * - ratings, reviews:   ProductReview, Product.ratingCount / ratingTotal
  * - delivery estimates: Shipment and a carrier serviceability API
  * - offers:             Coupon
  * - deal end time:      Collection.endsAt
- * - cart:               Cart, CartItem
  *
  * Values derive from the product slug, so they stay the same between loads.
  */

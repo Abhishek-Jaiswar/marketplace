@@ -10,6 +10,8 @@ model Cart {
   guestToken String? @unique
   expiresAt  TimestampString(3)?
 
+  items CartItem[]
+
   createdAt TimestampString(3) @default(now()) @onCreate(now())
   updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
 
