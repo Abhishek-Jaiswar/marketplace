@@ -13,13 +13,19 @@ export const registerSellerSchema = z.object({
   firstName: z.string().trim().min(1, { message: "First name is required" }),
   lastName: z.string().trim().optional(),
   email: z.string().trim().email({ message: "Valid email is required" }),
-  password: z.string().trim().min(8, { message: "Password must be at least 8 characters" }),
+  password: z
+    .string()
+    .trim()
+    .min(8, { message: "Password must be at least 8 characters" }),
   businessName: z.string().trim().optional(),
   businessType: BusinessTypeEnum.optional(),
 })
 
 export const onboardSchema = z.object({
-  businessName: z.string().trim().min(1, { message: "Business name is required" }),
+  businessName: z
+    .string()
+    .trim()
+    .min(1, { message: "Business name is required" }),
   businessType: BusinessTypeEnum,
   gstin: z
     .string()
@@ -29,7 +35,11 @@ export const onboardSchema = z.object({
     })
     .optional(),
   contactPhone: z.string().trim().optional(),
-  contactEmail: z.string().trim().email({ message: "Valid contact email is required" }).optional(),
+  contactEmail: z
+    .string()
+    .trim()
+    .email({ message: "Valid contact email is required" })
+    .optional(),
 })
 
 export const addressSchema = z.object({
@@ -44,20 +54,31 @@ export const addressSchema = z.object({
 })
 
 export const storeSchema = z.object({
-  displayName: z.string().trim().min(1, { message: "Store display name is required" }),
+  displayName: z
+    .string()
+    .trim()
+    .min(1, { message: "Store display name is required" }),
   slug: z
     .string()
     .trim()
     .min(3, { message: "Slug must be at least 3 characters" })
-    .regex(/^[a-z0-9-]+$/, { message: "Slug must only contain lowercase letters, numbers, and hyphens" })
+    .regex(/^[a-z0-9-]+$/, {
+      message: "Slug must only contain lowercase letters, numbers, and hyphens",
+    })
     .optional(),
   description: z.string().trim().optional(),
   address: addressSchema.optional(),
 })
 
 export const bankAccountSchema = z.object({
-  accountHolderName: z.string().trim().min(1, { message: "Account holder name is required" }),
-  accountNumber: z.string().trim().min(1, { message: "Account number is required" }),
+  accountHolderName: z
+    .string()
+    .trim()
+    .min(1, { message: "Account holder name is required" }),
+  accountNumber: z
+    .string()
+    .trim()
+    .min(1, { message: "Account number is required" }),
   ifscCode: z
     .string()
     .trim()

@@ -8,7 +8,11 @@ import {
 import { BadRequestError, UnauthorizedError } from "../../utils/errors/index.js"
 
 class CustomerController {
-  getProfile = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getProfile = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -21,7 +25,11 @@ class CustomerController {
     }
   }
 
-  updateProfile = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  updateProfile = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -29,11 +37,15 @@ class CustomerController {
 
       const parseResult = updateProfileSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid profile payload"
+        const message =
+          parseResult.error.issues[0]?.message || "Invalid profile payload"
         throw new BadRequestError(message)
       }
 
-      const customer = await customerService.updateCustomerProfile(req.user.userId, parseResult.data)
+      const customer = await customerService.updateCustomerProfile(
+        req.user.userId,
+        parseResult.data
+      )
       res.status(200).json({
         message: "Customer profile updated successfully.",
         customer,
@@ -43,7 +55,11 @@ class CustomerController {
     }
   }
 
-  createAddress = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  createAddress = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -51,11 +67,15 @@ class CustomerController {
 
       const parseResult = createAddressSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid address payload"
+        const message =
+          parseResult.error.issues[0]?.message || "Invalid address payload"
         throw new BadRequestError(message)
       }
 
-      const address = await customerService.createCustomerAddress(req.user.userId, parseResult.data)
+      const address = await customerService.createCustomerAddress(
+        req.user.userId,
+        parseResult.data
+      )
       res.status(201).json({
         message: "Address added successfully.",
         address,
@@ -65,7 +85,11 @@ class CustomerController {
     }
   }
 
-  updateAddress = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  updateAddress = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -78,11 +102,16 @@ class CustomerController {
 
       const parseResult = updateAddressSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid address payload"
+        const message =
+          parseResult.error.issues[0]?.message || "Invalid address payload"
         throw new BadRequestError(message)
       }
 
-      const address = await customerService.updateCustomerAddress(req.user.userId, addressId as string, parseResult.data)
+      const address = await customerService.updateCustomerAddress(
+        req.user.userId,
+        addressId as string,
+        parseResult.data
+      )
       res.status(200).json({
         message: "Address updated successfully.",
         address,
@@ -92,7 +121,11 @@ class CustomerController {
     }
   }
 
-  deleteAddress = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  deleteAddress = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -103,14 +136,21 @@ class CustomerController {
         throw new BadRequestError("Address ID is required")
       }
 
-      const result = await customerService.deleteCustomerAddress(req.user.userId, addressId as string)
+      const result = await customerService.deleteCustomerAddress(
+        req.user.userId,
+        addressId as string
+      )
       res.status(200).json(result)
     } catch (error) {
       next(error)
     }
   }
 
-  setDefaultShipping = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  setDefaultShipping = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -121,7 +161,10 @@ class CustomerController {
         throw new BadRequestError("Address ID is required")
       }
 
-      const customer = await customerService.setDefaultShippingAddress(req.user.userId, addressId as string)
+      const customer = await customerService.setDefaultShippingAddress(
+        req.user.userId,
+        addressId as string
+      )
       res.status(200).json({
         message: "Default shipping address set successfully.",
         customer,
@@ -131,7 +174,11 @@ class CustomerController {
     }
   }
 
-  setDefaultBilling = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  setDefaultBilling = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -142,7 +189,10 @@ class CustomerController {
         throw new BadRequestError("Address ID is required")
       }
 
-      const customer = await customerService.setDefaultBillingAddress(req.user.userId, addressId as string)
+      const customer = await customerService.setDefaultBillingAddress(
+        req.user.userId,
+        addressId as string
+      )
       res.status(200).json({
         message: "Default billing address set successfully.",
         customer,

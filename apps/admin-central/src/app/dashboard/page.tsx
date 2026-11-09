@@ -89,7 +89,8 @@ export default function AdminDashboard() {
             Platform Operations & Administration
           </h1>
           <p className="text-sm text-muted-foreground">
-            Monitor ecosystem GMV, seller approvals, system health, and marketplace metrics.
+            Monitor ecosystem GMV, seller approvals, system health, and
+            marketplace metrics.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -97,7 +98,10 @@ export default function AdminDashboard() {
             <ActivityIcon className="size-4" />
             Audit Logs
           </Button>
-          <Button size="sm" className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button
+            size="sm"
+            className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90"
+          >
             <ShieldCheckIcon className="size-4" />
             Approve Pending Sellers
           </Button>
@@ -109,7 +113,7 @@ export default function AdminDashboard() {
         {/* Metric 1: GMV */}
         <Card className="border-l-4 border-l-cyan-500">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <CardTitle className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
               Gross Volume (GMV)
             </CardTitle>
             <div className="rounded-lg bg-cyan-500/10 p-2 text-cyan-600 dark:text-cyan-400">
@@ -118,7 +122,7 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">$1,420,500.00</div>
-            <div className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400 mt-1">
+            <div className="mt-1 flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
               <span className="font-semibold">+22.4%</span> MoM ecosystem growth
             </div>
           </CardContent>
@@ -127,7 +131,7 @@ export default function AdminDashboard() {
         {/* Metric 2: Active Merchants */}
         <Card className="border-l-4 border-l-indigo-500">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <CardTitle className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
               Active Sellers
             </CardTitle>
             <div className="rounded-lg bg-indigo-500/10 p-2 text-indigo-600 dark:text-indigo-400">
@@ -136,8 +140,9 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">1,842</div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-              Across <span className="font-medium text-foreground">14 categories</span>
+            <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+              Across{" "}
+              <span className="font-medium text-foreground">14 categories</span>
             </div>
           </CardContent>
         </Card>
@@ -145,7 +150,7 @@ export default function AdminDashboard() {
         {/* Metric 3: Pending Approvals */}
         <Card className="border-l-4 border-l-amber-500">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <CardTitle className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
               Pending Applications
             </CardTitle>
             <div className="rounded-lg bg-amber-500/10 p-2 text-amber-600 dark:text-amber-400">
@@ -154,7 +159,7 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">18 Waiting</div>
-            <div className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400 mt-1">
+            <div className="mt-1 flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400">
               Requires KYB & license review
             </div>
           </CardContent>
@@ -163,7 +168,7 @@ export default function AdminDashboard() {
         {/* Metric 4: Platform Take-Rate Revenue */}
         <Card className="border-l-4 border-l-purple-500">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <CardTitle className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
               Platform Take Revenue
             </CardTitle>
             <div className="rounded-lg bg-purple-500/10 p-2 text-purple-600 dark:text-purple-400">
@@ -172,8 +177,9 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">$142,050.00</div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-              Effective take-rate: <span className="font-semibold text-foreground">10.0%</span>
+            <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+              Effective take-rate:{" "}
+              <span className="font-semibold text-foreground">10.0%</span>
             </div>
           </CardContent>
         </Card>
@@ -187,10 +193,15 @@ export default function AdminDashboard() {
             <div>
               <CardTitle>Seller Application Queue</CardTitle>
               <CardDescription>
-                Review seller verification requests before granting storefront access.
+                Review seller verification requests before granting storefront
+                access.
               </CardDescription>
             </div>
-            <Button variant="ghost" size="sm" className="gap-1 text-xs text-primary">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1 text-xs text-primary"
+            >
               View All Applications
               <ArrowUpRightIcon className="size-3" />
             </Button>
@@ -209,23 +220,40 @@ export default function AdminDashboard() {
                 </thead>
                 <tbody className="divide-y">
                   {pendingSellers.map((seller) => (
-                    <tr key={seller.id} className="hover:bg-muted/30 transition-colors">
+                    <tr
+                      key={seller.id}
+                      className="transition-colors hover:bg-muted/30"
+                    >
                       <td className="px-4 py-3 font-medium text-foreground">
                         <div>{seller.storeName}</div>
-                        <div className="text-xs text-muted-foreground">{seller.email}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {seller.email}
+                        </div>
                       </td>
                       <td className="px-4 py-3">
                         <Badge variant="outline">{seller.category}</Badge>
                       </td>
-                      <td className="px-4 py-3 text-xs text-muted-foreground">{seller.date}</td>
-                      <td className="px-4 py-3 font-semibold">{seller.requestedCommission}</td>
+                      <td className="px-4 py-3 text-xs text-muted-foreground">
+                        {seller.date}
+                      </td>
+                      <td className="px-4 py-3 font-semibold">
+                        {seller.requestedCommission}
+                      </td>
                       <td className="px-4 py-3 text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          <Button size="sm" variant="outline" className="h-7 text-xs gap-1 border-emerald-500/30 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-7 gap-1 border-emerald-500/30 text-xs text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950"
+                          >
                             <CheckCircle2Icon className="size-3.5" />
                             Approve
                           </Button>
-                          <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-destructive hover:bg-destructive/10">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-7 gap-1 text-xs text-destructive hover:bg-destructive/10"
+                          >
                             <XCircleIcon className="size-3.5" />
                             Reject
                           </Button>
@@ -244,10 +272,10 @@ export default function AdminDashboard() {
           {/* System Status Card */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold flex items-center justify-between">
+              <CardTitle className="flex items-center justify-between text-sm font-semibold">
                 <span>System Infrastructure Health</span>
-                <span className="flex items-center gap-1 text-xs text-emerald-600 font-normal">
-                  <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="flex items-center gap-1 text-xs font-normal text-emerald-600">
+                  <span className="size-2 animate-pulse rounded-full bg-emerald-500" />
                   Operational
                 </span>
               </CardTitle>
@@ -255,15 +283,21 @@ export default function AdminDashboard() {
             <CardContent className="flex flex-col gap-3 text-xs">
               <div className="flex items-center justify-between border-b pb-2">
                 <span className="text-muted-foreground">Database Clusters</span>
-                <span className="font-medium text-foreground">Healthy (3/3 nodes)</span>
+                <span className="font-medium text-foreground">
+                  Healthy (3/3 nodes)
+                </span>
               </div>
               <div className="flex items-center justify-between border-b pb-2">
                 <span className="text-muted-foreground">API Edge Latency</span>
                 <span className="font-medium text-foreground">18 ms avg</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Monthly Service SLA</span>
-                <span className="font-medium text-emerald-600 font-semibold">99.98% Uptime</span>
+                <span className="text-muted-foreground">
+                  Monthly Service SLA
+                </span>
+                <span className="font-medium font-semibold text-emerald-600">
+                  99.98% Uptime
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -271,17 +305,22 @@ export default function AdminDashboard() {
           {/* Audit Events Feed */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-base">
                 <UsersIcon className="size-4 text-primary" />
                 Realtime Platform Audit Trail
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               {recentAuditLogs.map((log) => (
-                <div key={log.id} className="flex flex-col gap-1 border-b last:border-0 pb-3 last:pb-0 text-xs">
-                  <div className="font-semibold text-foreground">{log.action}</div>
+                <div
+                  key={log.id}
+                  className="flex flex-col gap-1 border-b pb-3 text-xs last:border-0 last:pb-0"
+                >
+                  <div className="font-semibold text-foreground">
+                    {log.action}
+                  </div>
                   <div className="text-muted-foreground">{log.target}</div>
-                  <div className="flex items-center justify-between text-[11px] text-muted-foreground/80 mt-1">
+                  <div className="mt-1 flex items-center justify-between text-[11px] text-muted-foreground/80">
                     <span>{log.actor}</span>
                     <span>{log.time}</span>
                   </div>

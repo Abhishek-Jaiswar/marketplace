@@ -27,19 +27,28 @@ class SellerService {
 
     const passwordHash = await hashPassword(payload.password)
 
-    const result = await sellerRepository.registerSellerTransaction(payload, passwordHash)
+    const result = await sellerRepository.registerSellerTransaction(
+      payload,
+      passwordHash
+    )
 
     try {
       const otp = generateOtp()
       await userCache.setEmailVerificationOtp(result.user.email, otp)
       await mailService.sendOtpEmail(result.user.email, otp)
-      logger.info(`Seller verification OTP sent successfully to ${result.user.email}`)
+      logger.info(
+        `Seller verification OTP sent successfully to ${result.user.email}`
+      )
     } catch (err) {
-      logger.error(`Failed to process seller verification OTP for ${result.user.email}`, err)
+      logger.error(
+        `Failed to process seller verification OTP for ${result.user.email}`,
+        err
+      )
     }
 
     return {
-      message: "Seller registered successfully. Please verify your email using the OTP sent.",
+      message:
+        "Seller registered successfully. Please verify your email using the OTP sent.",
       user: result.user,
       seller: result.seller,
     }
@@ -65,10 +74,13 @@ class SellerService {
 
     // Add SELLER role if not present
     const updatedRoles: UserRole[] = Array.from(
-      new Set<UserRole>([...user.roles, "SELLER"]),
+      new Set<UserRole>([...user.roles, "SELLER"])
     )
 
-    const updatedUser = await sellerRepository.updateUserRoles(userId, updatedRoles)
+    const updatedUser = await sellerRepository.updateUserRoles(
+      userId,
+      updatedRoles
+    )
     if (!updatedUser) {
       throw new NotFoundError("User not found")
     }
@@ -104,7 +116,9 @@ class SellerService {
     return sellerCache.getOrSetSellerDetails(userId, async () => {
       const seller = await sellerRepository.findSellerByOwnerId(userId)
       if (!seller) {
-        throw new NotFoundError("Seller profile not found. Please start onboarding.")
+        throw new NotFoundError(
+          "Seller profile not found. Please start onboarding."
+        )
       }
       return seller
     })
@@ -116,18 +130,27 @@ class SellerService {
       throw new NotFoundError("Seller profile not found")
     }
 
-    if (seller.status !== "DRAFT" && seller.status !== "DOCUMENTS_PENDING" && seller.status !== "REJECTED") {
-      throw new ForbiddenError("Cannot edit seller profile in its current status")
+    if (
+      seller.status !== "DRAFT" &&
+      seller.status !== "DOCUMENTS_PENDING" &&
+      seller.status !== "REJECTED"
+    ) {
+      throw new ForbiddenError(
+        "Cannot edit seller profile in its current status"
+      )
     }
 
-    const updatedSeller = await sellerRepository.updateSellerProfile(seller.id, {
-      businessName: payload.businessName,
-      businessType: payload.businessType,
-      gstin: payload.gstin,
-      contactEmail: payload.contactEmail,
-      contactPhone: payload.contactPhone,
-      status: "DRAFT", // reset to draft if they modify details
-    })
+    const updatedSeller = await sellerRepository.updateSellerProfile(
+      seller.id,
+      {
+        businessName: payload.businessName,
+        businessType: payload.businessType,
+        gstin: payload.gstin,
+        contactEmail: payload.contactEmail,
+        contactPhone: payload.contactPhone,
+        status: "DRAFT", // reset to draft if they modify details
+      }
+    )
 
     await sellerCache.invalidateUser(userId)
 
@@ -140,8 +163,14 @@ class SellerService {
       throw new NotFoundError("Seller profile not found")
     }
 
-    if (seller.status !== "DRAFT" && seller.status !== "DOCUMENTS_PENDING" && seller.status !== "REJECTED") {
-      throw new ForbiddenError("Cannot edit store details in its current status")
+    if (
+      seller.status !== "DRAFT" &&
+      seller.status !== "DOCUMENTS_PENDING" &&
+      seller.status !== "REJECTED"
+    ) {
+      throw new ForbiddenError(
+        "Cannot edit store details in its current status"
+      )
     }
 
     let slug = payload.slug
@@ -178,7 +207,11 @@ class SellerService {
       throw new NotFoundError("Seller profile not found")
     }
 
-    if (seller.status !== "DRAFT" && seller.status !== "DOCUMENTS_PENDING" && seller.status !== "REJECTED") {
+    if (
+      seller.status !== "DRAFT" &&
+      seller.status !== "DOCUMENTS_PENDING" &&
+      seller.status !== "REJECTED"
+    ) {
       throw new ForbiddenError("Cannot add bank details in its current status")
     }
 
@@ -195,7 +228,11 @@ class SellerService {
       throw new NotFoundError("Seller profile not found")
     }
 
-    if (seller.status !== "DRAFT" && seller.status !== "DOCUMENTS_PENDING" && seller.status !== "REJECTED") {
+    if (
+      seller.status !== "DRAFT" &&
+      seller.status !== "DOCUMENTS_PENDING" &&
+      seller.status !== "REJECTED"
+    ) {
       throw new ForbiddenError("Cannot upload documents in its current status")
     }
 
@@ -219,8 +256,14 @@ class SellerService {
     })
 
     // 3. Attach Document to Seller Verification
-    const verification = await sellerRepository.getOrCreateVerification(seller.id)
-    const doc = await sellerRepository.addDocument(verification.id, media.id, type)
+    const verification = await sellerRepository.getOrCreateVerification(
+      seller.id
+    )
+    const doc = await sellerRepository.addDocument(
+      verification.id,
+      media.id,
+      type
+    )
 
     await sellerCache.invalidateUser(userId)
 
@@ -233,13 +276,19 @@ class SellerService {
       throw new NotFoundError("Seller profile not found")
     }
 
-    if (seller.status !== "DRAFT" && seller.status !== "DOCUMENTS_PENDING" && seller.status !== "REJECTED") {
+    if (
+      seller.status !== "DRAFT" &&
+      seller.status !== "DOCUMENTS_PENDING" &&
+      seller.status !== "REJECTED"
+    ) {
       throw new ForbiddenError("Application is already submitted or approved")
     }
 
     // Validation: ensure store details are filled
     if (!seller.store) {
-      throw new BadRequestError("Store information is required before submission")
+      throw new BadRequestError(
+        "Store information is required before submission"
+      )
     }
 
     // Validation: ensure pickup address is filled
@@ -249,13 +298,19 @@ class SellerService {
 
     // Validation: bank details
     if (seller.bankAccounts.length === 0) {
-      throw new BadRequestError("At least one bank account is required before submission")
+      throw new BadRequestError(
+        "At least one bank account is required before submission"
+      )
     }
 
     // Validation: documents
-    const verification = await sellerRepository.getOrCreateVerification(seller.id)
+    const verification = await sellerRepository.getOrCreateVerification(
+      seller.id
+    )
     if (verification.documents.length === 0) {
-      throw new BadRequestError("Please upload at least one verification document (e.g. GST certificate, PAN, or Cheque)")
+      throw new BadRequestError(
+        "Please upload at least one verification document (e.g. GST certificate, PAN, or Cheque)"
+      )
     }
 
     // Update statuses
@@ -275,12 +330,34 @@ class SellerService {
     payload: {
       status?: "APPROVED" | "REJECTED" | "UNDER_REVIEW" | undefined
       remarks?: string | null | undefined
-      stepDecisions?: {
-        business?: { status: "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"; rejectionReason?: string | null | undefined } | undefined
-        store?: { status: "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"; rejectionReason?: string | null | undefined } | undefined
-        bank?: { status: "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"; rejectionReason?: string | null | undefined } | undefined
-        documents?: { status: "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"; rejectionReason?: string | null | undefined } | undefined
-      } | undefined
+      stepDecisions?:
+        | {
+            business?:
+              | {
+                  status: "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"
+                  rejectionReason?: string | null | undefined
+                }
+              | undefined
+            store?:
+              | {
+                  status: "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"
+                  rejectionReason?: string | null | undefined
+                }
+              | undefined
+            bank?:
+              | {
+                  status: "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"
+                  rejectionReason?: string | null | undefined
+                }
+              | undefined
+            documents?:
+              | {
+                  status: "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"
+                  rejectionReason?: string | null | undefined
+                }
+              | undefined
+          }
+        | undefined
       reviveStep?: "business" | "store" | "bank" | "documents" | undefined
       reviveSeller?: boolean | undefined
     },
@@ -291,7 +368,8 @@ class SellerService {
       throw new NotFoundError("Seller not found")
     }
 
-    const verification = await sellerRepository.getOrCreateVerification(sellerId)
+    const verification =
+      await sellerRepository.getOrCreateVerification(sellerId)
 
     let businessStatus = verification.businessStatus || "PENDING"
     let businessRejectionReason = verification.businessRejectionReason || null
@@ -311,28 +389,32 @@ class SellerService {
         businessStatus = payload.stepDecisions.business.status as any
         businessRejectionReason =
           payload.stepDecisions.business.status === "REJECTED"
-            ? payload.stepDecisions.business.rejectionReason || "Business details rejected"
+            ? payload.stepDecisions.business.rejectionReason ||
+              "Business details rejected"
             : null
       }
       if (payload.stepDecisions.store) {
         storeStatus = payload.stepDecisions.store.status as any
         storeRejectionReason =
           payload.stepDecisions.store.status === "REJECTED"
-            ? payload.stepDecisions.store.rejectionReason || "Store & address details rejected"
+            ? payload.stepDecisions.store.rejectionReason ||
+              "Store & address details rejected"
             : null
       }
       if (payload.stepDecisions.bank) {
         bankStatus = payload.stepDecisions.bank.status as any
         bankRejectionReason =
           payload.stepDecisions.bank.status === "REJECTED"
-            ? payload.stepDecisions.bank.rejectionReason || "Bank account details rejected"
+            ? payload.stepDecisions.bank.rejectionReason ||
+              "Bank account details rejected"
             : null
       }
       if (payload.stepDecisions.documents) {
         documentsStatus = payload.stepDecisions.documents.status as any
         documentsRejectionReason =
           payload.stepDecisions.documents.status === "REJECTED"
-            ? payload.stepDecisions.documents.rejectionReason || "Verification documents / signature rejected"
+            ? payload.stepDecisions.documents.rejectionReason ||
+              "Verification documents / signature rejected"
             : null
       }
     }
@@ -362,7 +444,12 @@ class SellerService {
     } else if (payload.status) {
       overallStatus = payload.status
     } else {
-      const stepStatuses = [businessStatus, storeStatus, bankStatus, documentsStatus]
+      const stepStatuses = [
+        businessStatus,
+        storeStatus,
+        bankStatus,
+        documentsStatus,
+      ]
       if (stepStatuses.includes("REJECTED")) {
         overallStatus = "REJECTED"
       } else if (stepStatuses.every((s) => s === "APPROVED")) {
@@ -400,7 +487,10 @@ class SellerService {
       if (documentsStatus === "REJECTED" && documentsRejectionReason) {
         rejections.push(`Documents: ${documentsRejectionReason}`)
       }
-      finalRemarks = rejections.length > 0 ? rejections.join(" | ") : "Merchant application rejected"
+      finalRemarks =
+        rejections.length > 0
+          ? rejections.join(" | ")
+          : "Merchant application rejected"
     }
 
     // Update verification in db
@@ -423,36 +513,44 @@ class SellerService {
 
     // Update bank accounts & documents status
     if (bankStatus === "APPROVED") {
-      await db.orm.public.BankAccount
-        .where((bankAccount) => bankAccount.sellerId.eq(seller.id))
-        .updateAll({ status: "APPROVED", verifiedAt: new Date().toISOString() })
+      await db.orm.public.BankAccount.where((bankAccount) =>
+        bankAccount.sellerId.eq(seller.id)
+      ).updateAll({ status: "APPROVED", verifiedAt: new Date().toISOString() })
     } else if (bankStatus === "REJECTED") {
-      await db.orm.public.BankAccount
-        .where((bankAccount) => bankAccount.sellerId.eq(seller.id))
-        .updateAll({
-          status: "REJECTED",
-          rejectionReason: bankRejectionReason,
-        })
+      await db.orm.public.BankAccount.where((bankAccount) =>
+        bankAccount.sellerId.eq(seller.id)
+      ).updateAll({
+        status: "REJECTED",
+        rejectionReason: bankRejectionReason,
+      })
     }
 
     if (documentsStatus === "APPROVED") {
-      await db.orm.public.SellerDocument
-        .where((document) => document.verificationId.eq(verification.id))
-        .updateAll({ status: "APPROVED", verifiedAt: new Date().toISOString() })
+      await db.orm.public.SellerDocument.where((document) =>
+        document.verificationId.eq(verification.id)
+      ).updateAll({ status: "APPROVED", verifiedAt: new Date().toISOString() })
     } else if (documentsStatus === "REJECTED") {
-      await db.orm.public.SellerDocument
-        .where((document) => document.verificationId.eq(verification.id))
-        .updateAll({
-          status: "REJECTED",
-          rejectionReason: documentsRejectionReason,
-        })
+      await db.orm.public.SellerDocument.where((document) =>
+        document.verificationId.eq(verification.id)
+      ).updateAll({
+        status: "REJECTED",
+        rejectionReason: documentsRejectionReason,
+      })
     }
 
     // Update seller status
-    const updatedSeller = await sellerRepository.updateSellerProfile(seller.id, {
-      status: overallStatus === "APPROVED" ? "APPROVED" : overallStatus === "REJECTED" ? "REJECTED" : "UNDER_REVIEW",
-      approvedAt: overallStatus === "APPROVED" ? new Date() : null,
-    })
+    const updatedSeller = await sellerRepository.updateSellerProfile(
+      seller.id,
+      {
+        status:
+          overallStatus === "APPROVED"
+            ? "APPROVED"
+            : overallStatus === "REJECTED"
+              ? "REJECTED"
+              : "UNDER_REVIEW",
+        approvedAt: overallStatus === "APPROVED" ? new Date() : null,
+      }
+    )
 
     await sellerCache.invalidateUser(seller.ownerUserId)
 
@@ -461,15 +559,20 @@ class SellerService {
 
   async getAllSellers(page: number = 1, limit: number = 10) {
     return sellerCache.getOrSetUserList(page, limit, async () => {
-      logger.info(`Seller list cache miss - fetching page ${page} limit ${limit} from database`)
+      logger.info(
+        `Seller list cache miss - fetching page ${page} limit ${limit} from database`
+      )
       return sellerRepository.findAllSellers(page, limit)
     })
   }
 
   async lookupGstin(gstin: string) {
-    const gstinRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/
+    const gstinRegex =
+      /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/
     if (!gstinRegex.test(gstin)) {
-      throw new BadRequestError("Invalid GSTIN format. Must be a 15-digit code.")
+      throw new BadRequestError(
+        "Invalid GSTIN format. Must be a 15-digit code."
+      )
     }
 
     const states: Record<string, string> = {

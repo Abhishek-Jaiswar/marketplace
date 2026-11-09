@@ -21,7 +21,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
-import { ChevronsUpDownIcon, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon } from "lucide-react"
+import {
+  ChevronsUpDownIcon,
+  BadgeCheckIcon,
+  CreditCardIcon,
+  BellIcon,
+  LogOutIcon,
+} from "lucide-react"
 
 export interface UserMenuItem {
   label: string
@@ -58,11 +64,7 @@ const defaultUserMenuItems: UserMenuItem[] = [
   },
 ]
 
-export function NavUser({
-  user,
-  items,
-  onLogout,
-}: NavUserProps) {
+export function NavUser({ user, items, onLogout }: NavUserProps) {
   const { isMobile } = useSidebar()
   const initials = user.name
     ? user.name
@@ -83,13 +85,13 @@ export function NavUser({
             render={
               <SidebarMenuButton
                 size="lg"
-                className="w-full justify-start gap-2.5 rounded-xl px-2.5 py-2 hover:bg-slate-200/60 dark:hover:bg-slate-800/50 transition-colors cursor-pointer"
+                className="w-full cursor-pointer justify-start gap-2.5 rounded-xl px-2.5 py-2 transition-colors hover:bg-slate-200/60 dark:hover:bg-slate-800/50"
               />
             }
           >
             <Avatar className="size-8 rounded-full border border-slate-200 dark:border-slate-800">
               <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback className="rounded-full bg-slate-200 text-slate-800 font-bold text-xs dark:bg-slate-800 dark:text-slate-200">
+              <AvatarFallback className="rounded-full bg-slate-200 text-xs font-bold text-slate-800 dark:bg-slate-800 dark:text-slate-200">
                 {initials}
               </AvatarFallback>
             </Avatar>
@@ -97,7 +99,7 @@ export function NavUser({
               <span className="truncate font-bold text-foreground">
                 {user.name}
               </span>
-              <span className="truncate text-[11px] text-muted-foreground/80 font-normal">
+              <span className="truncate text-[11px] font-normal text-muted-foreground/80">
                 {user.email}
               </span>
             </div>
@@ -105,17 +107,17 @@ export function NavUser({
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
-            className="w-56 rounded-xl p-1.5 shadow-xl border-slate-200 dark:border-slate-800"
+            className="w-56 rounded-xl border-slate-200 p-1.5 shadow-xl dark:border-slate-800"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={8}
           >
             <DropdownMenuGroup>
               <DropdownMenuLabel className="p-0 font-normal">
-                <div className="flex items-center gap-2.5 px-2.5 py-2 text-left text-xs bg-slate-100 dark:bg-slate-800/60 rounded-lg">
+                <div className="flex items-center gap-2.5 rounded-lg bg-slate-100 px-2.5 py-2 text-left text-xs dark:bg-slate-800/60">
                   <Avatar className="size-8 rounded-full">
                     <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="rounded-full bg-slate-200 text-slate-800 font-bold text-xs dark:bg-slate-700 dark:text-slate-200">
+                    <AvatarFallback className="rounded-full bg-slate-200 text-xs font-bold text-slate-800 dark:bg-slate-700 dark:text-slate-200">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
@@ -135,7 +137,7 @@ export function NavUser({
                   key={index}
                   render={item.href ? <a href={item.href} /> : undefined}
                   onClick={item.onClick}
-                  className="gap-2 text-xs py-2 rounded-lg cursor-pointer"
+                  className="cursor-pointer gap-2 rounded-lg py-2 text-xs"
                 >
                   {item.icon}
                   <span>{item.label}</span>
@@ -145,7 +147,7 @@ export function NavUser({
             <DropdownMenuSeparator className="my-1" />
             <DropdownMenuItem
               onClick={onLogout}
-              className="gap-2 text-xs py-2 rounded-lg text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer"
+              className="cursor-pointer gap-2 rounded-lg py-2 text-xs text-destructive focus:bg-destructive/10 focus:text-destructive"
             >
               <LogOutIcon className="size-3.5" />
               Log out
@@ -156,4 +158,3 @@ export function NavUser({
     </SidebarMenu>
   )
 }
-

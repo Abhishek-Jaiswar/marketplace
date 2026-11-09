@@ -1,63 +1,58 @@
+import { MAX_UNPAGED_ROWS } from "../../utils/query-limits.js"
 import { db, type UserStatus } from "@workspace/db"
 import { TRegister } from "./user.types.js"
 
 class UserRepository {
   async findUserById(userId: string) {
-    return await db.orm.public.User
-      .select(
-        "id",
-        "firstName",
-        "lastName",
-        "email",
-        "status",
-        "roles",
-        "emailVerified",
-        "emailVerifiedAt",
-      )
-      .first({ id: userId })
+    return await db.orm.public.User.select(
+      "id",
+      "firstName",
+      "lastName",
+      "email",
+      "status",
+      "roles",
+      "emailVerified",
+      "emailVerifiedAt"
+    ).first({ id: userId })
   }
 
   async findUserByEmail(email: string) {
-    return await db.orm.public.User
-      .include("credential")
+    return await db.orm.public.User.include("credential")
       .where({ email })
       .first()
   }
 
   async registerUser(payload: TRegister, passwordHash: string) {
-    return await db.orm.public.User
-      .select(
-        "id",
-        "firstName",
-        "lastName",
-        "email",
-        "status",
-        "roles",
-        "emailVerified",
-        "createdAt",
-        "updatedAt",
-      )
-      .create({
-        firstName: payload.firstName,
-        lastName: payload.lastName,
-        email: payload.email,
-        credential: (credential) => credential.create({ passwordHash }),
-        customer: (customer) => customer.create({}),
-      })
+    return await db.orm.public.User.select(
+      "id",
+      "firstName",
+      "lastName",
+      "email",
+      "status",
+      "roles",
+      "emailVerified",
+      "createdAt",
+      "updatedAt"
+    ).create({
+      firstName: payload.firstName,
+      lastName: payload.lastName,
+      email: payload.email,
+      credential: (credential) => credential.create({ passwordHash }),
+      customer: (customer) => customer.create({}),
+    })
   }
 
   async updateUserStatus(userId: string, status: UserStatus) {
-    return await db.orm.public.User
-      .select(
-        "id",
-        "firstName",
-        "lastName",
-        "email",
-        "status",
-        "roles",
-        "emailVerified",
-        "updatedAt",
-      )
+    return await db.orm.public.User.select(
+      "id",
+      "firstName",
+      "lastName",
+      "email",
+      "status",
+      "roles",
+      "emailVerified",
+      "updatedAt"
+    )
       .where({ id: userId })
       .update({
         status,
@@ -67,19 +62,19 @@ class UserRepository {
   }
 
   async getAllUsers() {
-    return await db.orm.public.User
-      .select(
-        "id",
-        "firstName",
-        "lastName",
-        "email",
-        "status",
-        "roles",
-        "emailVerified",
-        "createdAt",
-        "updatedAt",
-      )
+    return await db.orm.public.User.select(
+      "id",
+      "firstName",
+      "lastName",
+      "email",
+      "status",
+      "roles",
+      "emailVerified",
+      "createdAt",
+      "updatedAt"
+    )
       .orderBy((user) => user.createdAt.desc())
+      .limit(MAX_UNPAGED_ROWS)
       .all()
   }
 
@@ -88,7 +83,7 @@ class UserRepository {
     refreshTokenHash: string,
     expiresAt: Date,
     userAgent?: string,
-    ipAddress?: string,
+    ipAddress?: string
   ) {
     return await db.orm.public.Session.create({
       userId,
@@ -100,23 +95,15 @@ class UserRepository {
   }
 
   async findSessionByHash(refreshTokenHash: string) {
-    return await db.orm.public.Session
-      .include("user", (user) =>
-        user.select(
-          "id",
-          "email",
-          "status",
-          "roles",
-          "emailVerified",
-        ),
-      )
+    return await db.orm.public.Session.include("user", (user) =>
+      user.select("id", "email", "status", "roles", "emailVerified")
+    )
       .where({ refreshTokenHash })
       .first()
   }
 
   async deleteSessionByHash(refreshTokenHash: string) {
-    return await db.orm.public.Session
-      .where({ refreshTokenHash })
+    return await db.orm.public.Session.where({ refreshTokenHash })
       .delete()
       .catch(() => null)
   }
@@ -126,12 +113,10 @@ class UserRepository {
   }
 
   async updateCredentialPassword(userId: string, passwordHash: string) {
-    return await db.orm.public.Credential
-      .where({ userId })
-      .update({
-        passwordHash,
-        passwordChangedAt: new Date().toISOString(),
-      })
+    return await db.orm.public.Credential.where({ userId }).update({
+      passwordHash,
+      passwordChangedAt: new Date().toISOString(),
+    })
   }
 }
 

@@ -5,7 +5,13 @@ const CATALOG_CACHE_TTL_SECONDS = 60 * 60 * 12 // 12 hours
 const CATALOG_VERSION_FALLBACK = 1
 const CATALOG_VERSION_KEY = "catalog:version"
 
-const buildBrandListKey = (version: number, page: number, limit: number, search?: string, isVerified?: boolean) =>
+const buildBrandListKey = (
+  version: number,
+  page: number,
+  limit: number,
+  search?: string,
+  isVerified?: boolean
+) =>
   `catalog:brands:v${version}:p:${page}:l:${limit}:s:${search ?? ""}:v:${isVerified ?? ""}`
 
 const buildProductListKey = (
@@ -56,13 +62,24 @@ class CatalogCache {
   ): Promise<T> {
     const version = await this.getVersion()
     return cacheService.remember(
-      buildProductListKey(version, page, limit, search, categoryId, brandId, status),
+      buildProductListKey(
+        version,
+        page,
+        limit,
+        search,
+        categoryId,
+        brandId,
+        status
+      ),
       CATALOG_CACHE_TTL_SECONDS,
       producer
     )
   }
 
-  async getOrSetProductBySlug<T>(slug: string, producer: () => Promise<T>): Promise<T> {
+  async getOrSetProductBySlug<T>(
+    slug: string,
+    producer: () => Promise<T>
+  ): Promise<T> {
     const version = await this.getVersion()
     return cacheService.remember(
       buildProductSlugKey(version, slug),
@@ -71,7 +88,10 @@ class CatalogCache {
     )
   }
 
-  async getOrSetProductById<T>(id: string, producer: () => Promise<T>): Promise<T> {
+  async getOrSetProductById<T>(
+    id: string,
+    producer: () => Promise<T>
+  ): Promise<T> {
     const version = await this.getVersion()
     return cacheService.remember(
       buildProductIdKey(version, id),

@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import React from "react";
-import { ShieldCheck, Truck, RotateCcw, Headphones, Sparkles } from "lucide-react";
+import React from "react"
+import { ShieldCheck, Truck, RotateCcw, Headphones } from "lucide-react"
 
 export function TrustBadges() {
   const badges = [
@@ -29,35 +29,39 @@ export function TrustBadges() {
       subtitle: "Instant concierge assistance",
       color: "text-purple-500 bg-purple-500/10 dark:bg-purple-500/20",
     },
-  ];
+  ]
 
   return (
-    <section className="w-full bg-card/60 border-y border-border/80 py-5 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <section className="w-full border-y border-border/80 bg-card/60 py-5 backdrop-blur-sm">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {badges.map((badge, idx) => {
-            const Icon = badge.icon;
+            const Icon = badge.icon
             return (
               <div
                 key={idx}
-                className="flex items-center space-x-4 p-3 rounded-2xl transition-all duration-300 hover:bg-zinc-100/80 dark:hover:bg-zinc-900/60 group"
+                className="group flex items-center space-x-4 rounded-2xl p-3 transition-all duration-300 hover:bg-zinc-100/80 dark:hover:bg-zinc-900/60"
               >
-                <div className={`p-3 rounded-xl ${badge.color} transition-transform duration-300 group-hover:scale-110`}>
-                  <Icon className="w-5 h-5" />
+                <div
+                  className={`rounded-xl p-3 ${badge.color} transition-transform duration-300 group-hover:scale-110`}
+                >
+                  <Icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                  <h4 className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-foreground uppercase">
                     {badge.title}
                   </h4>
-                  <p className="text-xs text-muted-foreground mt-0.5">{badge.subtitle}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {badge.subtitle}
+                  </p>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-export default TrustBadges;
+export default TrustBadges

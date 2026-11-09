@@ -17,7 +17,7 @@ const fontSerif = Lora({
 const fontMono = IBM_Plex_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  weight: ['100', '200', '300', '400', '500', '600', '700'],
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
 })
 
 export const metadata: Metadata = {

@@ -36,9 +36,7 @@ import {
 import { useRouter } from "next/navigation"
 
 export default function Header() {
-  const { isAuthenticated, user: cachedUser } = useAppSelector(
-    (state) => state.auth
-  )
+  const { user: cachedUser } = useAppSelector((state) => state.auth)
   const { data: userData, isLoading: isUserLoading } = useGetMeQuery(undefined)
   const user = userData?.user || cachedUser
 
@@ -73,7 +71,9 @@ export default function Header() {
   }
 
   // Prevent UI flickering while auth or seller data is resolving on initial load
-  const isResolvingAuth = (isUserLoading && !user) || (Boolean(user) && isSellerLoading && !sellerData)
+  const isResolvingAuth =
+    (isUserLoading && !user) ||
+    (Boolean(user) && isSellerLoading && !sellerData)
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-100 bg-white">
@@ -133,12 +133,12 @@ export default function Header() {
         {/* Auth Actions */}
         <div className="flex items-center gap-4">
           {isResolvingAuth ? (
-            <div className="h-9 w-32 animate-pulse rounded-xl bg-zinc-150/70" />
+            <div className="bg-zinc-150/70 h-9 w-32 animate-pulse rounded-xl" />
           ) : user ? (
             hasSellerProfile ? (
               <div className="flex items-center justify-center gap-3">
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center gap-2 rounded-full outline-none ring-offset-background transition-all hover:opacity-90 focus-visible:outline-none cursor-pointer">
+                  <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2 rounded-full ring-offset-background transition-all outline-none hover:opacity-90 focus-visible:outline-none">
                     <Avatar className="h-9 w-9 border border-zinc-200">
                       <AvatarImage
                         src={"https://placehold.net/avatar-5.png"}
@@ -150,14 +150,19 @@ export default function Header() {
                     </Avatar>
                   </DropdownMenuTrigger>
 
-                  <DropdownMenuContent align="end" className="w-56 mt-1.5 p-1.5 shadow-xl border border-zinc-150 rounded-xl">
+                  <DropdownMenuContent
+                    align="end"
+                    className="border-zinc-150 mt-1.5 w-56 rounded-xl border p-1.5 shadow-xl"
+                  >
                     <DropdownMenuGroup>
                       <DropdownMenuLabel className="px-2 py-1.5">
                         <div className="flex flex-col text-left">
-                          <span className="text-xs font-bold text-zinc-900 truncate">
-                            {user.firstName ? `${user.firstName} ${user.lastName || ""}` : "Seller Account"}
+                          <span className="truncate text-xs font-bold text-zinc-900">
+                            {user.firstName
+                              ? `${user.firstName} ${user.lastName || ""}`
+                              : "Seller Account"}
                           </span>
-                          <span className="text-[10px] font-medium text-zinc-500 truncate font-mono">
+                          <span className="truncate font-mono text-[10px] font-medium text-zinc-500">
                             {user.email}
                           </span>
                         </div>
@@ -166,15 +171,19 @@ export default function Header() {
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
                       <DropdownMenuItem
-                        onClick={() => router.push(redirectTarget || "/dashboard")}
-                        className="cursor-pointer text-xs font-medium gap-2 py-2"
+                        onClick={() =>
+                          router.push(redirectTarget || "/dashboard")
+                        }
+                        className="cursor-pointer gap-2 py-2 text-xs font-medium"
                       >
                         <LayoutDashboard className="h-4 w-4 text-zinc-500" />
-                        <span>{redirectTarget ? "Complete Onboarding" : "Dashboard"}</span>
+                        <span>
+                          {redirectTarget ? "Complete Onboarding" : "Dashboard"}
+                        </span>
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => router.push("/dashboard/settings")}
-                        className="cursor-pointer text-xs font-medium gap-2 py-2"
+                        className="cursor-pointer gap-2 py-2 text-xs font-medium"
                       >
                         <Settings className="h-4 w-4 text-zinc-500" />
                         <span>Settings</span>
@@ -185,7 +194,7 @@ export default function Header() {
                       <DropdownMenuItem
                         disabled={isLogoutLoading}
                         onClick={handleLogout}
-                        className="cursor-pointer text-xs font-medium gap-2 py-2 text-rose-600 focus:bg-rose-50 focus:text-rose-700"
+                        className="cursor-pointer gap-2 py-2 text-xs font-medium text-rose-600 focus:bg-rose-50 focus:text-rose-700"
                       >
                         <LogOut className="h-4 w-4 text-rose-500" />
                         <span>Logout</span>
@@ -222,4 +231,3 @@ export default function Header() {
     </header>
   )
 }
-

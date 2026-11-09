@@ -16,7 +16,11 @@ export const requestLogger: RequestHandler = (request, response, next) => {
   response.on("finish", () => {
     const durationMs = Math.round(performance.now() - startedAt)
     const level =
-      response.statusCode >= 500 ? "error" : response.statusCode >= 400 ? "warn" : "info"
+      response.statusCode >= 500
+        ? "error"
+        : response.statusCode >= 400
+          ? "warn"
+          : "info"
 
     logger[level]("request completed", {
       request: {

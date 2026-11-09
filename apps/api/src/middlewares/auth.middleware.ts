@@ -15,7 +15,11 @@ declare global {
   }
 }
 
-export function requireAuth(req: Request, _res: Response, next: NextFunction): void {
+export function requireAuth(
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): void {
   try {
     const authHeader = req.headers.authorization
     if (!authHeader || !authHeader.startsWith("Bearer ")) {

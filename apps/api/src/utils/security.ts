@@ -13,7 +13,10 @@ export async function hashPassword(password: string): Promise<string> {
   return await argon2.hash(password)
 }
 
-export async function comparePassword(password: string, hash: string): Promise<boolean> {
+export async function comparePassword(
+  password: string,
+  hash: string
+): Promise<boolean> {
   return await argon2.verify(hash, password)
 }
 

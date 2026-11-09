@@ -10,11 +10,16 @@ import {
 import { BadRequestError, UnauthorizedError } from "../../utils/errors/index.js"
 
 class SellerController {
-  register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  register = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const parseResult = registerSellerSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid registration payload"
+        const message =
+          parseResult.error.issues[0]?.message || "Invalid registration payload"
         throw new BadRequestError(message)
       }
 
@@ -25,7 +30,11 @@ class SellerController {
     }
   }
 
-  onboard = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  onboard = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -33,18 +42,26 @@ class SellerController {
 
       const parseResult = onboardSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid onboarding payload"
+        const message =
+          parseResult.error.issues[0]?.message || "Invalid onboarding payload"
         throw new BadRequestError(message)
       }
 
-      const result = await sellerService.onboardExistingUser(req.user.userId, parseResult.data)
+      const result = await sellerService.onboardExistingUser(
+        req.user.userId,
+        parseResult.data
+      )
       res.status(200).json(result)
     } catch (error) {
       next(error)
     }
   }
 
-  getMe = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getMe = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -57,7 +74,11 @@ class SellerController {
     }
   }
 
-  updateProfile = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  updateProfile = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -65,11 +86,15 @@ class SellerController {
 
       const parseResult = onboardSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid profile payload"
+        const message =
+          parseResult.error.issues[0]?.message || "Invalid profile payload"
         throw new BadRequestError(message)
       }
 
-      const seller = await sellerService.updateSellerProfile(req.user.userId, parseResult.data)
+      const seller = await sellerService.updateSellerProfile(
+        req.user.userId,
+        parseResult.data
+      )
       res.status(200).json({
         message: "Seller profile updated successfully.",
         seller,
@@ -79,7 +104,11 @@ class SellerController {
     }
   }
 
-  updateStore = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  updateStore = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -87,11 +116,15 @@ class SellerController {
 
       const parseResult = storeSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid store payload"
+        const message =
+          parseResult.error.issues[0]?.message || "Invalid store payload"
         throw new BadRequestError(message)
       }
 
-      const store = await sellerService.updateStoreDetails(req.user.userId, parseResult.data)
+      const store = await sellerService.updateStoreDetails(
+        req.user.userId,
+        parseResult.data
+      )
       res.status(200).json({
         message: "Store details updated successfully.",
         store,
@@ -101,7 +134,11 @@ class SellerController {
     }
   }
 
-  addBankAccount = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  addBankAccount = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -109,11 +146,15 @@ class SellerController {
 
       const parseResult = bankAccountSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid bank details payload"
+        const message =
+          parseResult.error.issues[0]?.message || "Invalid bank details payload"
         throw new BadRequestError(message)
       }
 
-      const account = await sellerService.addBankAccount(req.user.userId, parseResult.data)
+      const account = await sellerService.addBankAccount(
+        req.user.userId,
+        parseResult.data
+      )
       res.status(201).json({
         message: "Bank account added successfully.",
         account,
@@ -123,7 +164,11 @@ class SellerController {
     }
   }
 
-  uploadDocument = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  uploadDocument = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -140,12 +185,26 @@ class SellerController {
         throw new BadRequestError("Document file is required")
       }
 
-      const allowedTypes = ["GST_CERTIFICATE", "PAN_CARD", "BUSINESS_LICENSE", "ADDRESS_PROOF", "CANCELLED_CHEQUE", "SIGNATURE", "OTHER"]
+      const allowedTypes = [
+        "GST_CERTIFICATE",
+        "PAN_CARD",
+        "BUSINESS_LICENSE",
+        "ADDRESS_PROOF",
+        "CANCELLED_CHEQUE",
+        "SIGNATURE",
+        "OTHER",
+      ]
       if (!allowedTypes.includes(type)) {
-        throw new BadRequestError(`Invalid document type. Allowed types: ${allowedTypes.join(", ")}`)
+        throw new BadRequestError(
+          `Invalid document type. Allowed types: ${allowedTypes.join(", ")}`
+        )
       }
 
-      const document = await sellerService.uploadDocument(req.user.userId, type, file)
+      const document = await sellerService.uploadDocument(
+        req.user.userId,
+        type,
+        file
+      )
       res.status(201).json({
         message: "Document uploaded and attached successfully.",
         document,
@@ -155,7 +214,11 @@ class SellerController {
     }
   }
 
-  submit = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  submit = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Authentication required")
@@ -171,7 +234,11 @@ class SellerController {
     }
   }
 
-  verifySeller = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  verifySeller = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { sellerId } = req.params
       if (!sellerId) {
@@ -180,7 +247,9 @@ class SellerController {
 
       const parseResult = verifySellerSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid verification review payload"
+        const message =
+          parseResult.error.issues[0]?.message ||
+          "Invalid verification review payload"
         throw new BadRequestError(message)
       }
 
@@ -201,10 +270,17 @@ class SellerController {
     }
   }
 
-  getSellers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getSellers = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const page = Math.max(1, parseInt(req.query.page as string) || 1)
-      const limit = Math.max(1, Math.min(100, parseInt(req.query.limit as string) || 10))
+      const limit = Math.max(
+        1,
+        Math.min(100, parseInt(req.query.limit as string) || 10)
+      )
 
       const result = await sellerService.getAllSellers(page, limit)
       res.status(200).json(result)
@@ -213,7 +289,11 @@ class SellerController {
     }
   }
 
-  verifyGstin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  verifyGstin = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { gstin } = req.query
       if (!gstin || typeof gstin !== "string") {
@@ -226,7 +306,11 @@ class SellerController {
     }
   }
 
-  getPublicStoreBySlug = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getPublicStoreBySlug = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const slugParam = req.params.slug
       const slug = Array.isArray(slugParam) ? slugParam[0] : slugParam

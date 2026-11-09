@@ -18,7 +18,7 @@ const Logo = ({
 }: LogoProps) => {
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
-      <div className="flex items-center justify-center shrink-0">
+      <div className="flex shrink-0 items-center justify-center">
         <Image
           src="/shopping.png"
           height={iconSize}
@@ -37,7 +37,7 @@ const Logo = ({
         </span>
         {subtitle && (
           <span
-            className={`text-[10px] font-bold uppercase tracking-wider mt-0.5 ${
+            className={`mt-0.5 text-[10px] font-bold tracking-wider uppercase ${
               light ? "text-indigo-300" : "text-indigo-600"
             }`}
           >
@@ -50,4 +50,3 @@ const Logo = ({
 }
 
 export default Logo
-

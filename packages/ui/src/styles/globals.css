@@ -15,37 +15,37 @@
 
 :root {
   /* Surface & Canvas */
-  --background: oklch(0.985 0.004 247);       /* Soft Warm Canvas (#F8FAFC) */
-  --foreground: oklch(0.18 0.015 250);        /* Deep Charcoal (#0F172A) */
+  --background: oklch(0.985 0.004 247); /* Soft Warm Canvas (#F8FAFC) */
+  --foreground: oklch(0.18 0.015 250); /* Deep Charcoal (#0F172A) */
 
   /* Cards & Containers */
-  --card: oklch(1.000 0 0);                  /* Pure White (#FFFFFF) */
-  --card-foreground: oklch(0.18 0.015 250);   /* Deep Charcoal (#0F172A) */
-  --popover: oklch(1.000 0 0);
+  --card: oklch(1 0 0); /* Pure White (#FFFFFF) */
+  --card-foreground: oklch(0.18 0.015 250); /* Deep Charcoal (#0F172A) */
+  --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.015 250);
 
   /* Brand Primary (Trust & Main Navigation) */
-  --primary: oklch(0.55 0.22 255);            /* Warm Royal Cobalt Blue (#2563EB) */
+  --primary: oklch(0.55 0.22 255); /* Warm Royal Cobalt Blue (#2563EB) */
   --primary-foreground: oklch(0.99 0 0);
 
   /* Action & Conversion (Buy Now / Add to Cart / Deal of Day) */
-  --secondary: oklch(0.68 0.22 45);           /* Sunburst Saffron Orange (#F97316) */
+  --secondary: oklch(0.68 0.22 45); /* Sunburst Saffron Orange (#F97316) */
   --secondary-foreground: oklch(0.99 0 0);
 
   /* Deals & Discounts (Meesho Pink/Red) */
-  --accent: oklch(0.58 0.24 15);              /* Rose Crimson (#E11D48) */
+  --accent: oklch(0.58 0.24 15); /* Rose Crimson (#E11D48) */
   --accent-foreground: oklch(0.99 0 0);
 
   /* Neutral Muted & Borders */
-  --muted: oklch(0.96 0.005 247);             /* Off-white Gray (#F1F5F9) */
-  --muted-foreground: oklch(0.50 0.015 250);   /* Slate Gray (#64748B) */
-  --border: oklch(0.91 0.005 247);            /* Crisp Light Border (#E2E8F0) */
+  --muted: oklch(0.96 0.005 247); /* Off-white Gray (#F1F5F9) */
+  --muted-foreground: oklch(0.5 0.015 250); /* Slate Gray (#64748B) */
+  --border: oklch(0.91 0.005 247); /* Crisp Light Border (#E2E8F0) */
   --input: oklch(0.91 0.005 247);
   --ring: oklch(0.55 0.22 255);
 
   /* Trust & Delivery Accents */
-  --trust-green: oklch(0.62 0.19 160);        /* Emerald Mint (#10B981) */
-  --rating-gold: oklch(0.75 0.18 80);         /* Star Rating Yellow (#F59E0B) */
+  --trust-green: oklch(0.62 0.19 160); /* Emerald Mint (#10B981) */
+  --rating-gold: oklch(0.75 0.18 80); /* Star Rating Yellow (#F59E0B) */
 
   /* Destructive & Feedback */
   --destructive: oklch(0.58 0.23 25);
@@ -62,7 +62,9 @@
   --sidebar-ring: oklch(0.55 0.22 255);
 
   /* Typography & Geometry */
-  --font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans:
+    Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
   --font-serif: Merriweather, Georgia, serif;
   --font-mono: "Geist Mono", "JetBrains Mono", monospace;
 
@@ -72,38 +74,41 @@
   /* Soft Ambient Shadows */
   --shadow-color: hsl(220 14% 10% / 0.08);
   --shadow-sm: 0 1px 2px 0 var(--shadow-color);
-  --shadow-md: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
-  --shadow-lg: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
-  --shadow-xl: 0 20px 25px -5px var(--shadow-color), 0 8px 10px -6px var(--shadow-color);
+  --shadow-md:
+    0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
+  --shadow-lg:
+    0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
+  --shadow-xl:
+    0 20px 25px -5px var(--shadow-color), 0 8px 10px -6px var(--shadow-color);
 }
 
 .dark {
   /* Dark Mode Surfaces */
-  --background: oklch(0.14 0.02 250);         /* Deep Obsidian (#090D16) */
-  --foreground: oklch(0.98 0.005 247);        /* Crisp Soft White (#F8FAFC) */
+  --background: oklch(0.14 0.02 250); /* Deep Obsidian (#090D16) */
+  --foreground: oklch(0.98 0.005 247); /* Crisp Soft White (#F8FAFC) */
 
   /* Dark Mode Cards */
-  --card: oklch(0.20 0.02 250);               /* Dark Slate (#1E293B) */
+  --card: oklch(0.2 0.02 250); /* Dark Slate (#1E293B) */
   --card-foreground: oklch(0.98 0.005 247);
-  --popover: oklch(0.20 0.02 250);
+  --popover: oklch(0.2 0.02 250);
   --popover-foreground: oklch(0.98 0.005 247);
 
   /* Primary Brand (Adjusted for Dark Mode Contrast) */
-  --primary: oklch(0.62 0.22 255);            /* Vivid Blue (#3B82F6) */
+  --primary: oklch(0.62 0.22 255); /* Vivid Blue (#3B82F6) */
   --primary-foreground: oklch(0.99 0 0);
 
   /* Action & Conversion */
-  --secondary: oklch(0.68 0.22 45);           /* Sunburst Saffron (#F97316) */
+  --secondary: oklch(0.68 0.22 45); /* Sunburst Saffron (#F97316) */
   --secondary-foreground: oklch(0.99 0 0);
 
   /* Deals & Discounts */
-  --accent: oklch(0.62 0.24 15);              /* Rose Crimson (#F43F5E) */
+  --accent: oklch(0.62 0.24 15); /* Rose Crimson (#F43F5E) */
   --accent-foreground: oklch(0.99 0 0);
 
   /* Dark Mode Neutrals */
   --muted: oklch(0.25 0.02 250);
-  --muted-foreground: oklch(0.70 0.015 250);
-  --border: oklch(0.28 0.02 250);             /* Slate Border (#334155) */
+  --muted-foreground: oklch(0.7 0.015 250);
+  --border: oklch(0.28 0.02 250); /* Slate Border (#334155) */
   --input: oklch(0.28 0.02 250);
   --ring: oklch(0.62 0.22 255);
 
@@ -182,7 +187,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background font-sans text-foreground antialiased;
   }
 }
 

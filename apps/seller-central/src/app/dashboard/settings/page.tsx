@@ -59,9 +59,8 @@ const BUSINESS_TYPE_OPTIONS: { label: string; value: BusinessType }[] = [
 ]
 
 export default function SettingsPage() {
-  const { data: sellerData, isLoading: sellerLoading, refetch: refetchSeller } =
-    useGetSellerMeQuery()
-  const { data: userData, isLoading: userLoading } = useGetMeQuery()
+  const { data: sellerData, refetch: refetchSeller } = useGetSellerMeQuery()
+  const { data: userData } = useGetMeQuery()
 
   const [updateStore, { isLoading: isUpdatingStore }] = useUpdateStoreMutation()
   const [updateProfile, { isLoading: isUpdatingProfile }] =
@@ -139,7 +138,9 @@ export default function SettingsPage() {
         gstin: seller.gstin || "",
       })
 
-      const primaryBank = seller.bankAccounts?.find((b) => b.isPrimary) || seller.bankAccounts?.[0]
+      const primaryBank =
+        seller.bankAccounts?.find((b) => b.isPrimary) ||
+        seller.bankAccounts?.[0]
       if (primaryBank) {
         setBankForm({
           accountHolderName: primaryBank.accountHolderName || "",
@@ -225,11 +226,16 @@ export default function SettingsPage() {
   }
 
   const statusColorMap: Record<string, string> = {
-    APPROVED: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-    UNDER_REVIEW: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
-    DOCUMENTS_PENDING: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
-    DRAFT: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20",
-    REJECTED: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
+    APPROVED:
+      "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+    UNDER_REVIEW:
+      "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+    DOCUMENTS_PENDING:
+      "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+    DRAFT:
+      "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20",
+    REJECTED:
+      "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
   }
 
   const userInitials = user?.firstName
@@ -267,7 +273,7 @@ export default function SettingsPage() {
                   {seller?.status || "DRAFT"}
                 </Badge>
               </div>
-              <p className="mt-1 flex items-center gap-2 text-xs hover:text-primary cursor-pointer">
+              <p className="mt-1 flex cursor-pointer items-center gap-2 text-xs hover:text-primary">
                 <GlobeIcon className="size-3.5 text-indigo-400" />
                 <span>
                   {seller?.store?.slug

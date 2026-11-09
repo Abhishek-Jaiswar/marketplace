@@ -1,0 +1,186 @@
+// use prisma-8
+//
+// An Order is one checkout. It splits into one SellerOrder per seller, because
+// each seller accepts, packs, ships, invoices and settles independently.
+// All money in this file is integer paise.
+
+model Order {
+  id          String @id @onCreate(cuid(2))
+  orderNumber String @unique
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  // Stops a retried or double-submitted checkout from creating a second order.
+  idempotencyKey String @unique
+
+  status   OrderStatus @default(PENDING_PAYMENT)
+  currency String      @default("INR")
+
+  subtotal      Int
+  discountTotal Int @default(0)
+  shippingTotal Int @default(0)
+  taxTotal      Int @default(0)
+  grandTotal    Int
+
+  // Snapshots: an order must keep the address it shipped to after edits.
+  shippingAddress Json
+  billingAddress  Json
+  customerGstin   String?
+
+  placedAt    TimestampString(3)?
+  cancelledAt TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([customerId, createdAt])
+  @@index([status])
+  @@check(expression: sql`"grandTotal" >= 0`, name: "order_grand_total_non_negative")
+}
+
+model SellerOrder {
+  id                String @id @onCreate(cuid(2))
+  sellerOrderNumber String @unique
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  sellerId String
+  seller   Seller @relation(fields: [sellerId], references: [id], onDelete: Restrict)
+
+  pickupLocationId String?
+  pickupLocation   InventoryLocation? @relation(fields: [pickupLocationId], references: [id], onDelete: SetNull)
+
+  status SellerOrderStatus @default(NEW)
+
+  subtotal      Int
+  discountTotal Int @default(0)
+  shippingTotal Int @default(0)
+  taxTotal      Int @default(0)
+  total         Int
+
+  // The seller's dispatch deadline, derived from listing handling time.
+  shipByAt TimestampString(3)?
+
+  acceptedAt   TimestampString(3)?
+  packedAt     TimestampString(3)?
+  shippedAt    TimestampString(3)?
+  deliveredAt  TimestampString(3)?
+  cancelledAt  TimestampString(3)?
+  cancelledBy  ActorType?
+  cancelReason String?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@unique([orderId, sellerId])
+  @@index([sellerId, status])
+  @@index([status, shipByAt])
+}
+
+model OrderItem {
+  id String @id @onCreate(cuid(2))
+
+  sellerOrderId String
+  sellerOrder   SellerOrder @relation(fields: [sellerOrderId], references: [id], onDelete: Cascade)
+
+  sellerListingId String
+  sellerListing   SellerListing @relation(fields: [sellerListingId], references: [id], onDelete: Restrict)
+
+  variantId String
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+
+  // Snapshots: a later catalog edit must not rewrite what the customer bought.
+  title      String
+  sku        String
+  sellerSku  String
+  imageUrl   String?
+  attributes Json
+  hsnCode    String?
+
+  quantity  Int
+  unitMrp   Int
+  unitPrice Int
+
+  discountAmount Int @default(0)
+  taxableAmount  Int
+  gstRateBps     Int @default(0)
+  cgstAmount     Int @default(0)
+  sgstAmount     Int @default(0)
+  igstAmount     Int @default(0)
+  lineTotal      Int
+
+  // Captured at sale so a later rate change cannot alter settled orders.
+  commissionBps    Int @default(0)
+  commissionAmount Int @default(0)
+
+  status OrderItemStatus @default(PLACED)
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([sellerOrderId])
+  @@index([sellerListingId])
+  @@index([variantId])
+  @@index([status])
+  @@check(expression: sql`"quantity" > 0`, name: "order_item_quantity_positive")
+}
+
+model OrderEvent {
+  id String @id @onCreate(cuid(2))
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  sellerOrderId String?
+  sellerOrder   SellerOrder? @relation(fields: [sellerOrderId], references: [id], onDelete: Cascade)
+
+  fromStatus String?
+  toStatus   String
+
+  actorType   ActorType
+  actorUserId String?
+  actorUser   User?     @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  note     String?
+  metadata Json?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+
+  @@index([orderId, createdAt])
+  @@index([sellerOrderId])
+  @@index([actorUserId])
+}
+
+model Invoice {
+  id            String @id @onCreate(cuid(2))
+  invoiceNumber String @unique
+
+  sellerOrderId String
+  sellerOrder   SellerOrder @relation(fields: [sellerOrderId], references: [id], onDelete: Restrict)
+
+  // Set on credit notes raised against a return.
+  returnRequestId String?
+  returnRequest   ReturnRequest? @relation(fields: [returnRequestId], references: [id], onDelete: SetNull)
+
+  type InvoiceType
+
+  placeOfSupply String
+  taxableAmount Int
+  cgstAmount    Int @default(0)
+  sgstAmount    Int @default(0)
+  igstAmount    Int @default(0)
+  total         Int
+
+  documentMediaId String?
+  documentMedia   Media?  @relation(fields: [documentMediaId], references: [id], onDelete: SetNull)
+
+  issuedAt TimestampString(3)
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+
+  @@index([sellerOrderId])
+  @@index([returnRequestId])
+  @@index([documentMediaId])
+}

@@ -9,6 +9,7 @@ import {
   BellIcon,
   HelpCircleIcon,
   UserPlusIcon,
+  PackageIcon,
 } from "lucide-react"
 
 export const adminSidebarData: SidebarData = {
@@ -28,6 +29,11 @@ export const adminSidebarData: SidebarData = {
           title: "Seller Approvals",
           url: "/dashboard/sellers",
           icon: <StoreIcon />,
+        },
+        {
+          title: "Catalog Moderation",
+          url: "/dashboard/catalog",
+          icon: <PackageIcon />,
         },
       ],
     },

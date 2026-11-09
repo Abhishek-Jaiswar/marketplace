@@ -7,7 +7,10 @@ export interface RequestContext {
 
 export const requestContext = new AsyncLocalStorage<RequestContext>()
 
-export function runWithRequestContext<T>(context: RequestContext, callback: () => T): T {
+export function runWithRequestContext<T>(
+  context: RequestContext,
+  callback: () => T
+): T {
   return requestContext.run(context, callback)
 }
 
@@ -36,7 +39,9 @@ const devFormat = winston.format.combine(
   winston.format.printf((info) => {
     const { timestamp, level, message, correlationId, ...meta } = info
     const corrIdStr = correlationId ? ` [${correlationId}]` : ""
-    const metaStr = Object.keys(meta).length ? ` ${JSON.stringify(meta, null, 2)}` : ""
+    const metaStr = Object.keys(meta).length
+      ? ` ${JSON.stringify(meta, null, 2)}`
+      : ""
     return `${timestamp} [${level}]${corrIdStr}: ${message}${metaStr}`
   })
 )
@@ -74,15 +79,21 @@ export const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || "info",
   format: process.env.NODE_ENV !== "production" ? devFormat : prodFormat,
   transports,
-  exceptionHandlers: (!isNextJS && !disableFileLogging) ? [
-    new winston.transports.File({
-      filename: "logs/exceptions.log",
-    }),
-  ] : undefined,
-  rejectionHandlers: (!isNextJS && !disableFileLogging) ? [
-    new winston.transports.File({
-      filename: "logs/rejections.log",
-    }),
-  ] : undefined,
+  exceptionHandlers:
+    !isNextJS && !disableFileLogging
+      ? [
+          new winston.transports.File({
+            filename: "logs/exceptions.log",
+          }),
+        ]
+      : undefined,
+  rejectionHandlers:
+    !isNextJS && !disableFileLogging
+      ? [
+          new winston.transports.File({
+            filename: "logs/rejections.log",
+          }),
+        ]
+      : undefined,
   exitOnError: false,
 })

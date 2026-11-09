@@ -6,7 +6,11 @@ function getHeaderValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value
 }
 
-export const requestContextMiddleware: RequestHandler = (request, response, next) => {
+export const requestContextMiddleware: RequestHandler = (
+  request,
+  response,
+  next
+) => {
   const correlationId =
     getHeaderValue(request.headers["x-correlation-id"]) ??
     getHeaderValue(request.headers["x-request-id"]) ??

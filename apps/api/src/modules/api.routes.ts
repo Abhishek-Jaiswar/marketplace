@@ -16,4 +16,3 @@ router.use("/catalog", catalogRouter)
 router.use("/inventory", inventoryRouter)
 
 export { router as apiRouter }
-

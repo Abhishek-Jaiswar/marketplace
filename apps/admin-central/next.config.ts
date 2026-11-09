@@ -1,7 +1,7 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@workspace/ui", "@workspace/store", "@workspace/db"],
+  transpilePackages: ["@workspace/ui", "@workspace/store"],
   images: {
     remotePatterns: [
       {
@@ -14,6 +14,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

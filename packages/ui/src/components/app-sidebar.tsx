@@ -16,7 +16,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  useSidebar,
 } from "@workspace/ui/components/sidebar"
 import { StoreIcon } from "lucide-react"
 
@@ -65,8 +64,6 @@ export function AppSidebar({
   currentPath,
   ...props
 }: AppSidebarProps) {
-  const { toggleSidebar } = useSidebar()
-
   return (
     <Sidebar
       collapsible="icon"

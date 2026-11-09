@@ -1,31 +1,35 @@
-"use client";
+"use client"
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { mockHeroBanners, HeroBanner } from "../../utils/mockData";
+import React, { useState, useEffect } from "react"
+import Link from "next/link"
+import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { mockHeroBanners, HeroBanner } from "../../utils/mockData"
 
 export function HeroSection() {
-  const [activeBanner, setActiveBanner] = useState(0);
+  const [activeBanner, setActiveBanner] = useState(0)
 
   // Auto-cycling banners every 7 seconds
   useEffect(() => {
     const timer = setInterval(() => {
-      setActiveBanner((prev) => (prev + 1) % mockHeroBanners.length);
-    }, 7000);
-    return () => clearInterval(timer);
-  }, []);
+      setActiveBanner((prev) => (prev + 1) % mockHeroBanners.length)
+    }, 7000)
+    return () => clearInterval(timer)
+  }, [])
 
-  const nextBanner = () => setActiveBanner((prev) => (prev + 1) % mockHeroBanners.length);
+  const nextBanner = () =>
+    setActiveBanner((prev) => (prev + 1) % mockHeroBanners.length)
   const prevBanner = () =>
-    setActiveBanner((prev) => (prev - 1 + mockHeroBanners.length) % mockHeroBanners.length);
+    setActiveBanner(
+      (prev) => (prev - 1 + mockHeroBanners.length) % mockHeroBanners.length
+    )
 
-  const currentBanner: HeroBanner = mockHeroBanners[activeBanner] || mockHeroBanners[0]!;
+  const currentBanner: HeroBanner =
+    mockHeroBanners[activeBanner] || mockHeroBanners[0]!
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 relative z-10 overflow-hidden">
-      <div className="relative h-[480px] w-full rounded-3xl overflow-hidden border border-border shadow-2xl bg-card">
+    <section className="relative z-10 mx-auto w-full max-w-7xl overflow-hidden px-4 pt-6 sm:px-6 lg:px-8">
+      <div className="relative h-[480px] w-full overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeBanner}
@@ -33,31 +37,31 @@ export function HeroSection() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className={`absolute inset-0 bg-gradient-to-br ${currentBanner.bgGradient} flex flex-col md:flex-row items-center justify-between p-8 md:p-16 gap-8`}
+            className={`absolute inset-0 bg-gradient-to-br ${currentBanner.bgGradient} flex flex-col items-center justify-between gap-8 p-8 md:flex-row md:p-16`}
           >
             {/* Left Column: Context & Typography */}
-            <div className="flex-1 space-y-6 text-left max-w-xl">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-white/10 backdrop-blur-md text-white border border-white/20 uppercase tracking-widest font-mono">
-                <Sparkles className="w-3 h-3 text-amber-400" />
+            <div className="max-w-xl flex-1 space-y-6 text-left">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 font-mono text-[10px] font-bold tracking-widest text-white uppercase backdrop-blur-md">
+                <Sparkles className="h-3 w-3 text-amber-400" />
                 {currentBanner.tag}
               </span>
-              <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight text-white drop-shadow-md">
+              <h1 className="text-3xl leading-tight font-black tracking-tight text-white drop-shadow-md md:text-5xl">
                 {currentBanner.title}
               </h1>
-              <p className="text-sm md:text-base text-zinc-300 leading-relaxed max-w-lg">
+              <p className="max-w-lg text-sm leading-relaxed text-zinc-300 md:text-base">
                 {currentBanner.subtitle}
               </p>
-              <div className="pt-2 flex items-center gap-4">
+              <div className="flex items-center gap-4 pt-2">
                 <Link
                   href={currentBanner.link}
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-white text-zinc-950 font-bold text-sm hover:bg-zinc-100 transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-95 group"
+                  className="group inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-3.5 text-sm font-bold text-zinc-950 shadow-xl transition-all duration-200 hover:scale-[1.02] hover:bg-zinc-100 hover:shadow-2xl active:scale-95"
                 >
                   {currentBanner.buttonText}
-                  <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                  <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                 </Link>
                 <Link
                   href="/products"
-                  className="inline-flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white font-semibold text-sm hover:bg-white/20 transition-all"
+                  className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-5 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-all hover:bg-white/20"
                 >
                   Explore All
                 </Link>
@@ -65,11 +69,11 @@ export function HeroSection() {
             </div>
 
             {/* Right Column: Visual Product Emoji / Showcase Badge */}
-            <div className="relative flex-1 flex items-center justify-center">
-              <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl flex items-center justify-center text-7xl md:text-9xl animate-pulse">
+            <div className="relative flex flex-1 items-center justify-center">
+              <div className="relative flex h-64 w-64 animate-pulse items-center justify-center rounded-full border border-white/20 bg-white/10 text-7xl shadow-2xl backdrop-blur-xl md:h-80 md:w-80 md:text-9xl">
                 {currentBanner.image || "📦"}
               </div>
-              <div className="absolute bottom-4 right-4 bg-zinc-950/80 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 text-white text-xs font-medium">
+              <div className="absolute right-4 bottom-4 rounded-xl border border-white/10 bg-zinc-950/80 px-4 py-2 text-xs font-medium text-white backdrop-blur-md">
                 Verified Vendor Deal
               </div>
             </div>
@@ -79,21 +83,21 @@ export function HeroSection() {
         {/* Carousel Controls */}
         <button
           onClick={prevBanner}
-          className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-zinc-950/40 hover:bg-zinc-950/70 border border-white/20 text-white transition-all backdrop-blur-md"
+          className="absolute top-1/2 left-4 -translate-y-1/2 rounded-full border border-white/20 bg-zinc-950/40 p-3 text-white backdrop-blur-md transition-all hover:bg-zinc-950/70"
           aria-label="Previous Slide"
         >
-          <ChevronLeft className="w-5 h-5" />
+          <ChevronLeft className="h-5 w-5" />
         </button>
         <button
           onClick={nextBanner}
-          className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-zinc-950/40 hover:bg-zinc-950/70 border border-white/20 text-white transition-all backdrop-blur-md"
+          className="absolute top-1/2 right-4 -translate-y-1/2 rounded-full border border-white/20 bg-zinc-950/40 p-3 text-white backdrop-blur-md transition-all hover:bg-zinc-950/70"
           aria-label="Next Slide"
         >
-          <ChevronRight className="w-5 h-5" />
+          <ChevronRight className="h-5 w-5" />
         </button>
 
         {/* Dots Indicators */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+        <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
           {mockHeroBanners.map((_, idx) => (
             <button
               key={idx}
@@ -109,7 +113,7 @@ export function HeroSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-export default HeroSection;
+export default HeroSection

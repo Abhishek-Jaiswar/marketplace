@@ -1,79 +1,90 @@
-"use client";
+"use client"
 
-import React, { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Search, ChevronDown, ArrowRight, Sparkles } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useRef, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { Search, ChevronDown, ArrowRight, Sparkles } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 
-const categories = ["All Departments", "Electronics", "Fashion & Apparel", "Home & Kitchen", "Books & Stationeries", "Sports & Outdoors", "Beauty & Wellness"];
+const categories = [
+  "All Departments",
+  "Electronics",
+  "Fashion & Apparel",
+  "Home & Kitchen",
+  "Books & Stationeries",
+  "Sports & Outdoors",
+  "Beauty & Wellness",
+]
 const trendingSearches = [
   "wireless noise-canceling headphones",
   "ergonomic mechanical keyboard",
   "minimalist leather wallet",
   "stainless steel water bottle",
-];
+]
 
 export function NavbarSearch() {
-  const router = useRouter();
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("All");
-  const [isFocused, setIsFocused] = useState(false);
-  const [showCatMenu, setShowCatMenu] = useState(false);
-  const searchRef = useRef<HTMLDivElement>(null);
+  const router = useRouter()
+  const [query, setQuery] = useState("")
+  const [category, setCategory] = useState("All")
+  const [isFocused, setIsFocused] = useState(false)
+  const [showCatMenu, setShowCatMenu] = useState(false)
+  const searchRef = useRef<HTMLDivElement>(null)
 
   // Close menus when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setIsFocused(false);
-        setShowCatMenu(false);
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setIsFocused(false)
+        setShowCatMenu(false)
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
   const handleSearchSubmit = (searchTerm?: string) => {
-    const termToSearch = searchTerm !== undefined ? searchTerm : query;
-    setIsFocused(false);
-    setShowCatMenu(false);
+    const termToSearch = searchTerm !== undefined ? searchTerm : query
+    setIsFocused(false)
+    setShowCatMenu(false)
 
-    const params = new URLSearchParams();
+    const params = new URLSearchParams()
     if (termToSearch.trim()) {
-      params.set("q", termToSearch.trim());
+      params.set("q", termToSearch.trim())
     }
     if (category && category !== "All" && category !== "All Departments") {
-      params.set("category", category);
+      params.set("category", category)
     }
 
-    const queryString = params.toString();
-    router.push(`/products${queryString ? `?${queryString}` : ""}`);
-  };
+    const queryString = params.toString()
+    router.push(`/products${queryString ? `?${queryString}` : ""}`)
+  }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleSearchSubmit();
+      handleSearchSubmit()
     }
-  };
+  }
 
   return (
-    <div ref={searchRef} className="flex-1 max-w-2xl relative z-40">
+    <div ref={searchRef} className="relative z-40 max-w-2xl flex-1">
       <form
         onSubmit={(e) => {
-          e.preventDefault();
-          handleSearchSubmit();
+          e.preventDefault()
+          handleSearchSubmit()
         }}
-        className="flex h-10 w-full rounded-xl bg-muted/30 dark:bg-white/[0.03] border border-border hover:border-border/80 focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/10 focus-within:bg-background transition-all duration-300 overflow-hidden"
+        className="flex h-10 w-full overflow-hidden rounded-xl border border-border bg-muted/30 transition-all duration-300 focus-within:border-primary/50 focus-within:bg-background focus-within:ring-2 focus-within:ring-primary/10 hover:border-border/80 dark:bg-white/[0.03]"
       >
         {/* Category selector button */}
-        <div className="relative flex items-center h-full">
+        <div className="relative flex h-full items-center">
           <button
             type="button"
             onClick={() => setShowCatMenu(!showCatMenu)}
-            className="flex items-center gap-1.5 px-3 h-full border-r border-border text-xs text-muted-foreground hover:text-foreground hover:bg-muted transition-colors font-medium cursor-pointer"
+            className="flex h-full cursor-pointer items-center gap-1.5 border-r border-border px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
-            <span className="truncate max-w-[100px]">{category}</span>
-            <ChevronDown className="w-3.5 h-3.5" />
+            <span className="max-w-[100px] truncate">{category}</span>
+            <ChevronDown className="h-3.5 w-3.5" />
           </button>
 
           {/* Category Dropdown Menu */}
@@ -83,17 +94,17 @@ export function NavbarSearch() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                className="absolute top-11 left-0 w-48 rounded-xl border border-border bg-popover shadow-2xl p-1.5 z-50 text-popover-foreground"
+                className="absolute top-11 left-0 z-50 w-48 rounded-xl border border-border bg-popover p-1.5 text-popover-foreground shadow-2xl"
               >
                 {categories.map((cat) => (
                   <button
                     key={cat}
                     type="button"
                     onClick={() => {
-                      setCategory(cat === "All Departments" ? "All" : cat);
-                      setShowCatMenu(false);
+                      setCategory(cat === "All Departments" ? "All" : cat)
+                      setShowCatMenu(false)
                     }}
-                    className="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-muted text-muted-foreground hover:text-foreground transition-all duration-150 font-medium truncate"
+                    className="w-full truncate rounded-lg px-3 py-2 text-left text-xs font-medium text-muted-foreground transition-all duration-150 hover:bg-muted hover:text-foreground"
                   >
                     {cat}
                   </button>
@@ -111,16 +122,16 @@ export function NavbarSearch() {
           onFocus={() => setIsFocused(true)}
           onKeyDown={handleKeyDown}
           placeholder="Search for products, brands and categories..."
-          className="flex-1 bg-transparent px-4 h-full outline-none text-sm text-foreground placeholder-muted-foreground"
+          className="h-full flex-1 bg-transparent px-4 text-sm text-foreground placeholder-muted-foreground outline-none"
         />
 
         {/* Search Action Button */}
         <button
           type="submit"
-          className="flex items-center justify-center w-11 h-full hover:bg-secondary hover:text-secondary-foreground border-l border-border transition-all cursor-pointer"
+          className="flex h-full w-11 cursor-pointer items-center justify-center border-l border-border transition-all hover:bg-secondary hover:text-secondary-foreground"
           aria-label="Submit Search"
         >
-          <Search className="w-4.5 h-4.5" />
+          <Search className="h-4.5 w-4.5" />
         </button>
       </form>
 
@@ -131,13 +142,13 @@ export function NavbarSearch() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 5 }}
             exit={{ opacity: 0, y: 15 }}
-            className="absolute top-full left-0 w-full rounded-2xl border border-border bg-popover shadow-2xl p-4 z-40 overflow-hidden text-popover-foreground"
+            className="absolute top-full left-0 z-40 w-full overflow-hidden rounded-2xl border border-border bg-popover p-4 text-popover-foreground shadow-2xl"
           >
             {query.trim().length === 0 ? (
               <div className="space-y-4">
                 <div>
-                  <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2 font-mono">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
+                  <div className="mb-2 flex items-center gap-1.5 font-mono text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                    <Sparkles className="h-3.5 w-3.5 animate-pulse text-amber-500" />
                     <span>Trending Searches</span>
                   </div>
                   <div className="space-y-1">
@@ -146,13 +157,13 @@ export function NavbarSearch() {
                         key={term}
                         type="button"
                         onClick={() => {
-                          setQuery(term);
-                          handleSearchSubmit(term);
+                          setQuery(term)
+                          handleSearchSubmit(term)
                         }}
-                        className="w-full flex items-center justify-between text-left py-2 px-2.5 rounded-xl hover:bg-muted text-xs text-muted-foreground hover:text-foreground transition-colors duration-200"
+                        className="flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left text-xs text-muted-foreground transition-colors duration-200 hover:bg-muted hover:text-foreground"
                       >
                         <span>{term}</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-muted-foreground" />
+                        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
                       </button>
                     ))}
                   </div>
@@ -160,17 +171,23 @@ export function NavbarSearch() {
               </div>
             ) : (
               <div>
-                <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2 font-mono">
-                  <Search className="w-3.5 h-3.5 text-muted-foreground" />
+                <div className="mb-2 flex items-center gap-1.5 font-mono text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                  <Search className="h-3.5 w-3.5 text-muted-foreground" />
                   <span>Execute Search Query</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleSearchSubmit()}
-                  className="w-full flex items-center gap-2 py-2.5 px-2.5 rounded-xl hover:bg-secondary/10 hover:text-secondary text-left text-xs font-semibold text-foreground transition-colors"
+                  className="flex w-full items-center gap-2 rounded-xl px-2.5 py-2.5 text-left text-xs font-semibold text-foreground transition-colors hover:bg-secondary/10 hover:text-secondary"
                 >
-                  <Search className="w-4 h-4 text-primary" />
-                  <span>Search for <strong className="text-primary font-extrabold">&ldquo;{query}&rdquo;</strong> in {category}</span>
+                  <Search className="h-4 w-4 text-primary" />
+                  <span>
+                    Search for{" "}
+                    <strong className="font-extrabold text-primary">
+                      &ldquo;{query}&rdquo;
+                    </strong>{" "}
+                    in {category}
+                  </span>
                 </button>
               </div>
             )}
@@ -178,7 +195,7 @@ export function NavbarSearch() {
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 }
 
-export default NavbarSearch;
+export default NavbarSearch

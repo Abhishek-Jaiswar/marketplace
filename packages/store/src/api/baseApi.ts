@@ -1,98 +1,111 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { tokenReceived, loggedOut } from "../slices/authSlice";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { tokenReceived, loggedOut } from "../slices/authSlice"
 
 class SimpleMutex {
-  private promise: Promise<void> = Promise.resolve();
-  private locked = false;
+  private promise: Promise<void> = Promise.resolve()
+  private locked = false
 
   isLocked() {
-    return this.locked;
+    return this.locked
   }
 
   async waitForUnlock() {
     while (this.locked) {
-      await this.promise;
+      await this.promise
     }
   }
 
   async acquire(): Promise<() => void> {
-    this.locked = true;
-    let release: () => void = () => {};
+    this.locked = true
+    let release: () => void = () => {}
     const nextPromise = new Promise<void>((resolve) => {
       release = () => {
-        this.locked = false;
-        resolve();
-      };
-    });
-    const currentPromise = this.promise;
-    this.promise = currentPromise.then(() => nextPromise);
-    await currentPromise;
-    return release;
+        this.locked = false
+        resolve()
+      }
+    })
+    const currentPromise = this.promise
+    this.promise = currentPromise.then(() => nextPromise)
+    await currentPromise
+    return release
   }
 }
 
-const mutex = new SimpleMutex();
+const mutex = new SimpleMutex()
 
 const getBaseApiUrl = (): string => {
-  const envUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
+  const envUrl = process.env.NEXT_PUBLIC_API_URL?.trim()
   const defaultUrl =
     process.env.NODE_ENV === "production"
       ? "https://marketplace-2zmv.onrender.com/api"
-      : "http://localhost:4000/api";
-  const url = envUrl || defaultUrl;
-  const sanitized = url.replace(/\/+$/, "");
-  return sanitized.endsWith("/api") ? sanitized : `${sanitized}/api`;
-};
+      : "http://localhost:4000/api"
+  const url = envUrl || defaultUrl
+  const sanitized = url.replace(/\/+$/, "")
+  return sanitized.endsWith("/api") ? sanitized : `${sanitized}/api`
+}
 
 const baseQuery = fetchBaseQuery({
   baseUrl: getBaseApiUrl(),
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as any).auth?.accessToken;
+    const token = (getState() as any).auth?.accessToken
     if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
+      headers.set("Authorization", `Bearer ${token}`)
     }
-    return headers;
+    return headers
   },
-});
+})
 
 const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
-  await mutex.waitForUnlock();
+  await mutex.waitForUnlock()
 
-  let result = await baseQuery(args, api, extraOptions);
+  let result = await baseQuery(args, api, extraOptions)
 
   if (result.error && result.error.status === 401) {
     if (!mutex.isLocked()) {
-      const release = await mutex.acquire();
+      const release = await mutex.acquire()
       try {
         const refreshResult = await baseQuery(
           { url: "/users/refresh", method: "POST" },
           api,
           extraOptions
-        );
+        )
 
         if (refreshResult.data) {
-          const data = refreshResult.data as { accessToken: string };
-          api.dispatch(tokenReceived(data.accessToken));
-          result = await baseQuery(args, api, extraOptions);
+          const data = refreshResult.data as { accessToken: string }
+          api.dispatch(tokenReceived(data.accessToken))
+          result = await baseQuery(args, api, extraOptions)
         } else {
-          api.dispatch(loggedOut());
+          api.dispatch(loggedOut())
         }
       } finally {
-        release();
+        release()
       }
     } else {
-      await mutex.waitForUnlock();
-      result = await baseQuery(args, api, extraOptions);
+      await mutex.waitForUnlock()
+      result = await baseQuery(args, api, extraOptions)
     }
   }
 
-  return result;
-};
+  return result
+}
 
 export const baseApi = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["User", "Seller", "SellerList", "Customer", "Category", "CategoryTree"],
+  tagTypes: [
+    "User",
+    "Seller",
+    "SellerList",
+    "Customer",
+    "Category",
+    "CategoryTree",
+    "Catalog",
+    "Product",
+    "Listing",
+    "Inventory",
+    "Location",
+    "Brand",
+  ],
   endpoints: () => ({}),
-});
+})

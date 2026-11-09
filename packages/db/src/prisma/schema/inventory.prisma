@@ -44,6 +44,7 @@ model InventoryItem {
   updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
 
   @@unique([sellerListingId, locationId])
+  @@check(expression: sql`"onHand" >= 0 AND "reserved" >= 0 AND "reserved" <= "onHand"`, name: "inventory_stock_consistent")
   @@index([sellerListingId])
   @@index([locationId])
 }
@@ -54,6 +55,8 @@ model InventoryReservation {
   inventoryItem   InventoryItem     @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
 
   quantity        Int
+  orderItemId     String?
+  orderItem       OrderItem?        @relation(fields: [orderItemId], references: [id], onDelete: SetNull)
   cartId          String?
   orderId         String?
 
@@ -64,6 +67,7 @@ model InventoryReservation {
   updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
 
   @@index([inventoryItemId])
+  @@index([orderItemId])
   @@index([expiresAt])
   @@index([status])
 }

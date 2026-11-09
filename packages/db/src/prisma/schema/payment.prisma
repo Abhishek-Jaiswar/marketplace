@@ -1,0 +1,77 @@
+// use prisma-8
+//
+// All money in this file is integer paise.
+
+model Payment {
+  id String @id @onCreate(cuid(2))
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  provider PaymentProvider
+  method   PaymentMethod?
+  status   PaymentStatus   @default(CREATED)
+
+  amount   Int
+  currency String @default("INR")
+
+  providerOrderId   String? @unique
+  providerPaymentId String? @unique
+
+  failureCode   String?
+  failureReason String?
+  capturedAt    TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([orderId])
+  @@index([status])
+}
+
+// Providers redeliver webhooks; the unique pair makes processing idempotent.
+model PaymentWebhookEvent {
+  id String @id @onCreate(cuid(2))
+
+  provider        PaymentProvider
+  providerEventId String
+  eventType       String
+  payload         Json
+
+  processedAt TimestampString(3)?
+  error       String?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+
+  @@unique([provider, providerEventId])
+  @@index([processedAt])
+}
+
+model Refund {
+  id String @id @onCreate(cuid(2))
+
+  paymentId String
+  payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+
+  orderItemId String?
+  orderItem   OrderItem? @relation(fields: [orderItemId], references: [id], onDelete: Restrict)
+
+  returnRequestId String?
+  returnRequest   ReturnRequest? @relation(fields: [returnRequestId], references: [id], onDelete: SetNull)
+
+  amount Int
+  status RefundStatus @default(PENDING)
+  reason String?
+
+  providerRefundId String? @unique
+  processedAt      TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([paymentId])
+  @@index([orderItemId])
+  @@index([returnRequestId])
+  @@index([status])
+  @@check(expression: sql`"amount" > 0`, name: "refund_amount_positive")
+}

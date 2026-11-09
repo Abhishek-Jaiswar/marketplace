@@ -25,11 +25,17 @@ function getSingleParam(param: string | string[] | undefined): string {
 
 class CatalogController {
   // ---------------- Brands ----------------
-  getBrands = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getBrands = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const parsed = listBrandsQuerySchema.safeParse(req.query)
       if (!parsed.success) {
-        throw new BadRequestError(parsed.error.issues[0]?.message || "Invalid query parameters")
+        throw new BadRequestError(
+          parsed.error.issues[0]?.message || "Invalid query parameters"
+        )
       }
       const result = await catalogService.getBrands(parsed.data)
       res.status(200).json(result)
@@ -38,7 +44,11 @@ class CatalogController {
     }
   }
 
-  getBrandById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getBrandById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const id = getSingleParam(req.params.id)
       const brand = await catalogService.getBrandById(id)
@@ -48,7 +58,11 @@ class CatalogController {
     }
   }
 
-  getBrandBySlug = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getBrandBySlug = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const slug = getSingleParam(req.params.slug)
       const brand = await catalogService.getBrandBySlug(slug)
@@ -58,39 +72,61 @@ class CatalogController {
     }
   }
 
-  createBrand = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  createBrand = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const parsed = createBrandSchema.safeParse(req.body)
       if (!parsed.success) {
-        throw new BadRequestError(parsed.error.issues[0]?.message || "Invalid input")
+        throw new BadRequestError(
+          parsed.error.issues[0]?.message || "Invalid input"
+        )
       }
       const brand = await catalogService.createBrand(parsed.data)
-      res.status(201).json({ data: brand, message: "Brand created successfully" })
+      res
+        .status(201)
+        .json({ data: brand, message: "Brand created successfully" })
     } catch (error) {
       next(error)
     }
   }
 
-  updateBrand = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  updateBrand = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const id = getSingleParam(req.params.id)
       const parsed = updateBrandSchema.safeParse(req.body)
       if (!parsed.success) {
-        throw new BadRequestError(parsed.error.issues[0]?.message || "Invalid input")
+        throw new BadRequestError(
+          parsed.error.issues[0]?.message || "Invalid input"
+        )
       }
       const brand = await catalogService.updateBrand(id, parsed.data)
-      res.status(200).json({ data: brand, message: "Brand updated successfully" })
+      res
+        .status(200)
+        .json({ data: brand, message: "Brand updated successfully" })
     } catch (error) {
       next(error)
     }
   }
 
   // ---------------- Master Products (SPU) ----------------
-  getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getProducts = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const parsed = listProductsQuerySchema.safeParse(req.query)
       if (!parsed.success) {
-        throw new BadRequestError(parsed.error.issues[0]?.message || "Invalid query parameters")
+        throw new BadRequestError(
+          parsed.error.issues[0]?.message || "Invalid query parameters"
+        )
       }
       const result = await catalogService.getProducts(parsed.data)
       res.status(200).json(result)
@@ -99,7 +135,11 @@ class CatalogController {
     }
   }
 
-  getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getProductById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const id = getSingleParam(req.params.id)
       const product = await catalogService.getProductById(id)
@@ -109,7 +149,11 @@ class CatalogController {
     }
   }
 
-  getProductBySlug = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getProductBySlug = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const slug = getSingleParam(req.params.slug)
       const product = await catalogService.getProductBySlug(slug)
@@ -119,12 +163,18 @@ class CatalogController {
     }
   }
 
-  createProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  createProduct = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user) throw new UnauthorizedError("Authentication required")
       const parsed = createProductSchema.safeParse(req.body)
       if (!parsed.success) {
-        throw new BadRequestError(parsed.error.issues[0]?.message || "Invalid input")
+        throw new BadRequestError(
+          parsed.error.issues[0]?.message || "Invalid input"
+        )
       }
       const product = await catalogService.createProduct(req.user, parsed.data)
       res.status(201).json({
@@ -139,71 +189,114 @@ class CatalogController {
     }
   }
 
-  updateProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  updateProduct = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const id = getSingleParam(req.params.id)
       const parsed = updateProductSchema.safeParse(req.body)
       if (!parsed.success) {
-        throw new BadRequestError(parsed.error.issues[0]?.message || "Invalid input")
+        throw new BadRequestError(
+          parsed.error.issues[0]?.message || "Invalid input"
+        )
       }
       const product = await catalogService.updateProduct(id, parsed.data)
-      res.status(200).json({ data: product, message: "Product updated successfully" })
+      res
+        .status(200)
+        .json({ data: product, message: "Product updated successfully" })
     } catch (error) {
       next(error)
     }
   }
 
-  reviewProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  reviewProduct = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user) throw new UnauthorizedError("Authentication required")
       const id = getSingleParam(req.params.id)
       const parsed = reviewProductSchema.safeParse(req.body)
       if (!parsed.success) {
-        throw new BadRequestError(parsed.error.issues[0]?.message || "Invalid review payload")
+        throw new BadRequestError(
+          parsed.error.issues[0]?.message || "Invalid review payload"
+        )
       }
-      const product = await catalogService.reviewProduct(id, req.user.userId, parsed.data)
-      res.status(200).json({ data: product, message: `Product ${parsed.data.status.toLowerCase()} successfully` })
+      const product = await catalogService.reviewProduct(
+        id,
+        req.user.userId,
+        parsed.data
+      )
+      res.status(200).json({
+        data: product,
+        message: `Product ${parsed.data.status.toLowerCase()} successfully`,
+      })
     } catch (error) {
       next(error)
     }
   }
 
   // ---------------- Variants ----------------
-  addVariant = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  addVariant = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const productId = getSingleParam(req.params.productId)
       const parsed = createProductVariantSchema.safeParse(req.body)
       if (!parsed.success) {
-        throw new BadRequestError(parsed.error.issues[0]?.message || "Invalid variant data")
+        throw new BadRequestError(
+          parsed.error.issues[0]?.message || "Invalid variant data"
+        )
       }
       const variant = await catalogService.addVariant(productId, parsed.data)
-      res.status(201).json({ data: variant, message: "Variant created successfully" })
+      res
+        .status(201)
+        .json({ data: variant, message: "Variant created successfully" })
     } catch (error) {
       next(error)
     }
   }
 
-  updateVariant = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  updateVariant = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const id = getSingleParam(req.params.id)
       const parsed = updateProductVariantSchema.safeParse(req.body)
       if (!parsed.success) {
-        throw new BadRequestError(parsed.error.issues[0]?.message || "Invalid variant data")
+        throw new BadRequestError(
+          parsed.error.issues[0]?.message || "Invalid variant data"
+        )
       }
       const variant = await catalogService.updateVariant(id, parsed.data)
-      res.status(200).json({ data: variant, message: "Variant updated successfully" })
+      res
+        .status(200)
+        .json({ data: variant, message: "Variant updated successfully" })
     } catch (error) {
       next(error)
     }
   }
 
   // ---------------- Media ----------------
-  addProductMedia = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  addProductMedia = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const productId = getSingleParam(req.params.productId)
       const parsed = addProductMediaSchema.safeParse(req.body)
       if (!parsed.success) {
-        throw new BadRequestError(parsed.error.issues[0]?.message || "Invalid media association")
+        throw new BadRequestError(
+          parsed.error.issues[0]?.message || "Invalid media association"
+        )
       }
       const media = await catalogService.addMedia(productId, parsed.data)
       res.status(201).json({ data: media, message: "Media added to product" })
@@ -212,7 +305,11 @@ class CatalogController {
     }
   }
 
-  removeProductMedia = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  removeProductMedia = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const id = getSingleParam(req.params.id)
       await catalogService.removeMedia(id)
@@ -223,41 +320,71 @@ class CatalogController {
   }
 
   // ---------------- Seller Listings ----------------
-  createListing = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  createListing = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user) throw new UnauthorizedError("Authentication required")
       const parsed = createSellerListingSchema.safeParse(req.body)
       if (!parsed.success) {
-        throw new BadRequestError(parsed.error.issues[0]?.message || "Invalid listing input")
+        throw new BadRequestError(
+          parsed.error.issues[0]?.message || "Invalid listing input"
+        )
       }
-      const listing = await catalogService.createListing(req.user.userId, parsed.data)
-      res.status(201).json({ data: listing, message: "Offer listed successfully" })
+      const listing = await catalogService.createListing(
+        req.user.userId,
+        parsed.data
+      )
+      res
+        .status(201)
+        .json({ data: listing, message: "Offer listed successfully" })
     } catch (error) {
       next(error)
     }
   }
 
-  updateListing = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  updateListing = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user) throw new UnauthorizedError("Authentication required")
       const id = getSingleParam(req.params.id)
       const parsed = updateSellerListingSchema.safeParse(req.body)
       if (!parsed.success) {
-        throw new BadRequestError(parsed.error.issues[0]?.message || "Invalid listing update")
+        throw new BadRequestError(
+          parsed.error.issues[0]?.message || "Invalid listing update"
+        )
       }
       const isAdmin = req.user.roles.includes("ADMIN")
-      const listing = await catalogService.updateListing(id, req.user.userId, isAdmin, parsed.data)
-      res.status(200).json({ data: listing, message: "Listing updated successfully" })
+      const listing = await catalogService.updateListing(
+        id,
+        req.user.userId,
+        isAdmin,
+        parsed.data
+      )
+      res
+        .status(200)
+        .json({ data: listing, message: "Listing updated successfully" })
     } catch (error) {
       next(error)
     }
   }
 
-  getListings = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getListings = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const parsed = listSellerListingsQuerySchema.safeParse(req.query)
       if (!parsed.success) {
-        throw new BadRequestError(parsed.error.issues[0]?.message || "Invalid query parameters")
+        throw new BadRequestError(
+          parsed.error.issues[0]?.message || "Invalid query parameters"
+        )
       }
       const result = await catalogService.getListings(parsed.data)
       res.status(200).json(result)
@@ -267,7 +394,11 @@ class CatalogController {
   }
 
   // ---------------- Storefront PDP ----------------
-  getStorefrontPDP = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getStorefrontPDP = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const slug = getSingleParam(req.params.slug)
       const pdp = await catalogService.getStorefrontPDP(slug)

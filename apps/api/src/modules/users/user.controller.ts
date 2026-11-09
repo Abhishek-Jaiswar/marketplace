@@ -18,11 +18,16 @@ const getRefreshTokenCookieOptions = (maxAge?: number): CookieOptions => ({
 })
 
 class UserController {
-  register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  register = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const parseResult = registerSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid registration payload"
+        const message =
+          parseResult.error.issues[0]?.message || "Invalid registration payload"
         throw new BadRequestError(message)
       }
 
@@ -33,7 +38,11 @@ class UserController {
     }
   }
 
-  verify = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  verify = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { email, otp } = req.body
       if (!email || !otp) {
@@ -47,7 +56,11 @@ class UserController {
     }
   }
 
-  getUsers = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getUsers = async (
+    _req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const users = await userService.getUsers()
       res.status(200).json({
@@ -58,7 +71,11 @@ class UserController {
     }
   }
 
-  getMe = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getMe = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       if (!req.user || !req.user.userId) {
         throw new UnauthorizedError("Invalid session")
@@ -73,11 +90,16 @@ class UserController {
     }
   }
 
-  login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  login = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const parseResult = loginSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid login payload"
+        const message =
+          parseResult.error.issues[0]?.message || "Invalid login payload"
         throw new BadRequestError(message)
       }
 
@@ -87,7 +109,11 @@ class UserController {
         req.ip
       )
 
-      res.cookie("refreshToken", result.refreshToken, getRefreshTokenCookieOptions(30 * 24 * 60 * 60 * 1000))
+      res.cookie(
+        "refreshToken",
+        result.refreshToken,
+        getRefreshTokenCookieOptions(30 * 24 * 60 * 60 * 1000)
+      )
 
       res.status(200).json({
         accessToken: result.accessToken,
@@ -98,7 +124,11 @@ class UserController {
     }
   }
 
-  logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  logout = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken
       if (refreshToken) {
@@ -113,7 +143,11 @@ class UserController {
     }
   }
 
-  refresh = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  refresh = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken
       if (!refreshToken) {
@@ -126,7 +160,11 @@ class UserController {
         req.ip
       )
 
-      res.cookie("refreshToken", result.refreshToken, getRefreshTokenCookieOptions(30 * 24 * 60 * 60 * 1000))
+      res.cookie(
+        "refreshToken",
+        result.refreshToken,
+        getRefreshTokenCookieOptions(30 * 24 * 60 * 60 * 1000)
+      )
 
       res.status(200).json({
         accessToken: result.accessToken,
@@ -136,11 +174,16 @@ class UserController {
     }
   }
 
-  resendOtp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  resendOtp = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const parseResult = resendOtpSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid payload"
+        const message =
+          parseResult.error.issues[0]?.message || "Invalid payload"
         throw new BadRequestError(message)
       }
 
@@ -151,11 +194,16 @@ class UserController {
     }
   }
 
-  forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  forgotPassword = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const parseResult = forgotPasswordSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid payload"
+        const message =
+          parseResult.error.issues[0]?.message || "Invalid payload"
         throw new BadRequestError(message)
       }
 
@@ -166,11 +214,16 @@ class UserController {
     }
   }
 
-  resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  resetPassword = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const parseResult = resetPasswordSchema.safeParse(req.body)
       if (!parseResult.success) {
-        const message = parseResult.error.issues[0]?.message || "Invalid payload"
+        const message =
+          parseResult.error.issues[0]?.message || "Invalid payload"
         throw new BadRequestError(message)
       }
 

@@ -1,0 +1,43 @@
+// use prisma-8
+
+model Notification {
+  id String @id @onCreate(cuid(2))
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type    NotificationType
+  title   String
+  body    String?
+  linkUrl String?
+
+  readAt TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+
+  @@index([userId, readAt, createdAt])
+}
+
+// Who did what to whom, for every privileged action.
+model AuditLog {
+  id String @id @onCreate(cuid(2))
+
+  actorType   ActorType
+  actorUserId String?
+  actorUser   User?     @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  action     String
+  entityType String
+  entityId   String
+
+  before Json?
+  after  Json?
+
+  ipAddress String?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+
+  @@index([actorUserId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}

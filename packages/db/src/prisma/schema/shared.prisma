@@ -140,3 +140,191 @@ enum ReservationStatus {
   RELEASED  = "RELEASED"
   EXPIRED   = "EXPIRED"
 }
+
+enum ActorType {
+  @@type("pg/text@1")
+  CUSTOMER = "CUSTOMER"
+  SELLER   = "SELLER"
+  ADMIN    = "ADMIN"
+  SYSTEM   = "SYSTEM"
+}
+
+enum AttributeType {
+  @@type("pg/text@1")
+  TEXT         = "TEXT"
+  NUMBER       = "NUMBER"
+  BOOLEAN      = "BOOLEAN"
+  SELECT       = "SELECT"
+  MULTI_SELECT = "MULTI_SELECT"
+}
+
+enum AddressType {
+  @@type("pg/text@1")
+  HOME  = "HOME"
+  WORK  = "WORK"
+  OTHER = "OTHER"
+}
+
+enum OrderStatus {
+  @@type("pg/text@1")
+  PENDING_PAYMENT = "PENDING_PAYMENT"
+  PLACED          = "PLACED"
+  COMPLETED       = "COMPLETED"
+  CANCELLED       = "CANCELLED"
+  PAYMENT_FAILED  = "PAYMENT_FAILED"
+}
+
+enum SellerOrderStatus {
+  @@type("pg/text@1")
+  NEW       = "NEW"
+  ACCEPTED  = "ACCEPTED"
+  PACKED    = "PACKED"
+  SHIPPED   = "SHIPPED"
+  DELIVERED = "DELIVERED"
+  CANCELLED = "CANCELLED"
+}
+
+enum OrderItemStatus {
+  @@type("pg/text@1")
+  PLACED           = "PLACED"
+  SHIPPED          = "SHIPPED"
+  DELIVERED        = "DELIVERED"
+  CANCELLED        = "CANCELLED"
+  RETURN_REQUESTED = "RETURN_REQUESTED"
+  RETURNED         = "RETURNED"
+  REFUNDED         = "REFUNDED"
+}
+
+enum InvoiceType {
+  @@type("pg/text@1")
+  TAX_INVOICE = "TAX_INVOICE"
+  CREDIT_NOTE = "CREDIT_NOTE"
+}
+
+enum PaymentProvider {
+  @@type("pg/text@1")
+  RAZORPAY = "RAZORPAY"
+  COD      = "COD"
+}
+
+enum PaymentMethod {
+  @@type("pg/text@1")
+  UPI        = "UPI"
+  CARD       = "CARD"
+  NETBANKING = "NETBANKING"
+  WALLET     = "WALLET"
+  EMI        = "EMI"
+  COD        = "COD"
+}
+
+enum PaymentStatus {
+  @@type("pg/text@1")
+  CREATED            = "CREATED"
+  AUTHORIZED         = "AUTHORIZED"
+  CAPTURED           = "CAPTURED"
+  FAILED             = "FAILED"
+  PARTIALLY_REFUNDED = "PARTIALLY_REFUNDED"
+  REFUNDED           = "REFUNDED"
+}
+
+enum RefundStatus {
+  @@type("pg/text@1")
+  PENDING    = "PENDING"
+  PROCESSING = "PROCESSING"
+  SUCCEEDED  = "SUCCEEDED"
+  FAILED     = "FAILED"
+}
+
+enum ShipmentDirection {
+  @@type("pg/text@1")
+  FORWARD = "FORWARD"
+  RETURN  = "RETURN"
+}
+
+enum ShipmentStatus {
+  @@type("pg/text@1")
+  PENDING          = "PENDING"
+  LABEL_CREATED    = "LABEL_CREATED"
+  PICKED_UP        = "PICKED_UP"
+  IN_TRANSIT       = "IN_TRANSIT"
+  OUT_FOR_DELIVERY = "OUT_FOR_DELIVERY"
+  DELIVERED        = "DELIVERED"
+  DELIVERY_FAILED  = "DELIVERY_FAILED"
+  RETURNED_TO_SELLER = "RETURNED_TO_SELLER"
+  CANCELLED        = "CANCELLED"
+}
+
+enum ReturnReason {
+  @@type("pg/text@1")
+  DAMAGED          = "DAMAGED"
+  DEFECTIVE        = "DEFECTIVE"
+  WRONG_ITEM       = "WRONG_ITEM"
+  NOT_AS_DESCRIBED = "NOT_AS_DESCRIBED"
+  SIZE_OR_FIT      = "SIZE_OR_FIT"
+  CHANGED_MIND     = "CHANGED_MIND"
+  OTHER            = "OTHER"
+}
+
+enum ReturnResolution {
+  @@type("pg/text@1")
+  REFUND      = "REFUND"
+  REPLACEMENT = "REPLACEMENT"
+}
+
+enum ReturnStatus {
+  @@type("pg/text@1")
+  REQUESTED        = "REQUESTED"
+  APPROVED         = "APPROVED"
+  REJECTED         = "REJECTED"
+  PICKUP_SCHEDULED = "PICKUP_SCHEDULED"
+  PICKED_UP        = "PICKED_UP"
+  RECEIVED         = "RECEIVED"
+  COMPLETED        = "COMPLETED"
+  CANCELLED        = "CANCELLED"
+}
+
+enum SellerLedgerEntryType {
+  @@type("pg/text@1")
+  SALE                = "SALE"
+  COMMISSION          = "COMMISSION"
+  SHIPPING_FEE        = "SHIPPING_FEE"
+  PAYMENT_FEE         = "PAYMENT_FEE"
+  TCS                 = "TCS"
+  TDS                 = "TDS"
+  REFUND_REVERSAL     = "REFUND_REVERSAL"
+  COMMISSION_REVERSAL = "COMMISSION_REVERSAL"
+  ADJUSTMENT          = "ADJUSTMENT"
+  PAYOUT              = "PAYOUT"
+}
+
+enum PayoutStatus {
+  @@type("pg/text@1")
+  PENDING    = "PENDING"
+  PROCESSING = "PROCESSING"
+  PAID       = "PAID"
+  FAILED     = "FAILED"
+  ON_HOLD    = "ON_HOLD"
+}
+
+enum ReviewStatus {
+  @@type("pg/text@1")
+  PENDING   = "PENDING"
+  PUBLISHED = "PUBLISHED"
+  REJECTED  = "REJECTED"
+}
+
+enum CouponType {
+  @@type("pg/text@1")
+  PERCENTAGE = "PERCENTAGE"
+  FLAT       = "FLAT"
+}
+
+enum NotificationType {
+  @@type("pg/text@1")
+  ORDER    = "ORDER"
+  SHIPMENT = "SHIPMENT"
+  RETURN   = "RETURN"
+  PAYOUT   = "PAYOUT"
+  ACCOUNT  = "ACCOUNT"
+  PROMOTION = "PROMOTION"
+}

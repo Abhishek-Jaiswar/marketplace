@@ -1,7 +1,11 @@
 import { z } from "zod"
 
 export const updateProfileSchema = z.object({
-  phoneNumber: z.string().trim().min(5, { message: "Phone number is too short" }).optional(),
+  phoneNumber: z
+    .string()
+    .trim()
+    .min(5, { message: "Phone number is too short" })
+    .optional(),
 })
 
 export const createAddressSchema = z.object({

@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 import {
   ListPlus,
   PackageCheck,
@@ -6,110 +6,111 @@ import {
   Wallet2,
   Megaphone,
   Headset,
-} from "lucide-react";
+} from "lucide-react"
 
 export default function Features() {
   return (
-    <section id="features" className="w-full bg-[#f9fafb]/50 border-y border-zinc-100 py-16 px-8">
-      <div className="max-w-7xl mx-auto text-center space-y-10">
+    <section
+      id="features"
+      className="w-full border-y border-zinc-100 bg-[#f9fafb]/50 px-8 py-16"
+    >
+      <div className="mx-auto max-w-7xl space-y-10 text-center">
         {/* Headings */}
-        <div className="space-y-2.5 max-w-xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-black text-zinc-900 tracking-tight leading-none">
+        <div className="mx-auto max-w-xl space-y-2.5">
+          <h2 className="text-2xl leading-none font-black tracking-tight text-zinc-900 md:text-3xl">
             Everything You Need to Succeed
           </h2>
-          <p className="text-xs text-zinc-400 font-bold leading-normal">
+          <p className="text-xs leading-normal font-bold text-zinc-400">
             Powerful tools and features to help you manage, grow and scale your
             business effortlessly.
           </p>
         </div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-5 text-left">
+        <div className="grid grid-cols-1 gap-5 text-left md:grid-cols-2 lg:grid-cols-6">
           {/* Card 1 */}
-          <div className="bg-white border border-zinc-150/60 rounded-2xl p-5 flex flex-col gap-3 shadow-2xs hover:shadow-xs transition-shadow">
-            <div className="h-9 w-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 shrink-0">
-              <ListPlus className="w-4.5 h-4.5" />
+          <div className="border-zinc-150/60 flex flex-col gap-3 rounded-2xl border bg-white p-5 shadow-2xs transition-shadow hover:shadow-xs">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600">
+              <ListPlus className="h-4.5 w-4.5" />
             </div>
             <div className="space-y-1 leading-normal">
-              <h4 className="text-xs font-black text-zinc-800">
-                Easy Listing
-              </h4>
-              <p className="text-[10px] text-zinc-400 font-semibold">
+              <h4 className="text-xs font-black text-zinc-800">Easy Listing</h4>
+              <p className="text-[10px] font-semibold text-zinc-400">
                 Create and manage product listings in just a few clicks.
               </p>
             </div>
           </div>
 
           {/* Card 2 */}
-          <div className="bg-white border border-zinc-150/60 rounded-2xl p-5 flex flex-col gap-3 shadow-2xs hover:shadow-xs transition-shadow">
-            <div className="h-9 w-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-600 shrink-0">
-              <PackageCheck className="w-4.5 h-4.5" />
+          <div className="border-zinc-150/60 flex flex-col gap-3 rounded-2xl border bg-white p-5 shadow-2xs transition-shadow hover:shadow-xs">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-indigo-500/20 bg-indigo-500/10 text-indigo-600">
+              <PackageCheck className="h-4.5 w-4.5" />
             </div>
             <div className="space-y-1 leading-normal">
               <h4 className="text-xs font-black text-zinc-800">
                 Order Management
               </h4>
-              <p className="text-[10px] text-zinc-400 font-semibold">
+              <p className="text-[10px] font-semibold text-zinc-400">
                 Track, pack and ship orders seamlessly from one place.
               </p>
             </div>
           </div>
 
           {/* Card 3 */}
-          <div className="bg-white border border-zinc-150/60 rounded-2xl p-5 flex flex-col gap-3 shadow-2xs hover:shadow-xs transition-shadow">
-            <div className="h-9 w-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 shrink-0">
-              <BarChart4 className="w-4.5 h-4.5" />
+          <div className="border-zinc-150/60 flex flex-col gap-3 rounded-2xl border bg-white p-5 shadow-2xs transition-shadow hover:shadow-xs">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-500/20 bg-amber-500/10 text-amber-600">
+              <BarChart4 className="h-4.5 w-4.5" />
             </div>
             <div className="space-y-1 leading-normal">
               <h4 className="text-xs font-black text-zinc-800">
                 Business Insights
               </h4>
-              <p className="text-[10px] text-zinc-400 font-semibold">
+              <p className="text-[10px] font-semibold text-zinc-400">
                 Get real-time insights and analytics to grow smarter.
               </p>
             </div>
           </div>
 
           {/* Card 4 */}
-          <div className="bg-white border border-zinc-150/60 rounded-2xl p-5 flex flex-col gap-3 shadow-2xs hover:shadow-xs transition-shadow">
-            <div className="h-9 w-9 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-600 shrink-0">
-              <Wallet2 className="w-4.5 h-4.5" />
+          <div className="border-zinc-150/60 flex flex-col gap-3 rounded-2xl border bg-white p-5 shadow-2xs transition-shadow hover:shadow-xs">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-sky-500/20 bg-sky-500/10 text-sky-600">
+              <Wallet2 className="h-4.5 w-4.5" />
             </div>
             <div className="space-y-1 leading-normal">
               <h4 className="text-xs font-black text-zinc-800">
                 Secure Payments
               </h4>
-              <p className="text-[10px] text-zinc-400 font-semibold">
+              <p className="text-[10px] font-semibold text-zinc-400">
                 Receive payments directly in your bank account.
               </p>
             </div>
           </div>
 
           {/* Card 5 */}
-          <div className="bg-white border border-zinc-150/60 rounded-2xl p-5 flex flex-col gap-3 shadow-2xs hover:shadow-xs transition-shadow">
-            <div className="h-9 w-9 rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-650 shrink-0">
-              <Megaphone className="w-4.5 h-4.5" />
+          <div className="border-zinc-150/60 flex flex-col gap-3 rounded-2xl border bg-white p-5 shadow-2xs transition-shadow hover:shadow-xs">
+            <div className="text-pink-650 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-pink-500/20 bg-pink-500/10">
+              <Megaphone className="h-4.5 w-4.5" />
             </div>
             <div className="space-y-1 leading-normal">
               <h4 className="text-xs font-black text-zinc-800">
                 Marketing Tools
               </h4>
-              <p className="text-[10px] text-zinc-400 font-semibold">
+              <p className="text-[10px] font-semibold text-zinc-400">
                 Boost your visibility with ads, offers and promotions.
               </p>
             </div>
           </div>
 
           {/* Card 6 */}
-          <div className="bg-white border border-zinc-150/60 rounded-2xl p-5 flex flex-col gap-3 shadow-2xs hover:shadow-xs transition-shadow">
-            <div className="h-9 w-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 shrink-0">
-              <Headset className="w-4.5 h-4.5" />
+          <div className="border-zinc-150/60 flex flex-col gap-3 rounded-2xl border bg-white p-5 shadow-2xs transition-shadow hover:shadow-xs">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600">
+              <Headset className="h-4.5 w-4.5" />
             </div>
             <div className="space-y-1 leading-normal">
               <h4 className="text-xs font-black text-zinc-800">
                 Seller Support
               </h4>
-              <p className="text-[10px] text-zinc-400 font-semibold">
+              <p className="text-[10px] font-semibold text-zinc-400">
                 24/7 dedicated support whenever you need help.
               </p>
             </div>
@@ -117,5 +118,5 @@ export default function Features() {
         </div>
       </div>
     </section>
-  );
+  )
 }

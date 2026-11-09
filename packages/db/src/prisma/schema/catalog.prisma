@@ -12,6 +12,9 @@ model Category {
 
   isActive Boolean @default(true)
 
+  isReturnable     Boolean @default(true)
+  returnWindowDays Int     @default(7)
+
   parentId String?
   parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Restrict)
   children Category[] @relation("CategoryHierarchy")
@@ -52,6 +55,15 @@ model Product {
   highlights     String[]
   specifications Json?
 
+  // Tax and legally required disclosure for Indian e-commerce listings.
+  hsnCode          String?
+  gstRateBps       Int?
+  countryOfOrigin  String?
+  manufacturerInfo String?
+
+  ratingCount Int @default(0)
+  ratingTotal Int @default(0)
+
   categoryId String
   category   Category      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 
@@ -79,6 +91,7 @@ model Product {
   @@index([status])
   @@index([createdById])
   @@index([reviewedById])
+  @@fullTextIndex([title, description], name: "product_search")
 }
 
 model ProductVariant {
@@ -141,6 +154,9 @@ model SellerListing {
   condition        ItemCondition @default(NEW)
   conditionNote    String?
   handlingTimeDays Int           @default(1)
+  codEnabled       Boolean       @default(true)
+  minOrderQuantity Int           @default(1)
+  maxOrderQuantity Int?
   warranty         String?
   status           ListingStatus @default(ACTIVE)
 
@@ -151,7 +167,33 @@ model SellerListing {
 
   @@unique([sellerId, variantId])
   @@unique([sellerId, sellerSku])
+  @@index([variantId, status, sellingPrice], name: "listing_buy_box")
+  @@check(expression: sql`"sellingPrice" <= "mrpPrice"`, name: "listing_price_within_mrp")
   @@index([sellerId])
   @@index([variantId])
   @@index([status])
+}
+
+// Defines what sellers must fill in per category and what shoppers filter on.
+model CategoryAttribute {
+  id String @id @onCreate(cuid(2))
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  key     String
+  label   String
+  type    AttributeType
+  options String[]
+  unit    String?
+
+  isRequired    Boolean @default(false)
+  isFilterable  Boolean @default(false)
+  isVariantAxis Boolean @default(false)
+  sortOrder     Int     @default(0)
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@unique([categoryId, key])
 }

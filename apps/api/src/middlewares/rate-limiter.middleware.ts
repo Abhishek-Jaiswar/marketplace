@@ -13,7 +13,11 @@ export interface RateLimitOptions {
 export function rateLimiter(options: RateLimitOptions) {
   const { limit, windowSeconds, keyPrefix, keyGenerator } = options
 
-  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  return async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     // If Redis is not ready, bypass rate limiter rather than crashing the request
     if (redis.status !== "ready") {
       return next()
@@ -56,7 +60,9 @@ export function rateLimiter(options: RateLimitOptions) {
       res.setHeader("X-RateLimit-Reset", Math.ceil((now + windowMs) / 1000))
 
       if (count > limit) {
-        throw new TooManyRequestsError("Too many requests. Please try again later.")
+        throw new TooManyRequestsError(
+          "Too many requests. Please try again later."
+        )
       }
 
       next()

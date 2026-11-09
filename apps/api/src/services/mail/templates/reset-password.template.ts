@@ -12,4 +12,3 @@ If you didn't request a password reset, you can safely ignore this email.
 Thanks,
 CBS Marketplace`
 }
-

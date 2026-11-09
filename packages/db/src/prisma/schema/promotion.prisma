@@ -1,0 +1,88 @@
+// use prisma-8
+
+model Coupon {
+  id   String @id @onCreate(cuid(2))
+  code String @unique
+
+  type CouponType
+  // Basis points for PERCENTAGE, paise for FLAT.
+  value Int
+
+  // Null means the platform funds the discount; otherwise this seller does.
+  sellerId String?
+  seller   Seller? @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  minOrderAmount    Int  @default(0)
+  maxDiscountAmount Int?
+  usageLimit        Int?
+  perCustomerLimit  Int  @default(1)
+  usedCount         Int  @default(0)
+
+  isActive Boolean @default(true)
+  startsAt TimestampString(3)
+  endsAt   TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([sellerId])
+  @@index([isActive, endsAt])
+}
+
+model CouponRedemption {
+  id String @id @onCreate(cuid(2))
+
+  couponId String
+  coupon   Coupon @relation(fields: [couponId], references: [id], onDelete: Restrict)
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  discountAmount Int
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+
+  @@unique([couponId, orderId])
+  @@index([orderId])
+  @@index([customerId, couponId])
+}
+
+// Admin-curated shelves for the storefront home and campaign pages.
+model Collection {
+  id          String  @id @onCreate(cuid(2))
+  slug        String  @unique
+  title       String
+  description String?
+
+  bannerMediaId String?
+  bannerMedia   Media?  @relation(fields: [bannerMediaId], references: [id], onDelete: SetNull)
+
+  isActive  Boolean @default(false)
+  sortOrder Int     @default(0)
+  startsAt  TimestampString(3)?
+  endsAt    TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([bannerMediaId])
+  @@index([isActive, sortOrder])
+}
+
+model CollectionProduct {
+  id String @id @onCreate(cuid(2))
+
+  collectionId String
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  sortOrder Int @default(0)
+
+  @@unique([collectionId, productId])
+  @@index([productId])
+}

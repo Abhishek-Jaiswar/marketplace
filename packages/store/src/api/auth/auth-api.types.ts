@@ -1,75 +1,75 @@
 export interface UserProfile {
-  id: string;
-  firstName: string;
-  lastName: string | null;
-  email: string;
-  status: string;
-  emailVerified: boolean;
-  roles: string[];
+  id: string
+  firstName: string
+  lastName: string | null
+  email: string
+  status: string
+  emailVerified: boolean
+  roles: string[]
 }
 
 export interface LoginResponse {
-  accessToken: string;
-  user: UserProfile;
+  accessToken: string
+  user: UserProfile
 }
 
 export interface RegisterResponse {
-  message: string;
-  user: UserProfile;
+  message: string
+  user: UserProfile
 }
 
 export interface VerifyOtpResponse {
-  message: string;
-  user: UserProfile;
+  message: string
+  user: UserProfile
 }
 
 export interface ResendOtpResponse {
-  message: string;
+  message: string
 }
 
 export interface ForgotPasswordResponse {
-  message: string;
+  message: string
 }
 
 export interface ResetPasswordResponse {
-  message: string;
+  message: string
 }
 
 export interface LogoutResponse {
-  message: string;
+  message: string
 }
 
 export interface GetMeResponse {
-  user: UserProfile;
+  user: UserProfile
 }
 
 export interface LoginRequest {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 export interface RegisterRequest {
-  firstName: string;
-  lastName?: string;
-  email: string;
-  password: string;
+  firstName: string
+  lastName?: string
+  email: string
+  password: string
 }
 
 export interface VerifyOtpRequest {
-  email: string;
-  otp: string;
+  email: string
+  otp: string
 }
 
 export interface ResendOtpRequest {
-  email: string;
+  email: string
 }
 
 export interface ForgotPasswordRequest {
-  email: string;
+  email: string
 }
 
 export interface ResetPasswordRequest {
-  email: string;
-  otp: string;
-  newPassword: string;
+  email: string
+  otp: string
+  newPassword: string
 }

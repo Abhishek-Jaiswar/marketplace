@@ -1,11 +1,11 @@
-import React from "react";
-import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
+import React from "react"
+import Link from "next/link"
+import { ShieldCheck } from "lucide-react"
 
 interface LogoProps {
-  light?: boolean;
-  iconSize?: number;
-  subtitle?: string;
+  light?: boolean
+  iconSize?: number
+  subtitle?: string
 }
 
 export default function Logo({
@@ -14,7 +14,10 @@ export default function Logo({
   subtitle = "Admin Central",
 }: LogoProps) {
   return (
-    <Link href="/dashboard" className="flex items-center gap-2.5 group select-none">
+    <Link
+      href="/dashboard"
+      className="group flex items-center gap-2.5 select-none"
+    >
       <div
         className="flex items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/20 transition-transform group-hover:scale-105"
         style={{ width: iconSize + 10, height: iconSize + 10 }}
@@ -30,7 +33,7 @@ export default function Logo({
           CBS<span className="text-indigo-500">.</span>
         </span>
         <span
-          className={`text-[10px] font-bold tracking-widest uppercase mt-0.5 ${
+          className={`mt-0.5 text-[10px] font-bold tracking-widest uppercase ${
             light ? "text-indigo-200" : "text-zinc-500 dark:text-zinc-400"
           }`}
         >
@@ -38,5 +41,5 @@ export default function Logo({
         </span>
       </div>
     </Link>
-  );
+  )
 }

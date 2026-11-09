@@ -9,9 +9,7 @@
     "module": "preserve",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
   "include": ["src/**/*.ts", "prisma.config.ts"],
   "exclude": ["node_modules", "dist"]

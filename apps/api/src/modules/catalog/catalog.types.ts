@@ -1,9 +1,4 @@
 import type {
-  Brand,
-  Product,
-  ProductVariant,
-  ProductMedia,
-  SellerListing,
   ProductStatus,
   VariantStatus,
   ListingStatus,

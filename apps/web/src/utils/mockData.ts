@@ -1,82 +1,82 @@
 export interface SubCategoryGroup {
-  title: string;
-  items: string[];
+  title: string
+  items: string[]
 }
 
 export interface Category {
-  id: string;
-  name: string;
-  image: string;
-  itemCount: number;
-  gradient: string;
-  description?: string;
-  slug: string;
-  isPopular?: boolean;
-  subCategoryGroups?: SubCategoryGroup[];
+  id: string
+  name: string
+  image: string
+  itemCount: number
+  gradient: string
+  description?: string
+  slug: string
+  isPopular?: boolean
+  subCategoryGroups?: SubCategoryGroup[]
 }
 
 export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  originalPrice?: number;
-  rating: number;
-  reviewCount: number;
-  image: string;
-  category: string;
-  tag?: string;
-  description: string;
-  vendorId?: string;
-  vendorName?: string;
-  inStock?: boolean;
-  features?: string[];
+  id: string
+  name: string
+  price: number
+  originalPrice?: number
+  rating: number
+  reviewCount: number
+  image: string
+  category: string
+  tag?: string
+  description: string
+  vendorId?: string
+  vendorName?: string
+  inStock?: boolean
+  features?: string[]
 }
 
 export interface Vendor {
-  id: string;
-  name: string;
-  slug: string;
-  logo: string;
-  bannerGradient: string;
-  rating: number;
-  reviewCount: number;
-  productCount: number;
-  verified: boolean;
-  category: string;
-  description: string;
-  joinDate: string;
+  id: string
+  name: string
+  slug: string
+  logo: string
+  bannerGradient: string
+  rating: number
+  reviewCount: number
+  productCount: number
+  verified: boolean
+  category: string
+  description: string
+  joinDate: string
 }
 
 export interface FlashDeal {
-  id: string;
-  productId: string;
-  product: Product;
-  discountPercentage: number;
-  totalStock: number;
-  soldCount: number;
-  endTime: string;
+  id: string
+  productId: string
+  product: Product
+  discountPercentage: number
+  totalStock: number
+  soldCount: number
+  endTime: string
 }
 
 export interface HeroBanner {
-  id: string;
-  title: string;
-  subtitle: string;
-  buttonText: string;
-  link: string;
-  bgGradient: string;
-  tag: string;
-  image?: string;
+  id: string
+  title: string
+  subtitle: string
+  buttonText: string
+  link: string
+  bgGradient: string
+  tag: string
+  image?: string
 }
 
 export interface Testimonial {
-  id: string;
-  userName: string;
-  userRole: string;
-  avatar: string;
-  rating: number;
-  comment: string;
-  verifiedPurchase: boolean;
-  productName?: string;
+  id: string
+  userName: string
+  userRole: string
+  avatar: string
+  rating: number
+  comment: string
+  verifiedPurchase: boolean
+  productName?: string
 }
 
 export const mockCategories: Category[] = [
@@ -91,15 +91,31 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Trending Today",
-        items: ["Wireless Earbuds", "Smart Watches", "Kurtis & Tunics", "Running Shoes", "Air Fryers"],
+        items: [
+          "Wireless Earbuds",
+          "Smart Watches",
+          "Kurtis & Tunics",
+          "Running Shoes",
+          "Air Fryers",
+        ],
       },
       {
         title: "Top Rated Sellers",
-        items: ["Apex Electronics", "Nordic Atelier", "Urban Thread Co.", "Aura Botanicals"],
+        items: [
+          "Apex Electronics",
+          "Nordic Atelier",
+          "Urban Thread Co.",
+          "Aura Botanicals",
+        ],
       },
       {
         title: "Budget Bestsellers",
-        items: ["Under $15 Deals", "Under $25 Fashion", "Home Essentials", "Buy 1 Get 1 Free"],
+        items: [
+          "Under $15 Deals",
+          "Under $25 Fashion",
+          "Home Essentials",
+          "Buy 1 Get 1 Free",
+        ],
       },
     ],
   },
@@ -113,19 +129,44 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "All Kurtis",
-        items: ["Anarkali Kurtis", "Rayon Kurtis", "Cotton Kurtis", "Printed Kurtis", "Short Kurtis", "Kurta Sets"],
+        items: [
+          "Anarkali Kurtis",
+          "Rayon Kurtis",
+          "Cotton Kurtis",
+          "Printed Kurtis",
+          "Short Kurtis",
+          "Kurta Sets",
+        ],
       },
       {
         title: "Sarees & Blouses",
-        items: ["Silk Sarees", "Cotton Sarees", "Georgette Sarees", "Chiffon Sarees", "Designer Blouses", "Petticoats"],
+        items: [
+          "Silk Sarees",
+          "Cotton Sarees",
+          "Georgette Sarees",
+          "Chiffon Sarees",
+          "Designer Blouses",
+          "Petticoats",
+        ],
       },
       {
         title: "Lehengas & Suits",
-        items: ["Bridal Lehengas", "Partywear Lehengas", "Palazzo Suits", "Sharara Sets", "Ethnic Gowns"],
+        items: [
+          "Bridal Lehengas",
+          "Partywear Lehengas",
+          "Palazzo Suits",
+          "Sharara Sets",
+          "Ethnic Gowns",
+        ],
       },
       {
         title: "Dupattas & Accessories",
-        items: ["Phulkari Dupattas", "Banarasi Dupattas", "Ethnic Jackets", "Potli Bags"],
+        items: [
+          "Phulkari Dupattas",
+          "Banarasi Dupattas",
+          "Ethnic Jackets",
+          "Potli Bags",
+        ],
       },
     ],
   },
@@ -139,19 +180,40 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Tops & Tees",
-        items: ["Casual Tops", "Graphic T-Shirts", "Crop Tops", "Shirts & Blouses", "Tank Tops"],
+        items: [
+          "Casual Tops",
+          "Graphic T-Shirts",
+          "Crop Tops",
+          "Shirts & Blouses",
+          "Tank Tops",
+        ],
       },
       {
         title: "Dresses & Jumpsuits",
-        items: ["Maxi Dresses", "Bodycon Dresses", "Floral Sundresses", "Casual Jumpsuits", "Party Dresses"],
+        items: [
+          "Maxi Dresses",
+          "Bodycon Dresses",
+          "Floral Sundresses",
+          "Casual Jumpsuits",
+          "Party Dresses",
+        ],
       },
       {
         title: "Bottom Wear",
-        items: ["High-Waist Jeans", "Trousers & Pants", "Shorts & Skirts", "Leggings & Jeggings"],
+        items: [
+          "High-Waist Jeans",
+          "Trousers & Pants",
+          "Shorts & Skirts",
+          "Leggings & Jeggings",
+        ],
       },
       {
         title: "Winter & Outerwear",
-        items: ["Jackets & Coats", "Sweaters & Cardigans", "Hoodies & Sweatshirts"],
+        items: [
+          "Jackets & Coats",
+          "Sweaters & Cardigans",
+          "Hoodies & Sweatshirts",
+        ],
       },
     ],
   },
@@ -165,7 +227,13 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Bras & Sets",
-        items: ["Padded Bras", "Non-Padded Bras", "Sports Bras", "Bralettes", "T-Shirt Bras"],
+        items: [
+          "Padded Bras",
+          "Non-Padded Bras",
+          "Sports Bras",
+          "Bralettes",
+          "T-Shirt Bras",
+        ],
       },
       {
         title: "Sleep & Loungewear",
@@ -187,11 +255,23 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Top Wear",
-        items: ["Polo T-Shirts", "Casual Shirts", "Formal Shirts", "Oversized Tees", "Sweatshirts"],
+        items: [
+          "Polo T-Shirts",
+          "Casual Shirts",
+          "Formal Shirts",
+          "Oversized Tees",
+          "Sweatshirts",
+        ],
       },
       {
         title: "Bottom Wear",
-        items: ["Slim Fit Jeans", "Chinos & Trousers", "Cargo Pants", "Track Pants", "Shorts"],
+        items: [
+          "Slim Fit Jeans",
+          "Chinos & Trousers",
+          "Cargo Pants",
+          "Track Pants",
+          "Shorts",
+        ],
       },
       {
         title: "Ethnic Wear",
@@ -217,15 +297,31 @@ export const mockCategories: Category[] = [
       },
       {
         title: "Girls Clothing",
-        items: ["Frocks & Dresses", "Tops & Skirts", "Ethnic Wear", "Lehenga Sets"],
+        items: [
+          "Frocks & Dresses",
+          "Tops & Skirts",
+          "Ethnic Wear",
+          "Lehenga Sets",
+        ],
       },
       {
         title: "Toys & Games",
-        items: ["Soft Toys", "Educational Games", "Remote Control Cars", "Puzzles & Board Games", "Building Blocks"],
+        items: [
+          "Soft Toys",
+          "Educational Games",
+          "Remote Control Cars",
+          "Puzzles & Board Games",
+          "Building Blocks",
+        ],
       },
       {
         title: "Baby Care",
-        items: ["Diapers & Wipes", "Baby Strollers", "Feeding Bottles", "Baby Skincare"],
+        items: [
+          "Diapers & Wipes",
+          "Baby Strollers",
+          "Feeding Bottles",
+          "Baby Skincare",
+        ],
       },
     ],
   },
@@ -239,19 +335,41 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Kitchen & Dining",
-        items: ["Cookware Sets", "Non-Stick Pans", "Dinnerware & Cutlery", "Storage Containers", "Coffee Makers"],
+        items: [
+          "Cookware Sets",
+          "Non-Stick Pans",
+          "Dinnerware & Cutlery",
+          "Storage Containers",
+          "Coffee Makers",
+        ],
       },
       {
         title: "Home Decor",
-        items: ["Wall Art & Clocks", "Curtains & Blinds", "Cushion Covers", "Vases & Figurines", "Lighting & Lamps"],
+        items: [
+          "Wall Art & Clocks",
+          "Curtains & Blinds",
+          "Cushion Covers",
+          "Vases & Figurines",
+          "Lighting & Lamps",
+        ],
       },
       {
         title: "Bed & Bath",
-        items: ["Bedsheets & Pillowcases", "Blankets & Comforters", "Bath Towels", "Bath Mats"],
+        items: [
+          "Bedsheets & Pillowcases",
+          "Blankets & Comforters",
+          "Bath Towels",
+          "Bath Mats",
+        ],
       },
       {
         title: "Home Appliances",
-        items: ["Air Fryers", "Electric Kettles", "Vacuum Cleaners", "Water Purifiers"],
+        items: [
+          "Air Fryers",
+          "Electric Kettles",
+          "Vacuum Cleaners",
+          "Water Purifiers",
+        ],
       },
     ],
   },
@@ -265,19 +383,38 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Makeup",
-        items: ["Lipsticks & Lip Gloss", "Foundations & Concealers", "Eyeliners & Mascara", "Makeup Palettes"],
+        items: [
+          "Lipsticks & Lip Gloss",
+          "Foundations & Concealers",
+          "Eyeliners & Mascara",
+          "Makeup Palettes",
+        ],
       },
       {
         title: "Skincare",
-        items: ["Facial Serums", "Moisturizers", "Sunscreens", "Face Washes & Scrubs"],
+        items: [
+          "Facial Serums",
+          "Moisturizers",
+          "Sunscreens",
+          "Face Washes & Scrubs",
+        ],
       },
       {
         title: "Haircare",
-        items: ["Shampoos & Conditioners", "Hair Oils & Serums", "Hair Dryers & Straighteners"],
+        items: [
+          "Shampoos & Conditioners",
+          "Hair Oils & Serums",
+          "Hair Dryers & Straighteners",
+        ],
       },
       {
         title: "Personal Care",
-        items: ["Perfumes & Deodorants", "Grooming Trimmers", "Oral Care", "Sanitizers"],
+        items: [
+          "Perfumes & Deodorants",
+          "Grooming Trimmers",
+          "Oral Care",
+          "Sanitizers",
+        ],
       },
     ],
   },
@@ -291,15 +428,30 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Fashion Jewellery",
-        items: ["Earrings & Studs", "Necklace Sets", "Bangles & Bracelets", "Rings", "Anklets"],
+        items: [
+          "Earrings & Studs",
+          "Necklace Sets",
+          "Bangles & Bracelets",
+          "Rings",
+          "Anklets",
+        ],
       },
       {
         title: "Silver & Gold Plated",
-        items: ["Sterling Silver Rings", "Temple Jewellery", "Kundans & Pearls"],
+        items: [
+          "Sterling Silver Rings",
+          "Temple Jewellery",
+          "Kundans & Pearls",
+        ],
       },
       {
         title: "Accessories",
-        items: ["Hair Pins & Bands", "Sunglasses", "Belts & Wallets", "Scarves"],
+        items: [
+          "Hair Pins & Bands",
+          "Sunglasses",
+          "Belts & Wallets",
+          "Scarves",
+        ],
       },
     ],
   },
@@ -313,15 +465,31 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Women Footwear",
-        items: ["Heels & Pumps", "Flats & Sandals", "Sneakers", "Ethnic Juttis"],
+        items: [
+          "Heels & Pumps",
+          "Flats & Sandals",
+          "Sneakers",
+          "Ethnic Juttis",
+        ],
       },
       {
         title: "Men Footwear",
-        items: ["Casual Sneakers", "Formal Shoes", "Loafers", "Sports Shoes", "Sandals & Slippers"],
+        items: [
+          "Casual Sneakers",
+          "Formal Shoes",
+          "Loafers",
+          "Sports Shoes",
+          "Sandals & Slippers",
+        ],
       },
       {
         title: "Bags & Purses",
-        items: ["Handbags & Totes", "Sling Bags", "Backpacks", "Clutches & Wallets"],
+        items: [
+          "Handbags & Totes",
+          "Sling Bags",
+          "Backpacks",
+          "Clutches & Wallets",
+        ],
       },
     ],
   },
@@ -335,15 +503,30 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Audio Gear",
-        items: ["Noise Canceling Headphones", "Wireless Earbuds", "Bluetooth Speakers", "Soundbars"],
+        items: [
+          "Noise Canceling Headphones",
+          "Wireless Earbuds",
+          "Bluetooth Speakers",
+          "Soundbars",
+        ],
       },
       {
         title: "Mobile Accessories",
-        items: ["Power Banks", "Fast Chargers", "Phone Cases", "Screen Protectors"],
+        items: [
+          "Power Banks",
+          "Fast Chargers",
+          "Phone Cases",
+          "Screen Protectors",
+        ],
       },
       {
         title: "Computer Peripherals",
-        items: ["Mechanical Keyboards", "Ergonomic Mice", "Gaming Monitors", "USB Hubs"],
+        items: [
+          "Mechanical Keyboards",
+          "Ergonomic Mice",
+          "Gaming Monitors",
+          "USB Hubs",
+        ],
       },
       {
         title: "Wearable Tech",
@@ -361,15 +544,28 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Men Watches",
-        items: ["Analog Watches", "Chronograph Watches", "Leather Strap Watches", "Stainless Steel Watches"],
+        items: [
+          "Analog Watches",
+          "Chronograph Watches",
+          "Leather Strap Watches",
+          "Stainless Steel Watches",
+        ],
       },
       {
         title: "Women Watches",
-        items: ["Designer Rose Gold", "Minimalist Mesh Strap", "Bracelet Watches"],
+        items: [
+          "Designer Rose Gold",
+          "Minimalist Mesh Strap",
+          "Bracelet Watches",
+        ],
       },
       {
         title: "Smart Watches",
-        items: ["AMOLED Display Watches", "Calling Smartwatches", "Sports Trackers"],
+        items: [
+          "AMOLED Display Watches",
+          "Calling Smartwatches",
+          "Sports Trackers",
+        ],
       },
     ],
   },
@@ -383,11 +579,21 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Fitness Equipment",
-        items: ["Resistance Bands", "Dumbbells & Barbells", "Yoga Mats", "Ab Rollers"],
+        items: [
+          "Resistance Bands",
+          "Dumbbells & Barbells",
+          "Yoga Mats",
+          "Ab Rollers",
+        ],
       },
       {
         title: "Sports Gear",
-        items: ["Badminton Rackets", "Cricket Bats", "Football & Basketball", "Cycling Helmets"],
+        items: [
+          "Badminton Rackets",
+          "Cricket Bats",
+          "Football & Basketball",
+          "Cycling Helmets",
+        ],
       },
     ],
   },
@@ -401,11 +607,21 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Car Accessories",
-        items: ["Car Phone Mounts", "Car Air Fresheners", "Seat Covers", "Car Vacuum Cleaners"],
+        items: [
+          "Car Phone Mounts",
+          "Car Air Fresheners",
+          "Seat Covers",
+          "Car Vacuum Cleaners",
+        ],
       },
       {
         title: "Bike Accessories",
-        items: ["Riding Gloves", "Rider Helmets", "Bike Mobile Holders", "Chain Cleaners"],
+        items: [
+          "Riding Gloves",
+          "Rider Helmets",
+          "Bike Mobile Holders",
+          "Chain Cleaners",
+        ],
       },
     ],
   },
@@ -419,11 +635,21 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Fiction & Non-Fiction",
-        items: ["Bestselling Novels", "Self-Help & Business", "Biographies", "Comics & Manga"],
+        items: [
+          "Bestselling Novels",
+          "Self-Help & Business",
+          "Biographies",
+          "Comics & Manga",
+        ],
       },
       {
         title: "Stationery",
-        items: ["Journals & Planners", "Fountain Pens", "Art & Craft Supplies", "Desk Organizers"],
+        items: [
+          "Journals & Planners",
+          "Fountain Pens",
+          "Art & Craft Supplies",
+          "Desk Organizers",
+        ],
       },
     ],
   },
@@ -437,11 +663,20 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Handmade Crafts",
-        items: ["Terracotta Pottery", "Brass Idols", "Handwoven Carpets", "Handpainted Coasters"],
+        items: [
+          "Terracotta Pottery",
+          "Brass Idols",
+          "Handwoven Carpets",
+          "Handpainted Coasters",
+        ],
       },
       {
         title: "Organic Textiles",
-        items: ["Handloom Sarees", "Organic Cotton Dupattas", "Kalamkari Fabric"],
+        items: [
+          "Handloom Sarees",
+          "Organic Cotton Dupattas",
+          "Kalamkari Fabric",
+        ],
       },
     ],
   },
@@ -455,11 +690,21 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Pantry Staples",
-        items: ["Rice & Flour", "Pulses & Dal", "Cooking Oils", "Spices & Herbs"],
+        items: [
+          "Rice & Flour",
+          "Pulses & Dal",
+          "Cooking Oils",
+          "Spices & Herbs",
+        ],
       },
       {
         title: "Snacks & Beverages",
-        items: ["Gourmet Coffees", "Herbal Teas", "Nuts & Dried Fruits", "Chocolates & Biscuits"],
+        items: [
+          "Gourmet Coffees",
+          "Herbal Teas",
+          "Nuts & Dried Fruits",
+          "Chocolates & Biscuits",
+        ],
       },
     ],
   },
@@ -473,11 +718,21 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Dog Supplies",
-        items: ["Dog Food & Treats", "Leashes & Harnesses", "Grooming Shampoos", "Chew Toys"],
+        items: [
+          "Dog Food & Treats",
+          "Leashes & Harnesses",
+          "Grooming Shampoos",
+          "Chew Toys",
+        ],
       },
       {
         title: "Cat Supplies",
-        items: ["Cat Food", "Cat Litter", "Scratching Posts", "Interactive Toys"],
+        items: [
+          "Cat Food",
+          "Cat Litter",
+          "Scratching Posts",
+          "Interactive Toys",
+        ],
       },
     ],
   },
@@ -491,7 +746,12 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Desk Setup",
-        items: ["Monitor Risers", "Cable Management", "Desk Mats & Pads", "Paper Shredders"],
+        items: [
+          "Monitor Risers",
+          "Cable Management",
+          "Desk Mats & Pads",
+          "Paper Shredders",
+        ],
       },
       {
         title: "Filing & Paper",
@@ -509,7 +769,12 @@ export const mockCategories: Category[] = [
     subCategoryGroups: [
       {
         title: "Travel Bags",
-        items: ["Hard Shell Trolley Bags", "Duffel Bags", "Laptop Travel Backpacks", "Passport Covers"],
+        items: [
+          "Hard Shell Trolley Bags",
+          "Duffel Bags",
+          "Laptop Travel Backpacks",
+          "Passport Covers",
+        ],
       },
       {
         title: "Travel Comfort",
@@ -517,13 +782,14 @@ export const mockCategories: Category[] = [
       },
     ],
   },
-];
+]
 
 export const mockHeroBanners: HeroBanner[] = [
   {
     id: "hero-1",
     title: "Next-Gen Audio Experience",
-    subtitle: "Immersive active noise cancellation, 40-hour battery life, and crystal-clear high fidelity sound.",
+    subtitle:
+      "Immersive active noise cancellation, 40-hour battery life, and crystal-clear high fidelity sound.",
     buttonText: "Shop Audio Pro",
     link: "/products/prod-1",
     bgGradient: "from-blue-900/90 via-indigo-950 to-zinc-950 text-white",
@@ -533,7 +799,8 @@ export const mockHeroBanners: HeroBanner[] = [
   {
     id: "hero-2",
     title: "Elevate Your Workspace",
-    subtitle: "Ergonomic designs, custom mechanical keyboards, and minimalist desk setups built for peak productivity.",
+    subtitle:
+      "Ergonomic designs, custom mechanical keyboards, and minimalist desk setups built for peak productivity.",
     buttonText: "Explore Keyboards",
     link: "/products/prod-2",
     bgGradient: "from-purple-900/90 via-slate-950 to-zinc-950 text-white",
@@ -543,14 +810,15 @@ export const mockHeroBanners: HeroBanner[] = [
   {
     id: "hero-3",
     title: "Summer Collection 2026",
-    subtitle: "Eco-friendly premium apparel designed for effortless style and breathable everyday comfort.",
+    subtitle:
+      "Eco-friendly premium apparel designed for effortless style and breathable everyday comfort.",
     buttonText: "Browse Fashion",
     link: "/products?category=Fashion+%26+Apparel",
     bgGradient: "from-amber-900/90 via-orange-950 to-zinc-950 text-white",
     tag: "FASHION SPOTLIGHT",
     image: "👕",
   },
-];
+]
 
 export const mockVendors: Vendor[] = [
   {
@@ -564,7 +832,8 @@ export const mockVendors: Vendor[] = [
     productCount: 86,
     verified: true,
     category: "Electronics",
-    description: "Premium audio, keyboards, and high-performance workstation gadgets.",
+    description:
+      "Premium audio, keyboards, and high-performance workstation gadgets.",
     joinDate: "Member since 2024",
   },
   {
@@ -578,7 +847,8 @@ export const mockVendors: Vendor[] = [
     productCount: 142,
     verified: true,
     category: "Home & Kitchen",
-    description: "Minimalist Scandinavian home decor, handcrafted ceramics, and ergonomic furniture.",
+    description:
+      "Minimalist Scandinavian home decor, handcrafted ceramics, and ergonomic furniture.",
     joinDate: "Member since 2023",
   },
   {
@@ -592,7 +862,8 @@ export const mockVendors: Vendor[] = [
     productCount: 210,
     verified: true,
     category: "Fashion & Apparel",
-    description: "Sustainable streetwear and handcrafted full-grain leather accessories.",
+    description:
+      "Sustainable streetwear and handcrafted full-grain leather accessories.",
     joinDate: "Member since 2025",
   },
   {
@@ -606,10 +877,11 @@ export const mockVendors: Vendor[] = [
     productCount: 54,
     verified: true,
     category: "Beauty & Wellness",
-    description: "Cruelty-free organic skincare and essential oil formulations.",
+    description:
+      "Cruelty-free organic skincare and essential oil formulations.",
     joinDate: "Member since 2024",
   },
-];
+]
 
 export const mockProducts: Product[] = [
   {
@@ -625,8 +897,14 @@ export const mockProducts: Product[] = [
     vendorId: "v-1",
     vendorName: "Apex Electronics",
     inStock: true,
-    description: "Hybrid active noise canceling, high-resolution wireless audio, 40-hour long playback, and ultra-comfortable memory foam earcups.",
-    features: ["Active Noise Cancellation", "40H Battery Life", "Bluetooth 5.3 & AUX", "Fast USB-C Charging"],
+    description:
+      "Hybrid active noise canceling, high-resolution wireless audio, 40-hour long playback, and ultra-comfortable memory foam earcups.",
+    features: [
+      "Active Noise Cancellation",
+      "40H Battery Life",
+      "Bluetooth 5.3 & AUX",
+      "Fast USB-C Charging",
+    ],
   },
   {
     id: "prod-2",
@@ -641,14 +919,20 @@ export const mockProducts: Product[] = [
     vendorId: "v-1",
     vendorName: "Apex Electronics",
     inStock: true,
-    description: "Hot-swappable tactile mechanical switches, CNC aluminum casing, per-key RGB backlighting, and dual wireless mode.",
-    features: ["Hot-Swappable Switches", "Aluminum Chassis", "RGB Backlit Keys", "2.4GHz / BT / USB-C"],
+    description:
+      "Hot-swappable tactile mechanical switches, CNC aluminum casing, per-key RGB backlighting, and dual wireless mode.",
+    features: [
+      "Hot-Swappable Switches",
+      "Aluminum Chassis",
+      "RGB Backlit Keys",
+      "2.4GHz / BT / USB-C",
+    ],
   },
   {
     id: "prod-3",
     name: "Minimalist Full-Grain Leather Wallet",
     price: 49.99,
-    originalPrice: 65.00,
+    originalPrice: 65.0,
     rating: 4.7,
     reviewCount: 142,
     image: "👛",
@@ -657,8 +941,14 @@ export const mockProducts: Product[] = [
     vendorId: "v-3",
     vendorName: "Urban Thread Co.",
     inStock: true,
-    description: "RFID blocking slim card wallet made from authentic top grain leather with quick pull tab mechanism.",
-    features: ["100% Genuine Leather", "RFID Protection", "Holds up to 10 cards", "Slim Pocket Design"],
+    description:
+      "RFID blocking slim card wallet made from authentic top grain leather with quick pull tab mechanism.",
+    features: [
+      "100% Genuine Leather",
+      "RFID Protection",
+      "Holds up to 10 cards",
+      "Slim Pocket Design",
+    ],
   },
   {
     id: "prod-4",
@@ -673,14 +963,20 @@ export const mockProducts: Product[] = [
     vendorId: "v-2",
     vendorName: "Nordic Atelier",
     inStock: true,
-    description: "Double-walled vacuum insulation keeps beverages ice cold for 24 hours or steaming hot for 12 hours.",
-    features: ["BPA Free", "24H Cold / 12H Hot", "Leakproof Lid", "Sweat-proof Powder Coating"],
+    description:
+      "Double-walled vacuum insulation keeps beverages ice cold for 24 hours or steaming hot for 12 hours.",
+    features: [
+      "BPA Free",
+      "24H Cold / 12H Hot",
+      "Leakproof Lid",
+      "Sweat-proof Powder Coating",
+    ],
   },
   {
     id: "prod-5",
     name: "CoreErgo 3D Mesh Lumbar Desk Chair",
     price: 349.99,
-    originalPrice: 420.00,
+    originalPrice: 420.0,
     rating: 4.8,
     reviewCount: 95,
     image: "💺",
@@ -689,8 +985,14 @@ export const mockProducts: Product[] = [
     vendorId: "v-2",
     vendorName: "Nordic Atelier",
     inStock: true,
-    description: "Fully adjustable dynamic lumbar support, 3D armrests, breathable cooling mesh backrest, and heavy-duty steel base.",
-    features: ["Dynamic Lumbar Support", "3D Adjustable Armrests", "Breathable Mesh", "135° Recline System"],
+    description:
+      "Fully adjustable dynamic lumbar support, 3D armrests, breathable cooling mesh backrest, and heavy-duty steel base.",
+    features: [
+      "Dynamic Lumbar Support",
+      "3D Adjustable Armrests",
+      "Breathable Mesh",
+      "135° Recline System",
+    ],
   },
   {
     id: "prod-6",
@@ -705,14 +1007,20 @@ export const mockProducts: Product[] = [
     vendorId: "v-3",
     vendorName: "Urban Thread Co.",
     inStock: true,
-    description: "Includes 5 stackable workout latex bands, cushioned handles, heavy-duty door anchor, and carrying pouch.",
-    features: ["5 Resistance Levels", "Natural Latex", "Padded Ankle Straps", "Portable Travel Pouch"],
+    description:
+      "Includes 5 stackable workout latex bands, cushioned handles, heavy-duty door anchor, and carrying pouch.",
+    features: [
+      "5 Resistance Levels",
+      "Natural Latex",
+      "Padded Ankle Straps",
+      "Portable Travel Pouch",
+    ],
   },
   {
     id: "prod-7",
     name: "Aura Glow Hydrating Facial Serum",
-    price: 38.00,
-    originalPrice: 48.00,
+    price: 38.0,
+    originalPrice: 48.0,
     rating: 4.9,
     reviewCount: 230,
     image: "🧪",
@@ -721,13 +1029,19 @@ export const mockProducts: Product[] = [
     vendorId: "v-4",
     vendorName: "Aura Botanicals",
     inStock: true,
-    description: "Hyaluronic acid and vitamin C complex for intense skin moisture barrier restoration and radiant complexion.",
-    features: ["100% Vegan & Cruelty Free", "Deep Hydration", "Vitamin C & Niacinamide", "Dermatologist Tested"],
+    description:
+      "Hyaluronic acid and vitamin C complex for intense skin moisture barrier restoration and radiant complexion.",
+    features: [
+      "100% Vegan & Cruelty Free",
+      "Deep Hydration",
+      "Vitamin C & Niacinamide",
+      "Dermatologist Tested",
+    ],
   },
   {
     id: "prod-8",
     name: "Ultra-Clean Smart Ceramic Electric Kettle",
-    price: 64.50,
+    price: 64.5,
     originalPrice: 79.99,
     rating: 4.7,
     reviewCount: 168,
@@ -737,10 +1051,16 @@ export const mockProducts: Product[] = [
     vendorId: "v-2",
     vendorName: "Nordic Atelier",
     inStock: true,
-    description: "Precision temperature control kettle with gooseneck spout for perfect pour-over coffee and tea brewing.",
-    features: ["Precision Temp Control", "Quick Boil 1200W", "Keep-Warm Mode", "Auto Shut-Off Safety"],
+    description:
+      "Precision temperature control kettle with gooseneck spout for perfect pour-over coffee and tea brewing.",
+    features: [
+      "Precision Temp Control",
+      "Quick Boil 1200W",
+      "Keep-Warm Mode",
+      "Auto Shut-Off Safety",
+    ],
   },
-];
+]
 
 export const mockFlashDeals: FlashDeal[] = [
   {
@@ -779,7 +1099,7 @@ export const mockFlashDeals: FlashDeal[] = [
     soldCount: 29,
     endTime: "2026-07-22T23:59:59",
   },
-];
+]
 
 export const mockTestimonials: Testimonial[] = [
   {
@@ -788,7 +1108,8 @@ export const mockTestimonials: Testimonial[] = [
     userRole: "Software Engineer & Creator",
     avatar: "👨‍💻",
     rating: 5,
-    comment: "The KeyCraft keyboard from Apex Electronics on CBS Marketplace arrived within 2 days! Incredible quality and seamless checkout experience.",
+    comment:
+      "The KeyCraft keyboard from Apex Electronics on CBS Marketplace arrived within 2 days! Incredible quality and seamless checkout experience.",
     verifiedPurchase: true,
     productName: "KeyCraft Custom Mechanical Keyboard",
   },
@@ -798,7 +1119,8 @@ export const mockTestimonials: Testimonial[] = [
     userRole: "Interior Designer",
     avatar: "👩‍🎨",
     rating: 5,
-    comment: "Nordic Atelier's products on this marketplace are top tier. Loved buying directly from verified independent vendors with buyer protection.",
+    comment:
+      "Nordic Atelier's products on this marketplace are top tier. Loved buying directly from verified independent vendors with buyer protection.",
     verifiedPurchase: true,
     productName: "CoreErgo 3D Mesh Lumbar Desk Chair",
   },
@@ -808,8 +1130,9 @@ export const mockTestimonials: Testimonial[] = [
     userRole: "Audio Enthusiast",
     avatar: "🎧",
     rating: 5,
-    comment: "Best pricing on AeroSound Pro. The flash deal countdown saved me over $60. Highly recommend CBS Marketplace!",
+    comment:
+      "Best pricing on AeroSound Pro. The flash deal countdown saved me over $60. Highly recommend CBS Marketplace!",
     verifiedPurchase: true,
     productName: "AeroSound Pro Headphones",
   },
-];
+]

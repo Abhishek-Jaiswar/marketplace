@@ -12,11 +12,25 @@ concurrency:
 
 jobs:
   validate:
-    name: Lint, Typecheck & Build
+    name: Format, Lint, Typecheck, Test & Build
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/cbs_marketplace_test
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
 
     steps:
       - name: Checkout repository
@@ -41,11 +55,20 @@ jobs:
       - name: Generate Prisma contract
         run: pnpm db:generate
 
+      - name: Check formatting
+        run: pnpm format:check
+
       - name: Lint
         run: pnpm lint
 
       - name: Typecheck
         run: pnpm typecheck
+
+      - name: Unit and HTTP tests
+        run: pnpm test
+
+      - name: Integration tests
+        run: pnpm test:integration
 
       - name: Build packages and apps
         run: pnpm build

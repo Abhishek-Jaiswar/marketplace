@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import Link from "next/link"
+import Image from "next/image"
+import { usePathname } from "next/navigation"
 import {
   ChevronLeft,
   ChevronRight,
@@ -12,169 +12,178 @@ import {
   ArrowRight,
   Layers,
   Package,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useGetCategoryTreeQuery, type CategoryTreeNode } from "@workspace/store";
+} from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import {
+  useGetCategoryTreeQuery,
+  type CategoryTreeNode,
+} from "@workspace/store"
 
-const HOVER_CLOSE_DELAY = 180;
-const SCROLL_STEP = 320;
-const EDGE_THRESHOLD = 4;
+const HOVER_CLOSE_DELAY = 180
+const SCROLL_STEP = 320
+const EDGE_THRESHOLD = 4
 
 export function MegaMenu() {
-  const pathname = usePathname();
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-  const [previousPathname, setPreviousPathname] = useState(pathname);
+  const pathname = usePathname()
+  const [activeId, setActiveId] = useState<string | null>(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
+  const [previousPathname, setPreviousPathname] = useState(pathname)
 
-  const rootRef = useRef<HTMLDivElement>(null);
-  const ribbonRef = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pillRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  const rootRef = useRef<HTMLDivElement>(null)
+  const ribbonRef = useRef<HTMLDivElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const pillRefs = useRef<Map<string, HTMLAnchorElement>>(new Map())
 
-  const { data: treeResponse, isLoading, isError } = useGetCategoryTreeQuery();
+  const { data: treeResponse, isLoading, isError } = useGetCategoryTreeQuery()
   const categoryTree: CategoryTreeNode[] = Array.isArray(treeResponse?.data)
     ? treeResponse.data
-    : [];
+    : []
 
-  const activeCategory = categoryTree.find((category) => category.id === activeId) ?? null;
+  const activeCategory =
+    categoryTree.find((category) => category.id === activeId) ?? null
 
   if (previousPathname !== pathname) {
-    setPreviousPathname(pathname);
-    if (activeId !== null) setActiveId(null);
+    setPreviousPathname(pathname)
+    if (activeId !== null) setActiveId(null)
   }
 
   const clearCloseTimer = useCallback(() => {
     if (closeTimerRef.current) {
-      clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
+      clearTimeout(closeTimerRef.current)
+      closeTimerRef.current = null
     }
-  }, []);
+  }, [])
 
   const openCategory = useCallback(
     (id: string) => {
-      clearCloseTimer();
-      setActiveId(id);
+      clearCloseTimer()
+      setActiveId(id)
     },
     [clearCloseTimer]
-  );
+  )
 
   const closeMenu = useCallback(() => {
-    clearCloseTimer();
-    setActiveId(null);
-  }, [clearCloseTimer]);
+    clearCloseTimer()
+    setActiveId(null)
+  }, [clearCloseTimer])
 
   const scheduleClose = useCallback(() => {
-    clearCloseTimer();
-    closeTimerRef.current = setTimeout(() => setActiveId(null), HOVER_CLOSE_DELAY);
-  }, [clearCloseTimer]);
+    clearCloseTimer()
+    closeTimerRef.current = setTimeout(
+      () => setActiveId(null),
+      HOVER_CLOSE_DELAY
+    )
+  }, [clearCloseTimer])
 
-  useEffect(() => () => clearCloseTimer(), [clearCloseTimer]);
+  useEffect(() => () => clearCloseTimer(), [clearCloseTimer])
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
       if (!rootRef.current?.contains(event.target as Node)) {
-        closeMenu();
+        closeMenu()
       }
-    };
+    }
 
-    document.addEventListener("pointerdown", handlePointerDown);
-    return () => document.removeEventListener("pointerdown", handlePointerDown);
-  }, [closeMenu]);
+    document.addEventListener("pointerdown", handlePointerDown)
+    return () => document.removeEventListener("pointerdown", handlePointerDown)
+  }, [closeMenu])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape" || !activeId) return;
-      const trigger = pillRefs.current.get(activeId);
-      closeMenu();
-      trigger?.focus();
-    };
+      if (event.key !== "Escape" || !activeId) return
+      const trigger = pillRefs.current.get(activeId)
+      closeMenu()
+      trigger?.focus()
+    }
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeId, closeMenu]);
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [activeId, closeMenu])
 
   const updateScrollState = useCallback(() => {
-    const element = ribbonRef.current;
-    if (!element) return;
+    const element = ribbonRef.current
+    if (!element) return
 
-    setCanScrollLeft(element.scrollLeft > EDGE_THRESHOLD);
+    setCanScrollLeft(element.scrollLeft > EDGE_THRESHOLD)
     setCanScrollRight(
-      element.scrollLeft + element.clientWidth < element.scrollWidth - EDGE_THRESHOLD
-    );
-  }, []);
+      element.scrollLeft + element.clientWidth <
+        element.scrollWidth - EDGE_THRESHOLD
+    )
+  }, [])
 
   useEffect(() => {
-    updateScrollState();
+    updateScrollState()
 
-    const element = ribbonRef.current;
-    if (!element) return;
+    const element = ribbonRef.current
+    if (!element) return
 
-    const observer = new ResizeObserver(updateScrollState);
-    observer.observe(element);
-    element.addEventListener("scroll", updateScrollState, { passive: true });
-    window.addEventListener("resize", updateScrollState);
+    const observer = new ResizeObserver(updateScrollState)
+    observer.observe(element)
+    element.addEventListener("scroll", updateScrollState, { passive: true })
+    window.addEventListener("resize", updateScrollState)
 
     return () => {
-      observer.disconnect();
-      element.removeEventListener("scroll", updateScrollState);
-      window.removeEventListener("resize", updateScrollState);
-    };
-  }, [updateScrollState, categoryTree.length]);
+      observer.disconnect()
+      element.removeEventListener("scroll", updateScrollState)
+      window.removeEventListener("resize", updateScrollState)
+    }
+  }, [updateScrollState, categoryTree.length])
 
   const scrollRibbon = (direction: "left" | "right") => {
     ribbonRef.current?.scrollBy({
       left: direction === "left" ? -SCROLL_STEP : SCROLL_STEP,
       behavior: "smooth",
-    });
-  };
+    })
+  }
 
   const focusFirstPanelLink = useCallback(() => {
     requestAnimationFrame(() => {
       panelRef.current
-        ?.querySelector<HTMLElement>('a[href], button:not([disabled])')
-        ?.focus();
-    });
-  }, []);
+        ?.querySelector<HTMLElement>("a[href], button:not([disabled])")
+        ?.focus()
+    })
+  }, [])
 
   const handlePillKeyDown = (
     event: React.KeyboardEvent<HTMLAnchorElement>,
     index: number
   ) => {
-    const category = categoryTree[index];
-    if (!category) return;
+    const category = categoryTree[index]
+    if (!category) return
 
     if (event.key === "ArrowDown") {
-      event.preventDefault();
-      openCategory(category.id);
-      focusFirstPanelLink();
-      return;
+      event.preventDefault()
+      openCategory(category.id)
+      focusFirstPanelLink()
+      return
     }
 
-    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return
 
-    event.preventDefault();
+    event.preventDefault()
     const nextIndex =
       event.key === "ArrowRight"
         ? (index + 1) % categoryTree.length
-        : (index - 1 + categoryTree.length) % categoryTree.length;
-    const nextCategory = categoryTree[nextIndex];
+        : (index - 1 + categoryTree.length) % categoryTree.length
+    const nextCategory = categoryTree[nextIndex]
     if (nextCategory) {
-      pillRefs.current.get(nextCategory.id)?.focus();
+      pillRefs.current.get(nextCategory.id)?.focus()
     }
-  };
+  }
 
   const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
     if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-      closeMenu();
+      closeMenu()
     }
-  };
+  }
 
   const hasCategoryImage = Boolean(
     activeCategory?.image &&
-      (activeCategory.image.startsWith("http") || activeCategory.image.startsWith("/"))
-  );
+    (activeCategory.image.startsWith("http") ||
+      activeCategory.image.startsWith("/"))
+  )
 
   return (
     <div
@@ -206,7 +215,7 @@ export function MegaMenu() {
             <Link
               href="/products?sort=popular"
               onClick={closeMenu}
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-accent/20 px-3.5 py-1.5 text-xs font-extrabold text-accent transition-colors hover:bg-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:text-sm"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-accent/20 px-3.5 py-1.5 text-xs font-extrabold text-accent transition-colors hover:bg-accent/10 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:text-sm"
             >
               <Sparkles className="h-3.5 w-3.5 fill-accent" />
               <span>Popular Deals</span>
@@ -225,16 +234,16 @@ export function MegaMenu() {
 
             {!isLoading &&
               categoryTree.map((category, index) => {
-                const isActive = activeId === category.id;
+                const isActive = activeId === category.id
 
                 return (
                   <Link
                     key={category.id}
                     ref={(node) => {
                       if (node) {
-                        pillRefs.current.set(category.id, node);
+                        pillRefs.current.set(category.id, node)
                       } else {
-                        pillRefs.current.delete(category.id);
+                        pillRefs.current.delete(category.id)
                       }
                     }}
                     href={`/products?category=${encodeURIComponent(category.slug)}`}
@@ -245,7 +254,7 @@ export function MegaMenu() {
                     aria-haspopup="true"
                     aria-expanded={isActive}
                     aria-controls="megamenu-panel"
-                    className={`group inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:text-sm ${
+                    className={`group inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:text-sm ${
                       isActive
                         ? "bg-primary text-primary-foreground shadow-sm"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -258,7 +267,7 @@ export function MegaMenu() {
                       }`}
                     />
                   </Link>
-                );
+                )
               })}
 
             {!isLoading && categoryTree.length === 0 && (
@@ -268,7 +277,11 @@ export function MegaMenu() {
                 className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:text-sm"
               >
                 <Package className="h-3.5 w-3.5" />
-                <span>{isError ? "Categories unavailable - browse all products" : "All Products"}</span>
+                <span>
+                  {isError
+                    ? "Categories unavailable - browse all products"
+                    : "All Products"}
+                </span>
               </Link>
             )}
           </div>
@@ -354,20 +367,22 @@ export function MegaMenu() {
                 </div>
 
                 <div className="min-w-0">
-                  {activeCategory.children && activeCategory.children.length > 0 ? (
-                    <div className="scrollbar-thin grid max-h-[22rem] grid-cols-1 gap-x-8 gap-y-6 overflow-y-auto overscroll-contain pr-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {activeCategory.children &&
+                  activeCategory.children.length > 0 ? (
+                    <div className="grid max-h-[22rem] scrollbar-thin grid-cols-1 gap-x-8 gap-y-6 overflow-y-auto overscroll-contain pr-2 sm:grid-cols-2 lg:grid-cols-3">
                       {activeCategory.children.map((subCategory) => (
                         <div key={subCategory.id} className="min-w-0">
                           <Link
                             href={`/products?category=${encodeURIComponent(subCategory.slug)}`}
                             onClick={closeMenu}
-                            className="group flex items-center justify-between gap-2 border-b border-border/70 pb-1.5 text-[11px] font-black uppercase tracking-wider text-foreground/90 transition-colors hover:text-primary"
+                            className="group flex items-center justify-between gap-2 border-b border-border/70 pb-1.5 text-[11px] font-black tracking-wider text-foreground/90 uppercase transition-colors hover:text-primary"
                           >
                             <span className="truncate">{subCategory.name}</span>
                             <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
                           </Link>
 
-                          {subCategory.children && subCategory.children.length > 0 ? (
+                          {subCategory.children &&
+                          subCategory.children.length > 0 ? (
                             <ul className="mt-2 space-y-1.5">
                               {subCategory.children.map((item) => (
                                 <li key={item.id}>
@@ -393,7 +408,8 @@ export function MegaMenu() {
                     <div className="flex min-h-[12rem] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-border bg-muted/20 px-6 text-center">
                       <Package className="h-8 w-8 text-muted-foreground/50" />
                       <p className="text-xs font-medium text-muted-foreground">
-                        No subcategories yet. Browse everything in {activeCategory.name}.
+                        No subcategories yet. Browse everything in{" "}
+                        {activeCategory.name}.
                       </p>
                       <Link
                         href={`/products?category=${encodeURIComponent(activeCategory.slug)}`}
@@ -412,7 +428,7 @@ export function MegaMenu() {
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 }
 
-export default MegaMenu;
+export default MegaMenu

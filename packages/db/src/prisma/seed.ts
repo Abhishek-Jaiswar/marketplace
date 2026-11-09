@@ -18,8 +18,7 @@ const categoriesData: SeedCategory[] = [
     slug: "electronics",
     excerpt:
       "Explore top gadgets, smartphones, laptops, audio equipment, and photography tools.",
-    image:
-      "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800",
+    image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800",
     storageKey: "categories/electronics.jpg",
     altText: "Electronics catalog image",
     isActive: true,
@@ -145,8 +144,7 @@ const categoriesData: SeedCategory[] = [
     slug: "fashion-apparel",
     excerpt:
       "Trendy clothing, footwear, accessories, and jewelry for all seasons.",
-    image:
-      "https://images.unsplash.com/photo-1445205170230-053b83016050?w=800",
+    image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=800",
     storageKey: "categories/fashion-apparel.jpg",
     altText: "Fashion catalog cover",
     isActive: true,
@@ -187,7 +185,8 @@ const categoriesData: SeedCategory[] = [
           {
             name: "Men's Jeans & Trousers",
             slug: "mens-jeans-trousers",
-            excerpt: "Slim fit denim jeans, chinos, and tailored formal trousers.",
+            excerpt:
+              "Slim fit denim jeans, chinos, and tailored formal trousers.",
             image:
               "https://images.unsplash.com/photo-1542272604-780c36856842?w=800",
             storageKey: "categories/mens-jeans.jpg",
@@ -220,7 +219,8 @@ const categoriesData: SeedCategory[] = [
           {
             name: "Women's Tops & Tees",
             slug: "womens-tops-tees",
-            excerpt: "Stylish crop tops, floral blouses, and casual daily tees.",
+            excerpt:
+              "Stylish crop tops, floral blouses, and casual daily tees.",
             image:
               "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800",
             storageKey: "categories/womens-tops.jpg",
@@ -266,8 +266,7 @@ const categoriesData: SeedCategory[] = [
     slug: "home-kitchen",
     excerpt:
       "Furniture, kitchen appliances, home decor, cookware, and bedding essentials.",
-    image:
-      "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=800",
+    image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=800",
     storageKey: "categories/home-kitchen.jpg",
     altText: "Home and kitchen essentials",
     isActive: true,
@@ -367,8 +366,7 @@ const categoriesData: SeedCategory[] = [
     slug: "beauty-personal-care",
     excerpt:
       "Skincare products, haircare, cosmetics, fragrances, and grooming kits.",
-    image:
-      "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800",
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800",
     storageKey: "categories/beauty-personal-care.jpg",
     altText: "Beauty and skincare products",
     isActive: true,
@@ -444,10 +442,8 @@ const categoriesData: SeedCategory[] = [
   {
     name: "Sports & Fitness",
     slug: "sports-fitness",
-    excerpt:
-      "Fitness machinery, yoga mats, outdoor gear, and activewear.",
-    image:
-      "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800",
+    excerpt: "Fitness machinery, yoga mats, outdoor gear, and activewear.",
+    image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800",
     storageKey: "categories/sports-fitness.jpg",
     altText: "Fitness equipment and gym gear",
     isActive: true,
@@ -455,8 +451,7 @@ const categoriesData: SeedCategory[] = [
       {
         name: "Exercise & Fitness Equipment",
         slug: "fitness-equipment",
-        excerpt:
-          "Dumbbells, resistance bands, treadmills, and exercise bikes.",
+        excerpt: "Dumbbells, resistance bands, treadmills, and exercise bikes.",
         image:
           "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=800",
         storageKey: "categories/fitness-equipment.jpg",
@@ -488,8 +483,7 @@ const categoriesData: SeedCategory[] = [
       {
         name: "Team Sports Equipment",
         slug: "team-sports",
-        excerpt:
-          "Cricket bats, footballs, basketballs, and badminton rackets.",
+        excerpt: "Cricket bats, footballs, basketballs, and badminton rackets.",
         image:
           "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800",
         storageKey: "categories/team-sports.jpg",
@@ -503,8 +497,7 @@ const categoriesData: SeedCategory[] = [
     slug: "books-stationery",
     excerpt:
       "Best-selling novels, academic textbooks, notebooks, and fine writing pens.",
-    image:
-      "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800",
+    image: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800",
     storageKey: "categories/books-stationery.jpg",
     altText: "Books shelf",
     isActive: true,
@@ -548,8 +541,7 @@ const categoriesData: SeedCategory[] = [
     slug: "automotive-accessories",
     excerpt:
       "Car care essentials, riding jackets, helmets, and vehicle electronics.",
-    image:
-      "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=800",
+    image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=800",
     storageKey: "categories/automotive.jpg",
     altText: "Automotive accessories",
     isActive: true,
@@ -581,8 +573,7 @@ const categoriesData: SeedCategory[] = [
     slug: "toys-games-baby",
     excerpt:
       "Interactive toys, board games, action figures, and baby care essentials.",
-    image:
-      "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800",
+    image: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800",
     storageKey: "categories/toys-games-baby.jpg",
     altText: "Toys and board games",
     isActive: true,
@@ -625,7 +616,7 @@ const categoriesData: SeedCategory[] = [
 
 async function seedCategoriesRecursively(
   categories: SeedCategory[],
-  parentId: string | null = null,
+  parentId: string | null = null
 ): Promise<number> {
   let count = 0
 
@@ -645,7 +636,7 @@ async function seedCategoriesRecursively(
     if (catData.children && catData.children.length > 0) {
       const childCount = await seedCategoriesRecursively(
         catData.children,
-        created.id,
+        created.id
       )
       count += childCount
     }
@@ -659,11 +650,13 @@ async function main() {
 
   await db.orm.public.Session.where((row) => row.id.isNotNull()).deleteAll()
   await db.orm.public.VerificationToken.where((row) =>
-    row.id.isNotNull(),
+    row.id.isNotNull()
   ).deleteAll()
-  await db.orm.public.SellerDocument.where((row) => row.id.isNotNull()).deleteAll()
+  await db.orm.public.SellerDocument.where((row) =>
+    row.id.isNotNull()
+  ).deleteAll()
   await db.orm.public.SellerVerification.where((row) =>
-    row.id.isNotNull(),
+    row.id.isNotNull()
   ).deleteAll()
   await db.orm.public.BankAccount.where((row) => row.id.isNotNull()).deleteAll()
   await db.orm.public.Store.where((row) => row.id.isNotNull()).deleteAll()
@@ -672,13 +665,27 @@ async function main() {
   await db.orm.public.Address.where((row) => row.id.isNotNull()).deleteAll()
   await db.orm.public.Customer.where((row) => row.id.isNotNull()).deleteAll()
   await db.orm.public.User.where((row) => row.id.isNotNull()).deleteAll()
-  await db.orm.public.InventoryLedger.where((row) => row.id.isNotNull()).deleteAll()
-  await db.orm.public.InventoryReservation.where((row) => row.id.isNotNull()).deleteAll()
-  await db.orm.public.InventoryItem.where((row) => row.id.isNotNull()).deleteAll()
-  await db.orm.public.InventoryLocation.where((row) => row.id.isNotNull()).deleteAll()
-  await db.orm.public.SellerListing.where((row) => row.id.isNotNull()).deleteAll()
-  await db.orm.public.ProductMedia.where((row) => row.id.isNotNull()).deleteAll()
-  await db.orm.public.ProductVariant.where((row) => row.id.isNotNull()).deleteAll()
+  await db.orm.public.InventoryLedger.where((row) =>
+    row.id.isNotNull()
+  ).deleteAll()
+  await db.orm.public.InventoryReservation.where((row) =>
+    row.id.isNotNull()
+  ).deleteAll()
+  await db.orm.public.InventoryItem.where((row) =>
+    row.id.isNotNull()
+  ).deleteAll()
+  await db.orm.public.InventoryLocation.where((row) =>
+    row.id.isNotNull()
+  ).deleteAll()
+  await db.orm.public.SellerListing.where((row) =>
+    row.id.isNotNull()
+  ).deleteAll()
+  await db.orm.public.ProductMedia.where((row) =>
+    row.id.isNotNull()
+  ).deleteAll()
+  await db.orm.public.ProductVariant.where((row) =>
+    row.id.isNotNull()
+  ).deleteAll()
   await db.orm.public.Product.where((row) => row.id.isNotNull()).deleteAll()
   await db.orm.public.Brand.where((row) => row.id.isNotNull()).deleteAll()
   await db.orm.public.Category.where((row) => row.id.isNotNull()).updateAll({
@@ -709,7 +716,7 @@ async function main() {
     return user
   })
   console.log(
-    `✅ Created Admin User: ${adminUser.firstName} ${adminUser.lastName} (${adminUser.email})`,
+    `✅ Created Admin User: ${adminUser.firstName} ${adminUser.lastName} (${adminUser.email})`
   )
 
   const sellerUser = await db.transaction(async (tx) => {
@@ -741,13 +748,13 @@ async function main() {
     return user
   })
   console.log(
-    `✅ Created Seller User: ${sellerUser.firstName} ${sellerUser.lastName} (${sellerUser.email})`,
+    `✅ Created Seller User: ${sellerUser.firstName} ${sellerUser.lastName} (${sellerUser.email})`
   )
 
   console.log("\nSeeding categories hierarchy...")
   const totalCategories = await seedCategoriesRecursively(categoriesData)
   console.log(
-    `✅ Successfully seeded ${totalCategories} categories across multiple hierarchical levels.`,
+    `✅ Successfully seeded ${totalCategories} categories across multiple hierarchical levels.`
   )
 
   console.log("\n===========================================")

@@ -1,10 +1,10 @@
 // Base API and RTK Query
-export { baseApi } from "./api/baseApi";
+export { baseApi } from "./api/baseApi"
 
 // Store Factory & Provider
-export { makeStore } from "./store";
-export { Provider } from "react-redux";
-export { setupListeners } from "@reduxjs/toolkit/query";
+export { makeStore } from "./store"
+export { Provider } from "react-redux"
+export { setupListeners } from "@reduxjs/toolkit/query"
 
 // Counter Slice and Actions
 export {
@@ -12,8 +12,8 @@ export {
   increment,
   decrement,
   incrementByAmount,
-} from "./slices/counterSlice";
-export { default as counterReducer } from "./slices/counterSlice";
+} from "./slices/counterSlice"
+export { default as counterReducer } from "./slices/counterSlice"
 
 // Auth Slice and Actions
 export {
@@ -21,9 +21,9 @@ export {
   tokenReceived,
   userProfileReceived,
   loggedOut,
-} from "./slices/authSlice";
-export { default as authReducer } from "./slices/authSlice";
-export type { AuthState } from "./slices/authSlice";
+} from "./slices/authSlice"
+export { default as authReducer } from "./slices/authSlice"
+export type { AuthState } from "./slices/authSlice"
 
 // Onboarding Slice and Actions
 export {
@@ -32,9 +32,9 @@ export {
   setWelcomeView,
   startOnboarding,
   resetOnboardingState,
-} from "./slices/onboardingSlice";
-export { default as onboardingReducer } from "./slices/onboardingSlice";
-export type { OnboardingState } from "./slices/onboardingSlice";
+} from "./slices/onboardingSlice"
+export { default as onboardingReducer } from "./slices/onboardingSlice"
+export type { OnboardingState } from "./slices/onboardingSlice"
 
 // Auth API types
 export type {
@@ -53,7 +53,7 @@ export type {
   ResetPasswordResponse,
   LogoutResponse,
   GetMeResponse,
-} from "./api/auth/auth-api.types";
+} from "./api/auth/auth-api.types"
 
 // Auth API and Hooks
 export {
@@ -67,11 +67,11 @@ export {
   useLogoutMutation,
   useGetMeQuery,
   useLazyGetMeQuery,
-} from "./api/auth/auth-api";
+} from "./api/auth/auth-api"
 
 // Custom Typed Hooks & Types
-export { useAppDispatch, useAppSelector, useAppStore } from "./hooks";
-export type { RootState, AppDispatch, AppStore } from "./hooks";
+export { useAppDispatch, useAppSelector, useAppStore } from "./hooks"
+export type { RootState, AppDispatch, AppStore } from "./hooks"
 
 // Seller API Types
 export type {
@@ -94,7 +94,7 @@ export type {
   StepDecision,
   VerifySellerRequest,
   PaginatedSellersResponse,
-} from "./api/seller/seller-api.types";
+} from "./api/seller/seller-api.types"
 
 // Seller API and Hooks
 export {
@@ -114,7 +114,7 @@ export {
   useSubmitOnboardingMutation,
   useGetSellersAdminQuery,
   useVerifySellerAdminMutation,
-} from "./api/seller/seller-api";
+} from "./api/seller/seller-api"
 
 // Customer API Types
 export type {
@@ -124,7 +124,7 @@ export type {
   UpdateCustomerProfileRequest,
   CreateAddressRequest,
   UpdateAddressRequest,
-} from "./api/customer/customer-api.types";
+} from "./api/customer/customer-api.types"
 
 // Customer API and Hooks
 export {
@@ -137,7 +137,7 @@ export {
   useDeleteCustomerAddressMutation,
   useSetDefaultShippingAddressMutation,
   useSetDefaultBillingAddressMutation,
-} from "./api/customer/customer-api";
+} from "./api/customer/customer-api"
 
 // Category API Types
 export type {
@@ -157,7 +157,7 @@ export type {
   ToggleCategoryStatusRequest,
   ToggleCategoryStatusResponse,
   DeleteCategoryResponse,
-} from "./api/categories/category-api.types";
+} from "./api/categories/category-api.types"
 
 // Category API and Hooks
 export {
@@ -174,7 +174,63 @@ export {
   useUpdateCategoryMutation,
   useToggleCategoryStatusMutation,
   useDeleteCategoryMutation,
-} from "./api/categories/category-api";
+} from "./api/categories/category-api"
 
+// Catalog API Types
+export type {
+  Brand,
+  ProductVariant,
+  Product,
+  SellerListing,
+  ListBrandsParams,
+  ListBrandsResponse,
+  CreateBrandRequest,
+  ListProductsParams,
+  ListProductsResponse,
+  CreateProductRequest,
+  ReviewProductRequest,
+  CreateVariantRequest,
+  ListListingsParams,
+  ListListingsResponse,
+  CreateListingRequest,
+  UpdateListingRequest,
+} from "./api/catalog/catalog-api.types"
 
+// Catalog API and Hooks
+export {
+  catalogApi,
+  useGetBrandsQuery,
+  useCreateBrandMutation,
+  useGetProductsQuery,
+  useGetProductByIdQuery,
+  useGetProductBySlugQuery,
+  useCreateProductMutation,
+  useReviewProductMutation,
+  useCreateProductVariantMutation,
+  useGetListingsQuery,
+  useCreateListingMutation,
+  useUpdateListingMutation,
+} from "./api/catalog/catalog-api"
 
+// Inventory API Types
+export type {
+  InventoryLocation,
+  InventoryItem,
+  InventoryLedgerEntry,
+  CreateLocationRequest,
+  AdjustStockRequest,
+  ListInventoryParams,
+  ListInventoryResponse,
+  ListLedgerParams,
+  ListLedgerResponse,
+} from "./api/inventory/inventory-api.types"
+
+// Inventory API and Hooks
+export {
+  inventoryApi,
+  useGetLocationsQuery,
+  useCreateLocationMutation,
+  useAdjustStockMutation,
+  useGetInventoryQuery,
+  useGetLedgerQuery,
+} from "./api/inventory/inventory-api"

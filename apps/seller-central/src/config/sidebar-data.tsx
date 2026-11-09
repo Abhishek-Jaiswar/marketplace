@@ -1,4 +1,3 @@
-
 import { SidebarData } from "@workspace/ui/components/app-sidebar"
 import {
   LayoutDashboardIcon,
@@ -14,6 +13,7 @@ import {
   ZapIcon,
   ClockIcon,
   CheckCircle2Icon,
+  WarehouseIcon,
 } from "lucide-react"
 
 export const sellerSidebarData: SidebarData = {
@@ -79,9 +79,14 @@ export const sellerSidebarData: SidebarData = {
           icon: <InboxIcon />,
         },
         {
-          title: "Products & Stock",
+          title: "Product Catalog & Offers",
           url: "/dashboard/products",
           icon: <PackageIcon />,
+        },
+        {
+          title: "Multi-Warehouse Inventory",
+          url: "/dashboard/inventory",
+          icon: <WarehouseIcon />,
         },
         {
           title: "Sales Reporting",

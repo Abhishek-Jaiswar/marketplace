@@ -1,3 +1,4 @@
+import { MAX_UNPAGED_ROWS } from "../../utils/query-limits.js"
 import { and, db, or, type Condition } from "@workspace/db"
 import type {
   CreateCategoryInput,
@@ -11,17 +12,19 @@ type CategoryWhereInput = NonNullable<
 
 class CategoryRepository {
   async findById(id: string) {
-    return await db.orm.public.Category
-      .include("parent", (parent) => parent.select("id", "name", "slug"))
+    return await db.orm.public.Category.include("parent", (parent) =>
+      parent.select("id", "name", "slug")
+    )
       .include("children", (children) => children.count())
       .first({ id })
   }
 
   async findBySlug(slug: string) {
-    return await db.orm.public.Category
-      .include("parent", (parent) => parent.select("id", "name", "slug"))
+    return await db.orm.public.Category.include("parent", (parent) =>
+      parent.select("id", "name", "slug")
+    )
       .include("children", (children) =>
-        children.select("id", "name", "slug", "excerpt", "image", "isActive"),
+        children.select("id", "name", "slug", "excerpt", "image", "isActive")
       )
       .where({ slug })
       .first()
@@ -50,7 +53,7 @@ class CategoryRepository {
         conditions.push(
           parentId === null
             ? category.parentId.isNull()
-            : category.parentId.eq(parentId),
+            : category.parentId.eq(parentId)
         )
       }
 
@@ -60,16 +63,15 @@ class CategoryRepository {
           or(
             category.name.ilike(term),
             category.slug.ilike(term),
-            category.excerpt.ilike(term),
-          ),
+            category.excerpt.ilike(term)
+          )
         )
       }
 
       return conditions.length > 0 ? and(...conditions) : and()
     }
 
-    const query = db.orm.public.Category
-      .where(where)
+    const query = db.orm.public.Category.where(where)
       .orderBy((category) => category.name.asc())
       .offset(skip)
       .limit(limit)
@@ -78,9 +80,9 @@ class CategoryRepository {
 
     const [items, totals] = await Promise.all([
       query.all(),
-      db.orm.public.Category
-        .where(where)
-        .aggregate((aggregate) => ({ total: aggregate.count() })),
+      db.orm.public.Category.where(where).aggregate((aggregate) => ({
+        total: aggregate.count(),
+      })),
     ])
 
     return {
@@ -94,21 +96,24 @@ class CategoryRepository {
 
   async findTree(includeInactive = false) {
     if (includeInactive) {
-      return await db.orm.public.Category
-        .where((category) => category.parentId.isNull())
+      return await db.orm.public.Category.where((category) =>
+        category.parentId.isNull()
+      )
         .orderBy((category) => category.name.asc())
         .include("children", (children) =>
           children
             .orderBy((category) => category.name.asc())
             .include("children", (grandchildren) =>
-              grandchildren.orderBy((category) => category.name.asc()),
-            ),
+              grandchildren.orderBy((category) => category.name.asc())
+            )
         )
+        .limit(MAX_UNPAGED_ROWS)
         .all()
     }
 
-    return await db.orm.public.Category
-      .where((category) => category.parentId.isNull())
+    return await db.orm.public.Category.where((category) =>
+      category.parentId.isNull()
+    )
       .where((category) => category.isActive.eq(true))
       .orderBy((category) => category.name.asc())
       .include("children", (children) =>
@@ -118,32 +123,34 @@ class CategoryRepository {
           .include("children", (grandchildren) =>
             grandchildren
               .where((category) => category.isActive.eq(true))
-              .orderBy((category) => category.name.asc()),
-          ),
+              .orderBy((category) => category.name.asc())
+          )
       )
+      .limit(MAX_UNPAGED_ROWS)
       .all()
   }
 
   async create(data: CreateCategoryInput) {
-    return await db.orm.public.Category
-      .include("parent", (parent) => parent.select("id", "name", "slug"))
-      .create({
-        name: data.name,
-        slug: data.slug!,
-        excerpt: data.excerpt ?? null,
-        image: data.image,
-        storageKey: data.storageKey,
-        altText: data.altText,
-        isActive: data.isActive ?? true,
-        parentId: data.parentId ?? null,
-      })
+    return await db.orm.public.Category.include("parent", (parent) =>
+      parent.select("id", "name", "slug")
+    ).create({
+      name: data.name,
+      slug: data.slug!,
+      excerpt: data.excerpt ?? null,
+      image: data.image,
+      storageKey: data.storageKey,
+      altText: data.altText,
+      isActive: data.isActive ?? true,
+      parentId: data.parentId ?? null,
+    })
   }
 
   async update(id: string, data: UpdateCategoryInput) {
     const parentId = data.parentId
 
-    return await db.orm.public.Category
-      .include("parent", (parent) => parent.select("id", "name", "slug"))
+    return await db.orm.public.Category.include("parent", (parent) =>
+      parent.select("id", "name", "slug")
+    )
       .where({ id })
       .update({
         ...(data.name !== undefined && { name: data.name }),
@@ -167,9 +174,9 @@ class CategoryRepository {
   }
 
   async countChildren(parentId: string): Promise<number> {
-    const result = await db.orm.public.Category
-      .where({ parentId })
-      .aggregate((aggregate) => ({ count: aggregate.count() }))
+    const result = await db.orm.public.Category.where({ parentId }).aggregate(
+      (aggregate) => ({ count: aggregate.count() })
+    )
 
     return result.count
   }
@@ -180,9 +187,7 @@ class CategoryRepository {
 
     while (currentId) {
       const categoryRecord: { parentId: string | null } | null =
-        await db.orm.public.Category
-          .select("parentId")
-          .first({ id: currentId })
+        await db.orm.public.Category.select("parentId").first({ id: currentId })
 
       if (!categoryRecord || !categoryRecord.parentId) break
       ancestors.push(categoryRecord.parentId)

@@ -15,7 +15,9 @@ class CustomerCache {
   }
 
   async invalidateCustomer(userId: string) {
-    const deletedKeys = await cacheService.delete(buildCustomerDetailsKey(userId))
+    const deletedKeys = await cacheService.delete(
+      buildCustomerDetailsKey(userId)
+    )
 
     logger.info("Customer cache invalidated", {
       userId,

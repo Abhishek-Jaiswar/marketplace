@@ -13,7 +13,9 @@ export function requireRole(allowedRoles: UserRole[]) {
       const hasRole = userRoles.some((role) => allowedRoles.includes(role))
 
       if (!hasRole) {
-        throw new ForbiddenError("You do not have permission to perform this action")
+        throw new ForbiddenError(
+          "You do not have permission to perform this action"
+        )
       }
 
       next()

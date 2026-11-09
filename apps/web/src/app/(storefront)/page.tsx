@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
+import React, { useState } from "react"
 import {
   TrustBadges,
   HeroSection,
@@ -11,25 +11,25 @@ import {
   PromoBanners,
   SellerCtaBanner,
   TestimonialsSection,
-} from "../../components/home";
+} from "../../components/home"
 
 export default function StorefrontPage() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [wishlist, setWishlist] = useState<string[]>([]);
-  const [, setCart] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState("All")
+  const [wishlist, setWishlist] = useState<string[]>([])
+  const [, setCart] = useState<string[]>([])
 
   const handleToggleWishlist = (id: string) => {
     setWishlist((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
+    )
+  }
 
   const handleAddToCart = (id: string) => {
-    setCart((prev) => [...prev, id]);
-  };
+    setCart((prev) => [...prev, id])
+  }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground font-sans antialiased selection:bg-blue-500 selection:text-white">
+    <div className="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased selection:bg-blue-500 selection:text-white">
       {/* 1. HERO SECTION */}
       <HeroSection />
 
@@ -66,5 +66,5 @@ export default function StorefrontPage() {
       {/* 9. TESTIMONIALS & REVIEWS */}
       <TestimonialsSection />
     </div>
-  );
+  )
 }
