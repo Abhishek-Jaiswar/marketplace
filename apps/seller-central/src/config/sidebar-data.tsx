@@ -1,3 +1,4 @@
+import { LogoMark } from "@workspace/ui/components/logo"
 import { SidebarData } from "@workspace/ui/components/app-sidebar"
 import {
   LayoutDashboardIcon,
@@ -19,7 +20,7 @@ import {
 export const sellerSidebarData: SidebarData = {
   appName: "Seller Central",
   appSubtitle: "seller.cbsmarketplace.com",
-  appLogo: "/shopping.png",
+  appLogo: <LogoMark className="size-5" />,
   groups: [
     {
       groupTitle: "Overview",

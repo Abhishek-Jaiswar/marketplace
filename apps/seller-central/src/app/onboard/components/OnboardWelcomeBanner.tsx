@@ -1,3 +1,4 @@
+import { brand } from "@workspace/ui/lib/brand"
 import React from "react"
 import {
   ShieldCheck,
@@ -7,7 +8,7 @@ import {
   ArrowRight,
   X,
 } from "lucide-react"
-import Logo from "@/components/logo"
+import { Logo } from "@workspace/ui/components/logo"
 
 interface OnboardWelcomeBannerProps {
   onStart: () => void
@@ -22,7 +23,7 @@ export const OnboardWelcomeBanner: React.FC<OnboardWelcomeBannerProps> = ({
     <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-zinc-900 select-none">
       {/* Minimal Header */}
       <header className="flex w-full items-center justify-between border-b border-zinc-200/80 bg-white px-6 py-4">
-        <Logo iconSize={26} subtitle="Seller Onboarding" />
+        <Logo size="md" descriptor="Seller Onboarding" />
         <button
           onClick={onCancel}
           className="flex cursor-pointer items-center gap-1 text-xs font-bold text-zinc-500 hover:text-zinc-800"
@@ -38,7 +39,7 @@ export const OnboardWelcomeBanner: React.FC<OnboardWelcomeBannerProps> = ({
             <ShieldCheck className="h-4 w-4" /> Amazon-Style Seller Setup
           </div>
           <h1 className="text-3xl leading-tight font-extrabold tracking-tight text-zinc-900 sm:text-4xl">
-            Welcome to CBS Marketplace Seller Hub
+            Welcome to {brand.marketplaceName} Seller Hub
           </h1>
           <p className="mx-auto max-w-xl text-sm leading-relaxed font-medium text-zinc-500">
             Set up your merchant account in a few simple, distraction-free

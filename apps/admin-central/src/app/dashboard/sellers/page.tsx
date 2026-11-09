@@ -107,7 +107,7 @@ export default function SellerApprovalPage() {
             <CardTitle className="text-xs font-semibold text-muted-foreground uppercase">
               Pending Review
             </CardTitle>
-            <div className="rounded-lg bg-amber-500/10 p-2 text-amber-600 dark:text-amber-400">
+            <div className="rounded-lg bg-amber-500/10 p-2 text-amber-600">
               <ClockIcon className="size-4" />
             </div>
           </CardHeader>
@@ -115,7 +115,7 @@ export default function SellerApprovalPage() {
             <div className="text-2xl font-bold text-foreground">
               {pendingCount} Applications
             </div>
-            <p className="mt-1 text-xs font-medium text-amber-600 dark:text-amber-400">
+            <p className="mt-1 text-xs font-medium text-amber-600">
               Waiting for admin verification
             </p>
           </CardContent>
@@ -134,7 +134,7 @@ export default function SellerApprovalPage() {
             <CardTitle className="text-xs font-semibold text-muted-foreground uppercase">
               Approved Merchants
             </CardTitle>
-            <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-400">
+            <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-600">
               <CheckCircle2Icon className="size-4" />
             </div>
           </CardHeader>
@@ -142,7 +142,7 @@ export default function SellerApprovalPage() {
             <div className="text-2xl font-bold text-foreground">
               {approvedCount} Active
             </div>
-            <p className="mt-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+            <p className="mt-1 text-xs font-medium text-emerald-600">
               Active selling permissions
             </p>
           </CardContent>
@@ -161,7 +161,7 @@ export default function SellerApprovalPage() {
             <CardTitle className="text-xs font-semibold text-muted-foreground uppercase">
               Needs Attention
             </CardTitle>
-            <div className="rounded-lg bg-rose-500/10 p-2 text-rose-600 dark:text-rose-400">
+            <div className="rounded-lg bg-rose-500/10 p-2 text-rose-600">
               <XCircleIcon className="size-4" />
             </div>
           </CardHeader>
@@ -169,7 +169,7 @@ export default function SellerApprovalPage() {
             <div className="text-2xl font-bold text-foreground">
               {rejectedCount} Rejected
             </div>
-            <p className="mt-1 text-xs font-medium text-rose-600 dark:text-rose-400">
+            <p className="mt-1 text-xs font-medium text-rose-600">
               Revisions requested
             </p>
           </CardContent>

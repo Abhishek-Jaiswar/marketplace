@@ -1,4 +1,5 @@
 "use client"
+import { brand } from "@workspace/ui/lib/brand"
 
 import React, { useState } from "react"
 import Link from "next/link"
@@ -84,7 +85,7 @@ export default function RegisterPage() {
       <div className="space-y-1.5 text-left">
         <h2 className="text-2xl font-black text-foreground">Create Account</h2>
         <p className="text-xs text-muted-foreground">
-          Join the CBS Marketplace community
+          Join the {brand.marketplaceName} community
         </p>
       </div>
 
@@ -112,7 +113,7 @@ export default function RegisterPage() {
                 placeholder="John"
                 required
                 disabled={isLoading}
-                className="dark:focus:border-zinc-650 w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
+                className="w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
               />
             </div>
           </div>
@@ -129,7 +130,7 @@ export default function RegisterPage() {
                 onChange={(e) => setLastName(e.target.value)}
                 placeholder="Doe"
                 disabled={isLoading}
-                className="dark:focus:border-zinc-650 w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
+                className="w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
               />
             </div>
           </div>
@@ -149,7 +150,7 @@ export default function RegisterPage() {
               placeholder="name@example.com"
               required
               disabled={isLoading}
-              className="dark:focus:border-zinc-650 w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
+              className="w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
             />
           </div>
         </div>
@@ -168,7 +169,7 @@ export default function RegisterPage() {
               placeholder="••••••••"
               required
               disabled={isLoading}
-              className="dark:focus:border-zinc-650 w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
+              className="w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
             />
           </div>
         </div>
@@ -187,7 +188,7 @@ export default function RegisterPage() {
               placeholder="••••••••"
               required
               disabled={isLoading}
-              className="dark:focus:border-zinc-650 w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
+              className="w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
             />
           </div>
         </div>
@@ -196,7 +197,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={isLoading || isNavigating}
-          className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-bold text-zinc-50 transition-all hover:bg-zinc-800 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-zinc-200"
+          className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-bold text-zinc-50 transition-all hover:bg-zinc-800 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
         >
           {isLoading || isNavigating ? (
             <>
@@ -219,10 +220,7 @@ export default function RegisterPage() {
       {/* Bottom Switch Link */}
       <div className="pt-2 text-center text-xs text-muted-foreground">
         Already have an account?{" "}
-        <Link
-          href="/login"
-          className="font-bold text-zinc-800 hover:underline dark:text-zinc-200"
-        >
+        <Link href="/login" className="font-bold text-zinc-800 hover:underline">
           Sign In
         </Link>
       </div>

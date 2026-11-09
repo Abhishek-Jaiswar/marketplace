@@ -1,4 +1,5 @@
 "use client"
+import { brand } from "@workspace/ui/lib/brand"
 
 import React, { useState, Suspense } from "react"
 import Link from "next/link"
@@ -78,13 +79,13 @@ function LoginForm() {
       <div className="space-y-1.5 text-left">
         <h2 className="text-2xl font-black text-foreground">Sign In</h2>
         <p className="text-xs text-muted-foreground">
-          Access your CBS Marketplace account
+          Access your {brand.marketplaceName} account
         </p>
       </div>
 
       {/* Success Banner from verified or reset redirect */}
       {isVerified && !errorMessage && (
-        <div className="flex items-start gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3.5 text-xs text-emerald-600 transition-all duration-200 dark:text-emerald-400">
+        <div className="flex items-start gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3.5 text-xs text-emerald-600 transition-all duration-200">
           <CheckCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <span className="leading-relaxed font-medium">
             Your email has been verified. Please sign in below.
@@ -93,7 +94,7 @@ function LoginForm() {
       )}
 
       {isReset && !errorMessage && (
-        <div className="flex items-start gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3.5 text-xs text-emerald-600 transition-all duration-200 dark:text-emerald-400">
+        <div className="flex items-start gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3.5 text-xs text-emerald-600 transition-all duration-200">
           <CheckCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <span className="leading-relaxed font-medium">
             Your password has been reset successfully. Please sign in below.
@@ -124,7 +125,7 @@ function LoginForm() {
               placeholder="name@example.com"
               required
               disabled={isLoading}
-              className="dark:focus:border-zinc-650 w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
+              className="w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
             />
           </div>
         </div>
@@ -151,7 +152,7 @@ function LoginForm() {
               placeholder="••••••••"
               required
               disabled={isLoading}
-              className="dark:focus:border-zinc-650 w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
+              className="w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
             />
           </div>
         </div>
@@ -160,7 +161,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-bold text-zinc-50 transition-all hover:bg-zinc-800 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-zinc-200"
+          className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-bold text-zinc-50 transition-all hover:bg-zinc-800 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
         >
           {isLoading ? (
             <>
@@ -181,7 +182,7 @@ function LoginForm() {
         Don&apos;t have an account?{" "}
         <Link
           href="/register"
-          className="font-bold text-zinc-800 hover:underline dark:text-zinc-200"
+          className="font-bold text-zinc-800 hover:underline"
         >
           Sign Up
         </Link>

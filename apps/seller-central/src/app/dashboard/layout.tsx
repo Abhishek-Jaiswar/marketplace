@@ -92,12 +92,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         currentPath={pathname}
       />
       <SidebarInset>
-        <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between gap-2 border-b border-slate-200/80 bg-background/80 px-4 backdrop-blur-md transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 dark:border-slate-800/80">
+        <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between gap-2 border-b border-slate-200/80 bg-background/80 px-4 backdrop-blur-md transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground" />
             <Separator
               orientation="vertical"
-              className="mr-2 bg-slate-200 data-[orientation=vertical]:h-4 dark:bg-slate-800"
+              className="mr-2 bg-slate-200 data-[orientation=vertical]:h-4"
             />
             <Breadcrumb>
               <BreadcrumbList>

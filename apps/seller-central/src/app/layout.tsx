@@ -1,28 +1,21 @@
 import type { Metadata } from "next"
-import { Inter, Lora, IBM_Plex_Mono } from "next/font/google"
+import { Anek_Latin } from "next/font/google"
+import { brand } from "@workspace/ui/lib/brand"
 import StoreProvider from "./StoreProvider"
 import "./globals.css"
 import HeaderFooter from "@/components/layout/header-footer"
 
-const fontSans = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
-
-const fontSerif = Lora({
-  subsets: ["latin"],
-  variable: "--font-serif",
-})
-
-const fontMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
+// The rupee sign is in latin-ext; without it prices fall back to another font.
+const anek = Anek_Latin({
+  subsets: ["latin", "latin-ext"],
+  axes: ["wdth"],
+  variable: "--font-anek",
+  display: "swap",
 })
 
 export const metadata: Metadata = {
-  title: "CBS Seller Central - Sell on CBS Marketplace",
-  description: "Register and onboard as a seller on CBS Marketplace.",
+  title: `${brand.sellerProductName} | ${brand.marketplaceName}`,
+  description: `Register and sell on ${brand.marketplaceName}.`,
 }
 
 export default function RootLayout({
@@ -33,7 +26,8 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
+      className={`${anek.variable} antialiased`}
+      data-surface="seller"
     >
       <body className="flex min-h-full flex-col">
         <StoreProvider>

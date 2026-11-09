@@ -1,3 +1,4 @@
+import { brand } from "@workspace/ui/lib/brand"
 import React from "react"
 import {
   Users,
@@ -27,7 +28,7 @@ export default function Hero({ handleStartSelling }: HeroProps) {
         {/* Heading */}
         <h1 className="lg:text-6.5xl text-4xl leading-[1.08] font-black tracking-tight text-zinc-900 md:text-5xl">
           Grow Your Business with{" "}
-          <span className="font-black text-indigo-600">CBS</span>
+          <span className="font-black text-indigo-600">{brand.name}</span>
         </h1>
 
         <p className="max-w-lg text-sm leading-relaxed font-semibold text-zinc-500 md:text-base">
@@ -121,7 +122,7 @@ export default function Hero({ handleStartSelling }: HeroProps) {
         <div className="border-zinc-150/70 w-full max-w-[620px] scale-95 overflow-hidden rounded-[28px] border bg-white shadow-2xl md:scale-100">
           <img
             src="/dashboard-mockup.png"
-            alt="CBS Seller Dashboard Mockup"
+            alt={`${brand.name} Seller Dashboard Mockup`}
             className="block h-auto w-full object-contain"
           />
         </div>

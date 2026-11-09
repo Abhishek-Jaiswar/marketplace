@@ -21,9 +21,10 @@ const buildProductListKey = (
   search?: string,
   categoryId?: string,
   brandId?: string,
-  status?: string
+  status?: string,
+  sellerId?: string
 ) =>
-  `catalog:products:v${version}:p:${page}:l:${limit}:s:${search ?? ""}:c:${categoryId ?? ""}:b:${brandId ?? ""}:st:${status ?? ""}`
+  `catalog:products:v${version}:p:${page}:l:${limit}:s:${search ?? ""}:c:${categoryId ?? ""}:b:${brandId ?? ""}:st:${status ?? ""}:seller:${sellerId ?? "all"}`
 
 const buildProductSlugKey = (version: number, slug: string) =>
   `catalog:product:slug:v${version}:${slug}`
@@ -58,6 +59,7 @@ class CatalogCache {
     categoryId: string | undefined,
     brandId: string | undefined,
     status: string | undefined,
+    sellerId: string | undefined,
     producer: () => Promise<T>
   ): Promise<T> {
     const version = await this.getVersion()
@@ -69,7 +71,8 @@ class CatalogCache {
         search,
         categoryId,
         brandId,
-        status
+        status,
+        sellerId
       ),
       CATALOG_CACHE_TTL_SECONDS,
       producer

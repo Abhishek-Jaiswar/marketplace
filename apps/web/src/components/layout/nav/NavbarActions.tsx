@@ -16,7 +16,6 @@ import {
   useGetMeQuery,
   useLogoutMutation,
 } from "@workspace/store"
-import { ThemeToggle } from "./ThemeToggle"
 import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar"
 import {
   DropdownMenu,
@@ -55,7 +54,6 @@ export function NavbarActions() {
   return (
     <div className="flex items-center gap-4">
       {/* Theme Toggle */}
-      <ThemeToggle />
 
       {/* Wishlist Link */}
       <Link
@@ -68,11 +66,11 @@ export function NavbarActions() {
 
       {/* Account Info Dropdown */}
       {isLoading ? (
-        <div className="h-8 w-8 animate-pulse rounded-lg border border-border bg-muted/60 dark:bg-zinc-800" />
+        <div className="h-8 w-8 animate-pulse rounded-lg border border-border bg-muted/60" />
       ) : isAuthenticated && user ? (
         <DropdownMenu>
           <DropdownMenuTrigger className="group flex cursor-pointer items-center gap-2 rounded-xl border border-transparent p-1.5 pr-3 transition-all outline-none hover:border-border hover:bg-muted">
-            <Avatar className="dark:group-hover:border-zinc-650 h-8 w-8 rounded-lg border border-border transition-colors group-hover:border-zinc-400">
+            <Avatar className="h-8 w-8 rounded-lg border border-border transition-colors group-hover:border-zinc-400">
               <AvatarFallback className="rounded-lg bg-muted font-mono text-xs font-bold text-foreground">
                 {getInitials()}
               </AvatarFallback>
@@ -174,7 +172,7 @@ export function NavbarActions() {
         className="group relative flex items-center gap-2 rounded-xl border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-muted hover:text-foreground"
       >
         <ShoppingCart className="h-5.5 w-5.5 text-muted-foreground transition-colors group-hover:text-foreground" />
-        <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-background bg-zinc-950 text-[10px] font-extrabold text-zinc-50 transition-transform group-hover:scale-110 dark:bg-zinc-50 dark:text-zinc-950">
+        <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-background bg-zinc-950 text-[10px] font-extrabold text-zinc-50 transition-transform group-hover:scale-110">
           0
         </span>
       </Link>

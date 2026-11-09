@@ -1,23 +1,20 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Anek_Latin } from "next/font/google"
+import { brand } from "@workspace/ui/lib/brand"
 import StoreProvider from "./StoreProvider"
-import { ThemeProvider } from "../components/providers/ThemeProvider"
-import { Navbar } from "../components/layout/nav/Navbar"
 import "./globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-})
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// The rupee sign is in latin-ext; without it prices fall back to another font.
+const anek = Anek_Latin({
+  subsets: ["latin", "latin-ext"],
+  axes: ["wdth"],
+  variable: "--font-anek",
+  display: "swap",
 })
 
 export const metadata: Metadata = {
-  title: "CBS Storefront",
-  description: "The universal marketplace for customers",
+  title: brand.marketplaceName,
+  description: `Shop from verified sellers across India on ${brand.marketplaceName}.`,
 }
 
 export default function RootLayout({
@@ -28,20 +25,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      suppressHydrationWarning
+      className={`${anek.variable} h-full antialiased`}
+      data-surface="storefront"
     >
-      <body className="flex min-h-full flex-col bg-background font-sans text-foreground antialiased transition-colors duration-200">
-        <StoreProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem={false}
-          >
-            <Navbar />
-            {children}
-          </ThemeProvider>
-        </StoreProvider>
+      <body className="flex min-h-full flex-col">
+        <StoreProvider>{children}</StoreProvider>
       </body>
     </html>
   )

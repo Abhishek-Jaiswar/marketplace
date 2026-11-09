@@ -300,7 +300,7 @@ export function SellerInspectionModal({
     const st = getStepStatus(step)
     if (st === "APPROVED") {
       return (
-        <span className="inline-flex items-center gap-1 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+        <span className="inline-flex items-center gap-1 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-600">
           <CheckCircle2Icon className="size-3.5" />
           Verified
         </span>
@@ -315,7 +315,7 @@ export function SellerInspectionModal({
       )
     }
     return (
-      <span className="inline-flex items-center gap-1 rounded-md border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-xs font-bold text-amber-600 dark:text-amber-400">
+      <span className="inline-flex items-center gap-1 rounded-md border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-xs font-bold text-amber-600">
         <ClockIcon className="size-3.5" />
         Pending
       </span>
@@ -396,7 +396,7 @@ export function SellerInspectionModal({
             </div>
 
             <div className="flex items-center gap-4 text-xs">
-              <span className="flex items-center gap-1.5 font-bold text-emerald-600 dark:text-emerald-400">
+              <span className="flex items-center gap-1.5 font-bold text-emerald-600">
                 <CheckCircle2Icon className="size-3.5" />
                 {approvedStepsCount} Verified
               </span>
@@ -407,7 +407,7 @@ export function SellerInspectionModal({
                 </span>
               )}
               {pendingStepsCount > 0 && (
-                <span className="flex items-center gap-1.5 font-bold text-amber-600 dark:text-amber-400">
+                <span className="flex items-center gap-1.5 font-bold text-amber-600">
                   <ClockIcon className="size-3.5" />
                   {pendingStepsCount} Pending
                 </span>
@@ -445,7 +445,7 @@ export function SellerInspectionModal({
           </div>
         )}
         {successMsg && (
-          <div className="mx-6 mt-3 flex shrink-0 items-center justify-between gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+          <div className="mx-6 mt-3 flex shrink-0 items-center justify-between gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-xs font-semibold text-emerald-600">
             <div className="flex items-center gap-2">
               <CheckCircle2Icon className="size-4 shrink-0" />
               <span>{successMsg}</span>

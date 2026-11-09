@@ -1,3 +1,4 @@
+import { brand } from "@workspace/ui/lib/brand"
 import React from "react"
 import { Grid, Tag, Lock, Check, Loader2, Store } from "lucide-react"
 
@@ -46,7 +47,7 @@ export const OnboardGstinVerification: React.FC<
       {setCategoryMode && (
         <div className="space-y-3">
           <span className="block text-xs font-bold text-zinc-800">
-            What do you plan to sell on CBS?
+            What do you plan to sell on {brand.name}?
           </span>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <button
@@ -182,7 +183,9 @@ export const OnboardGstinVerification: React.FC<
 
         <div className="mt-1 flex items-center gap-1.5 pb-1 text-[10px] font-semibold text-zinc-400">
           <Lock className="h-3.5 w-3.5 text-zinc-400" />
-          <span>GSTIN is mandatory to sell products on CBS Marketplace.</span>
+          <span>
+            GSTIN is mandatory to sell products on {brand.marketplaceName}.
+          </span>
         </div>
       </div>
     </div>

@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
 
       {/* Success Banner */}
       {localSuccess && (
-        <div className="flex items-start gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3.5 text-xs text-emerald-600 transition-all duration-200 dark:text-emerald-400">
+        <div className="flex items-start gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3.5 text-xs text-emerald-600 transition-all duration-200">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 rotate-180" />
           <span className="leading-relaxed font-medium">{localSuccess}</span>
         </div>
@@ -91,7 +91,7 @@ export default function ForgotPasswordPage() {
               placeholder="name@example.com"
               required
               disabled={isLoading || !!localSuccess}
-              className="dark:focus:border-zinc-650 w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
+              className="w-full rounded-xl border border-border bg-muted/40 py-2.5 pr-4 pl-10 text-sm text-foreground placeholder-muted-foreground transition-all focus:border-zinc-400 focus:outline-none"
             />
           </div>
         </div>
@@ -100,7 +100,7 @@ export default function ForgotPasswordPage() {
         <button
           type="submit"
           disabled={isLoading || !!localSuccess}
-          className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-bold text-zinc-50 transition-all hover:bg-zinc-800 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-zinc-200"
+          className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-bold text-zinc-50 transition-all hover:bg-zinc-800 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
         >
           {isLoading ? (
             <>

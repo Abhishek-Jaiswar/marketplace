@@ -206,8 +206,8 @@ export default function AdminCatalogPage() {
         <div
           className={`flex items-center justify-between rounded-lg border p-4 text-sm ${
             statusMessage.type === "success"
-              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-              : "border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-400"
+              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600"
+              : "border-rose-500/30 bg-rose-500/10 text-rose-600"
           }`}
         >
           <div className="flex items-center gap-2">
@@ -581,11 +581,11 @@ export default function AdminCatalogPage() {
 
               {showRejectInput && (
                 <div className="flex flex-col gap-2 border-t border-border pt-2">
-                  <label className="text-xs font-semibold text-rose-600 dark:text-rose-400">
+                  <label className="text-xs font-semibold text-rose-600">
                     Reason for Rejection (Visible to Seller)
                   </label>
                   <textarea
-                    className="h-20 w-full rounded-md border border-rose-300 bg-background p-2 text-sm dark:border-rose-900"
+                    className="h-20 w-full rounded-md border border-rose-300 bg-background p-2 text-sm"
                     placeholder="e.g. Inaccurate brand name, missing mandatory GTIN barcode, or unclear product specifications..."
                     value={rejectFeedback}
                     onChange={(e) => setRejectFeedback(e.target.value)}

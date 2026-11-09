@@ -34,6 +34,14 @@ export function verifyAccessToken(token: string): AccessTokenPayload {
   return jwt.verify(token, Env.JWT_SECRET) as AccessTokenPayload
 }
 
+/** Keyed and bound to the user, so a leaked table cannot be brute-forced. */
+export function hashOtp(userId: string, type: string, otp: string): string {
+  return crypto
+    .createHmac("sha256", Env.JWT_SECRET)
+    .update(`${userId}:${type}:${otp}`)
+    .digest("hex")
+}
+
 export function generateRefreshToken(): string {
   return crypto.randomBytes(40).toString("hex")
 }

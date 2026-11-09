@@ -14,22 +14,16 @@ import {
   ChevronRight,
   Check,
 } from "lucide-react"
+import { ProductImage } from "../../../../components/product-image"
 import {
-  mockProducts,
-  mockVendors,
-  Product,
-  Vendor,
-} from "../../../../utils/mockData"
+  formatRupees,
+  useStorefrontProduct,
+} from "../../../../lib/storefront-products"
 
 export default function ProductDetailPage() {
   const params = useParams()
-  const productId = (params?.id as string) || "prod-1"
-
-  const product: Product =
-    mockProducts.find((p) => p.id === productId) || mockProducts[0]!
-
-  const vendor: Vendor =
-    mockVendors.find((v) => v.name === product.vendorName) || mockVendors[0]!
+  const slug = (params?.id as string) ?? ""
+  const { product, vendor, isLoading } = useStorefrontProduct(slug)
 
   const [quantity, setQuantity] = useState(1)
   const [isWishlisted, setIsWishlisted] = useState(false)
@@ -38,6 +32,14 @@ export default function ProductDetailPage() {
   const handleAddToCart = () => {
     setAddedToCart(true)
     setTimeout(() => setAddedToCart(false), 2500)
+  }
+
+  if (!product || !vendor) {
+    return (
+      <p className="mx-auto w-full max-w-7xl px-4 py-16 text-muted-foreground sm:px-6 lg:px-8">
+        {isLoading ? "Loading this product." : "This product is not available."}
+      </p>
+    )
   }
 
   return (
@@ -62,8 +64,8 @@ export default function ProductDetailPage() {
         <div className="grid grid-cols-1 gap-12 rounded-3xl border border-border bg-card p-6 shadow-xl sm:p-10 lg:grid-cols-2">
           {/* Left Column: Visual Showcase */}
           <div className="space-y-4">
-            <div className="relative flex h-[400px] w-full items-center justify-center overflow-hidden rounded-2xl border border-border bg-zinc-100 text-9xl shadow-inner dark:bg-zinc-900">
-              <span className="animate-pulse">{product.image}</span>
+            <div className="relative flex h-[400px] w-full items-center justify-center overflow-hidden rounded-2xl border border-border bg-zinc-100 text-9xl shadow-inner">
+              <ProductImage src={product.image} alt={product.name} />
               {product.tag && (
                 <span className="absolute top-4 left-4 rounded-full bg-rose-600 px-3 py-1 font-mono text-xs font-black text-white shadow-md">
                   {product.tag}
@@ -85,15 +87,15 @@ export default function ProductDetailPage() {
 
             {/* Micro badges */}
             <div className="grid grid-cols-3 gap-3 text-center text-xs">
-              <div className="rounded-xl border border-border bg-zinc-100 p-3 dark:bg-zinc-900/60">
+              <div className="rounded-xl border border-border bg-zinc-100 p-3">
                 <Truck className="mx-auto mb-1 h-4 w-4 text-blue-500" />
                 <span className="block font-semibold">Free Delivery</span>
               </div>
-              <div className="rounded-xl border border-border bg-zinc-100 p-3 dark:bg-zinc-900/60">
+              <div className="rounded-xl border border-border bg-zinc-100 p-3">
                 <ShieldCheck className="mx-auto mb-1 h-4 w-4 text-emerald-500" />
                 <span className="block font-semibold">1 Yr Warranty</span>
               </div>
-              <div className="rounded-xl border border-border bg-zinc-100 p-3 dark:bg-zinc-900/60">
+              <div className="rounded-xl border border-border bg-zinc-100 p-3">
                 <RotateCcw className="mx-auto mb-1 h-4 w-4 text-amber-500" />
                 <span className="block font-semibold">Easy Returns</span>
               </div>
@@ -105,12 +107,12 @@ export default function ProductDetailPage() {
             <div>
               {/* Category & Rating */}
               <div className="mb-2 flex items-center justify-between">
-                <span className="font-mono text-xs font-bold tracking-widest text-blue-600 uppercase dark:text-blue-400">
+                <span className="font-mono text-xs font-bold tracking-widest text-blue-600 uppercase">
                   {product.category}
                 </span>
                 <div className="flex items-center gap-1.5 text-xs font-extrabold text-amber-500">
                   <Star className="h-4 w-4 fill-amber-500" />
-                  <span>{product.rating}</span>
+                  <span>{product.ratingLabel}</span>
                   <span className="font-normal text-muted-foreground">
                     ({product.reviewCount} verified reviews)
                   </span>
@@ -122,11 +124,11 @@ export default function ProductDetailPage() {
               </h1>
 
               {/* Vendor Info Box */}
-              <div className="mt-3 inline-flex items-center gap-2 rounded-xl border border-border bg-zinc-100 p-2 px-3 text-xs dark:bg-zinc-900">
+              <div className="mt-3 inline-flex items-center gap-2 rounded-xl border border-border bg-zinc-100 p-2 px-3 text-xs">
                 <Store className="h-4 w-4 text-emerald-500" />
                 <span className="text-muted-foreground">Sold by:</span>
                 <Link
-                  href={`/stores/${vendor.slug}`}
+                  href={`/store/${vendor.slug}`}
                   className="font-bold text-foreground hover:underline"
                 >
                   {product.vendorName || vendor.name}
@@ -141,14 +143,14 @@ export default function ProductDetailPage() {
               {/* Price Tag */}
               <div className="mt-6 flex items-baseline gap-3">
                 <span className="text-3xl font-black text-foreground">
-                  ${product.price.toFixed(2)}
+                  {formatRupees(product.price)}
                 </span>
                 {product.originalPrice && (
                   <span className="font-mono text-base text-muted-foreground line-through">
-                    ${product.originalPrice.toFixed(2)}
+                    {formatRupees(product.originalPrice)}
                   </span>
                 )}
-                <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 font-mono text-xs font-bold text-emerald-600">
                   In Stock & Ready to Ship
                 </span>
               </div>
@@ -187,7 +189,7 @@ export default function ProductDetailPage() {
                 <div className="flex items-center overflow-hidden rounded-xl border border-border bg-background">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3.5 py-1.5 text-sm font-bold hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    className="px-3.5 py-1.5 text-sm font-bold hover:bg-zinc-100"
                   >
                     -
                   </button>
@@ -196,7 +198,7 @@ export default function ProductDetailPage() {
                   </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="px-3.5 py-1.5 text-sm font-bold hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    className="px-3.5 py-1.5 text-sm font-bold hover:bg-zinc-100"
                   >
                     +
                   </button>

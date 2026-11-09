@@ -1,3 +1,4 @@
+import { brand } from "@workspace/ui/lib/brand"
 import React from "react"
 import { Store, Globe, Check, Copy } from "lucide-react"
 
@@ -46,7 +47,7 @@ export const StoreBrandingSection: React.FC<StoreBrandingSectionProps> = ({
             Store Identity & Branding
           </h2>
           <p className="mt-1 text-xs font-semibold text-zinc-400">
-            How customers recognize your business on CBS Marketplace.
+            How customers recognize your business on {brand.marketplaceName}.
           </p>
         </div>
       </div>

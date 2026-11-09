@@ -1,4 +1,5 @@
 "use client"
+import { brand } from "@workspace/ui/lib/brand"
 
 import React, { useState } from "react"
 import Link from "next/link"
@@ -20,7 +21,7 @@ import {
   Phone,
 } from "lucide-react"
 
-import Logo from "@/components/logo"
+import { Logo } from "@workspace/ui/components/logo"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -93,14 +94,14 @@ export default function RegisterPage() {
 
         <div className="relative z-10 space-y-8">
           {/* Logo */}
-          <Logo light iconSize={36} />
+          <Logo size="lg" tone="inverse" descriptor="Seller Central" />
 
           {/* Hero Image Section */}
           <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3 shadow-2xl backdrop-blur-sm">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-slate-900">
               <img
                 src="/login-side-img.png"
-                alt="CBS Seller Central Dashboard"
+                alt={`${brand.name} Seller Central Dashboard`}
                 className="h-full w-full object-cover object-top transition-transform duration-500 hover:scale-105"
               />
             </div>
@@ -179,7 +180,7 @@ export default function RegisterPage() {
         {/* Top Header Navigation */}
         <div className="mx-auto mb-6 flex w-full max-w-xl items-center justify-between">
           <div className="lg:hidden">
-            <Logo iconSize={32} />
+            <Logo size="lg" descriptor="Seller Central" />
           </div>
 
           <div className="ml-auto text-sm font-medium text-zinc-500">
@@ -197,7 +198,7 @@ export default function RegisterPage() {
         <div className="mx-auto my-auto w-full max-w-xl space-y-6">
           <div className="space-y-2">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-600">
-              <ShieldCheck className="h-4 w-4" /> Start Selling on CBS
+              <ShieldCheck className="h-4 w-4" /> Start Selling on {brand.name}
             </div>
             <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
               Create your seller account

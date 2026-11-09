@@ -20,8 +20,22 @@ export interface ProductVariant {
   status: "ACTIVE" | "INACTIVE" | "DISCONTINUED"
   weightGrams?: number | null
   dimensions?: Record<string, unknown> | null
+  listings?: Array<{
+    id: string
+    sellerId: string
+    mrpPrice: number
+    sellingPrice: number
+    status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "SUSPENDED"
+  }>
   createdAt: string
   updatedAt: string
+}
+
+export interface ProductMedia {
+  id: string
+  isPrimary: boolean
+  sortOrder: number
+  media?: { id: string; url: string }
 }
 
 export interface Product {
@@ -40,6 +54,7 @@ export interface Product {
   approvedAt?: string | null
   createdById?: string | null
   variants?: ProductVariant[]
+  media?: ProductMedia[]
   createdAt: string
   updatedAt: string
 }
@@ -105,6 +120,7 @@ export interface ListProductsParams {
   search?: string
   categoryId?: string
   brandId?: string
+  sellerId?: string
   status?: "DRAFT" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "ARCHIVED"
 }
 
@@ -180,4 +196,37 @@ export interface UpdateListingRequest {
   handlingTimeDays?: number
   warranty?: string | null
   status?: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "SUSPENDED"
+}
+
+export interface StorefrontOffer {
+  id: string
+  mrpPrice: number
+  sellingPrice: number
+  availableStock: number
+  isInStock: boolean
+  seller?: {
+    id: string
+    businessName: string
+    status: string
+    store?: { slug: string; displayName: string } | null
+  }
+}
+
+export interface StorefrontPdp {
+  product: Pick<
+    Product,
+    | "id"
+    | "title"
+    | "slug"
+    | "description"
+    | "highlights"
+    | "category"
+    | "brand"
+  > & { media?: ProductMedia[] }
+  variants: Array<
+    ProductVariant & {
+      buyBoxWinner: StorefrontOffer | null
+      allOffers: StorefrontOffer[]
+    }
+  >
 }

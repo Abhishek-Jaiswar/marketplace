@@ -18,7 +18,7 @@ import {
 } from "@workspace/store"
 import { Loader2, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react"
 
-import Logo from "@/components/logo"
+import { Logo } from "@workspace/ui/components/logo"
 import { OnboardGstinVerification } from "./components/OnboardGstinVerification"
 import { OnboardSignaturePad } from "./components/OnboardSignaturePad"
 import { HelpFloatingButton } from "./components/HelpFloatingButton"
@@ -368,7 +368,7 @@ function OnboardingContent() {
     <div className="flex min-h-screen flex-col bg-slate-50 pb-16 font-sans text-zinc-900 select-none">
       {/* Top Minimal Progress Bar Header */}
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-zinc-200/80 bg-white px-6 py-4">
-        <Logo iconSize={24} subtitle="Seller Onboarding" />
+        <Logo size="md" descriptor="Seller Onboarding" />
 
         <div className="flex items-center gap-3">
           <div className="flex flex-col space-x-10 text-right sm:block">

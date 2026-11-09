@@ -1,4 +1,5 @@
 "use client"
+import { brand } from "@workspace/ui/lib/brand"
 
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -22,7 +23,7 @@ import {
   LockKeyhole,
 } from "lucide-react"
 
-import Logo from "@/components/logo"
+import { Logo } from "@workspace/ui/components/logo"
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -112,7 +113,7 @@ export default function AdminLoginPage() {
 
         <div className="relative z-10 space-y-8">
           {/* Logo */}
-          <Logo light iconSize={32} subtitle="System Operations" />
+          <Logo size="lg" tone="inverse" descriptor="System Operations" />
 
           {/* Security & Monitoring Hero Card */}
           <div className="space-y-4 pt-4">
@@ -121,7 +122,7 @@ export default function AdminLoginPage() {
             </div>
 
             <h2 className="text-3xl leading-tight font-extrabold tracking-tight text-white">
-              CBS Central Management & Control
+              {brand.name} Central Management & Control
             </h2>
             <p className="text-xs leading-relaxed font-medium text-indigo-200/80">
               Secure infrastructure operations for managing sellers, platform
@@ -186,7 +187,7 @@ export default function AdminLoginPage() {
       <div className="flex min-h-screen flex-1 flex-col justify-between bg-white p-8 sm:p-12 lg:p-16">
         {/* Top Header Logo for mobile */}
         <div className="mx-auto mb-8 flex w-full max-w-md items-center justify-between lg:hidden">
-          <Logo iconSize={30} />
+          <Logo size="md" descriptor="Admin Central" />
         </div>
 
         {/* Main Form Container */}
@@ -296,7 +297,7 @@ export default function AdminLoginPage() {
 
         {/* Footer Support Info */}
         <div className="mx-auto flex w-full max-w-md items-center justify-between border-t border-zinc-100 pt-6 text-center text-xs text-zinc-500">
-          <span>CBS Operations Control v2.4</span>
+          <span>{brand.name} Operations Control v2.4</span>
           <span className="font-mono text-[11px] text-zinc-400">
             Internal Systems Only
           </span>

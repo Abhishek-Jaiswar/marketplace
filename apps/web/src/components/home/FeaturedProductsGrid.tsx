@@ -3,7 +3,12 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import { Star, ShoppingCart, Heart, ArrowRight, Sparkles } from "lucide-react"
-import { mockProducts, Product } from "../../utils/mockData"
+import { ProductImage } from "../product-image"
+import {
+  formatRupees,
+  useStorefrontProducts,
+  type Product,
+} from "../../lib/storefront-products"
 
 interface FeaturedProductsGridProps {
   onAddToCart?: (id: string) => void
@@ -18,26 +23,23 @@ export function FeaturedProductsGrid({
 }: FeaturedProductsGridProps) {
   const [activeTab, setActiveTab] = useState("All")
 
+  const { products, isLoading } = useStorefrontProducts({ limit: 24 })
   const categories = [
     "All",
-    "Electronics",
-    "Fashion & Apparel",
-    "Home & Kitchen",
-    "Sports & Outdoors",
-    "Beauty & Wellness",
+    ...Array.from(new Set(products.map((p) => p.category))),
   ]
 
   const filteredProducts =
     activeTab === "All"
-      ? mockProducts
-      : mockProducts.filter((p: Product) => p.category === activeTab)
+      ? products
+      : products.filter((p: Product) => p.category === activeTab)
 
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       {/* Header & Category Tabs */}
       <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
-          <span className="mb-1 flex items-center gap-1.5 text-xs font-bold tracking-widest text-blue-600 uppercase dark:text-blue-400">
+          <span className="mb-1 flex items-center gap-1.5 text-xs font-bold tracking-widest text-blue-600 uppercase">
             <Sparkles className="h-3.5 w-3.5 text-amber-500" />
             Handpicked Selection
           </span>
@@ -64,6 +66,12 @@ export function FeaturedProductsGrid({
         </div>
       </div>
 
+      {!isLoading && products.length === 0 ? (
+        <p className="text-muted-foreground">
+          Products will appear here as sellers list them.
+        </p>
+      ) : null}
+
       {/* Product Cards Grid */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {filteredProducts.map((product: Product) => {
@@ -72,14 +80,12 @@ export function FeaturedProductsGrid({
           return (
             <div
               key={product.id}
-              className="group flex flex-col justify-between rounded-2xl border border-border bg-card p-4 transition-all duration-300 hover:border-zinc-400/50 hover:shadow-xl dark:hover:border-zinc-700"
+              className="group flex flex-col justify-between rounded-2xl border border-border bg-card p-4 transition-all duration-300 hover:border-zinc-400/50 hover:shadow-xl"
             >
               <div>
                 {/* Image & Badges */}
-                <div className="relative mb-4 flex h-48 w-full items-center justify-center overflow-hidden rounded-xl bg-zinc-100 text-7xl dark:bg-zinc-900">
-                  <span className="transition-transform duration-300 group-hover:scale-110">
-                    {product.image}
-                  </span>
+                <div className="relative mb-4 flex h-48 w-full items-center justify-center overflow-hidden rounded-xl bg-zinc-100 text-7xl">
+                  <ProductImage src={product.image} alt={product.name} />
 
                   {product.tag && (
                     <span className="absolute top-3 left-3 rounded-full border border-white/10 bg-zinc-900/90 px-2.5 py-1 font-mono text-[10px] font-black text-white shadow-sm">
@@ -111,13 +117,13 @@ export function FeaturedProductsGrid({
                   </span>
                   <span className="flex items-center gap-1 font-bold text-amber-500">
                     <Star className="h-3 w-3 fill-amber-500" />
-                    {product.rating}
+                    {product.ratingLabel}
                   </span>
                 </div>
 
                 <Link
                   href={`/products/${product.id}`}
-                  className="line-clamp-2 text-sm font-bold text-foreground transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+                  className="line-clamp-2 text-sm font-bold text-foreground transition-colors hover:text-blue-600"
                 >
                   {product.name}
                 </Link>
@@ -131,11 +137,11 @@ export function FeaturedProductsGrid({
               <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
                 <div>
                   <span className="text-lg font-extrabold text-foreground">
-                    ${product.price.toFixed(2)}
+                    {formatRupees(product.price)}
                   </span>
                   {product.originalPrice && (
                     <span className="ml-2 font-mono text-xs text-muted-foreground line-through">
-                      ${product.originalPrice.toFixed(2)}
+                      {formatRupees(product.originalPrice)}
                     </span>
                   )}
                 </div>
@@ -164,7 +170,7 @@ export function FeaturedProductsGrid({
       <div className="mt-10 text-center">
         <Link
           href="/products"
-          className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-8 py-3.5 text-sm font-bold text-foreground shadow-md transition-all hover:border-zinc-400 hover:shadow-xl dark:hover:border-zinc-700"
+          className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-8 py-3.5 text-sm font-bold text-foreground shadow-md transition-all hover:border-zinc-400 hover:shadow-xl"
         >
           Browse All Products
           <ArrowRight className="h-4 w-4" />

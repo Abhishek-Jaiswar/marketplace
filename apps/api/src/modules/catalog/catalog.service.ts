@@ -101,6 +101,7 @@ class CatalogService {
       query.categoryId,
       query.brandId,
       query.status,
+      query.sellerId,
       () => catalogRepository.findProducts(query)
     )
   }

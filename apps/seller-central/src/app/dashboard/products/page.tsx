@@ -1,4 +1,5 @@
 "use client"
+import { brand } from "@workspace/ui/lib/brand"
 
 import React, { useState } from "react"
 import {
@@ -271,8 +272,8 @@ export default function SellerProductsPage() {
         <div
           className={`flex items-center justify-between rounded-lg border p-4 text-sm ${
             statusMessage.type === "success"
-              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-              : "border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-400"
+              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600"
+              : "border-rose-500/30 bg-rose-500/10 text-rose-600"
           }`}
         >
           <div className="flex items-center gap-2">
@@ -333,7 +334,8 @@ export default function SellerProductsPage() {
                 Active Marketplace Offers
               </CardTitle>
               <CardDescription>
-                These are the variants you are currently selling on the CBS
+                These are the variants you are currently selling on the{" "}
+                {brand.name}
                 storefront.
               </CardDescription>
             </CardHeader>
@@ -409,15 +411,15 @@ export default function SellerProductsPage() {
                             <td className="px-4 py-3 text-xs text-muted-foreground line-through">
                               ₹{listing.mrpPrice.toLocaleString("en-IN")}
                             </td>
-                            <td className="px-4 py-3 font-semibold text-emerald-600 dark:text-emerald-400">
+                            <td className="px-4 py-3 font-semibold text-emerald-600">
                               ₹{listing.sellingPrice.toLocaleString("en-IN")}
                             </td>
                             <td className="px-4 py-3">
                               <span
                                 className={`inline-flex items-center gap-1 text-xs font-medium ${
                                   totalStock > 0
-                                    ? "text-emerald-600 dark:text-emerald-400"
-                                    : "text-rose-600 dark:text-rose-400"
+                                    ? "text-emerald-600"
+                                    : "text-rose-600"
                                 }`}
                               >
                                 {totalStock > 0 ? (

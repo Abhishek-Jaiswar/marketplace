@@ -1,4 +1,5 @@
 "use client"
+import { brand } from "@workspace/ui/lib/brand"
 
 import React, { useState } from "react"
 import Link from "next/link"
@@ -20,7 +21,7 @@ import {
   ArrowRight,
 } from "lucide-react"
 
-import Logo from "@/components/logo"
+import { Logo } from "@workspace/ui/components/logo"
 import { getSellerOnboardingRedirect } from "@/lib/onboarding"
 
 export default function LoginPage() {
@@ -87,14 +88,14 @@ export default function LoginPage() {
 
         <div className="relative z-10 space-y-8">
           {/* Logo */}
-          <Logo light iconSize={36} />
+          <Logo size="lg" tone="inverse" descriptor="Seller Central" />
 
           {/* Hero Image Section */}
           <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3 shadow-2xl backdrop-blur-sm">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-slate-900">
               <Image
                 src="/login-side-img.png"
-                alt="CBS Seller Central Dashboard"
+                alt={`${brand.name} Seller Central Dashboard`}
                 fill
                 className="object-cover object-top transition-transform duration-500 hover:scale-105"
               />
@@ -176,11 +177,11 @@ export default function LoginPage() {
         {/* Top Header Navigation */}
         <div className="mx-auto mb-8 flex w-full max-w-md items-center justify-between">
           <div className="lg:hidden">
-            <Logo iconSize={32} />
+            <Logo size="lg" descriptor="Seller Central" />
           </div>
 
           <div className="ml-auto text-sm font-medium text-zinc-500">
-            New to CBS Seller Hub?{" "}
+            New to {brand.name} Seller Hub?{" "}
             <Link
               href="/register"
               className="ml-1 font-bold text-indigo-600 hover:text-indigo-700 hover:underline"

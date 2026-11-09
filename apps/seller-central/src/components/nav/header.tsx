@@ -10,7 +10,7 @@ import {
   LogOut,
   Settings,
 } from "lucide-react"
-import Logo from "../logo"
+import { Logo } from "@workspace/ui/components/logo"
 import { getSellerOnboardingRedirect } from "@/lib/onboarding"
 import {
   useAppSelector,
@@ -79,7 +79,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-zinc-100 bg-white">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Logo />
+        <Logo size="md" descriptor="Seller Central" />
 
         {/* Navigation Links */}
         <nav className="hidden items-center gap-8 md:flex">

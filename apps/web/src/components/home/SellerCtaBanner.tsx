@@ -1,4 +1,5 @@
 "use client"
+import { brand } from "@workspace/ui/lib/brand"
 
 import React from "react"
 import Link from "next/link"
@@ -25,7 +26,8 @@ export function SellerCtaBanner() {
               Vendor Growth Engine
             </span>
             <h2 className="text-2xl leading-tight font-black tracking-tight text-white sm:text-4xl">
-              Start Selling On CBS Marketplace & Scale Your Brand Nationwide
+              Start Selling On {brand.marketplaceName} & Scale Your Brand
+              Nationwide
             </h2>
             <p className="text-sm leading-relaxed text-zinc-300">
               Join thousands of verified independent merchants. Enjoy low

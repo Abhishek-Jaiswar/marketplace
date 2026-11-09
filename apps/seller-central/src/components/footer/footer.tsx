@@ -1,3 +1,5 @@
+import { brand } from "@workspace/ui/lib/brand"
+import { Logo } from "@workspace/ui/components/logo"
 import React from "react"
 import Link from "next/link"
 
@@ -7,14 +9,7 @@ const Footer = () => {
       <div className="mx-auto mb-8 grid max-w-7xl grid-cols-1 gap-8 text-left md:grid-cols-4">
         {/* Brand */}
         <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-sm font-black text-white">
-              C
-            </div>
-            <span className="text-sm leading-none font-extrabold tracking-tight text-white">
-              CBS <span className="text-indigo-400">Seller Hub</span>
-            </span>
-          </div>
+          <Logo size="sm" tone="inverse" descriptor="Seller Central" />
           <p className="mt-2 max-w-xs text-xs leading-relaxed text-zinc-500">
             Helping sellers grow their businesses online with secure weekly
             payouts, 24/7 support, and access to millions of customers.
@@ -98,7 +93,7 @@ const Footer = () => {
       </div>
 
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-zinc-800 pt-8 text-[11px] font-medium text-zinc-500 sm:flex-row">
-        <span>© 2026 CBS Marketplace. All rights reserved.</span>
+        <span>© 2026 {brand.marketplaceName}. All rights reserved.</span>
         <div className="flex gap-4">
           <Link href="/terms" className="hover:underline">
             Terms

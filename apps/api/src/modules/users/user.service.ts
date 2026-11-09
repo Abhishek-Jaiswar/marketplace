@@ -1,9 +1,9 @@
 import { logger } from "@workspace/logger"
 import { userRepository } from "./user.repository.js"
 import { userCache } from "./user.cache.js"
+import { otpService } from "./otp.service.js"
 import {
   hashPassword,
-  generateOtp,
   comparePassword,
   signAccessToken,
   generateRefreshToken,
@@ -29,8 +29,7 @@ class UserService {
     const passwordHash = await hashPassword(payload.password)
     const user = await userRepository.registerUser(payload, passwordHash)
 
-    const otp = generateOtp()
-    await userCache.setEmailVerificationOtp(user.email, otp)
+    const otp = await otpService.issue(user.id, "EMAIL_VERIFICATION")
 
     // Send verification email in background without blocking HTTP response
     mailService
@@ -57,23 +56,16 @@ class UserService {
       throw new BadRequestError("Email and OTP are required")
     }
 
-    const cachedOtp = await userCache.getEmailVerificationOtp(email)
-    if (!cachedOtp) {
-      throw new BadRequestError("OTP has expired or is invalid")
-    }
-
-    if (cachedOtp !== otp) {
-      throw new BadRequestError("Invalid OTP")
-    }
-
     const user = await userRepository.findUserByEmail(email)
-    if (!user) {
-      throw new NotFoundError("User not found")
+    if (
+      !user ||
+      !(await otpService.consume(user.id, "EMAIL_VERIFICATION", otp))
+    ) {
+      throw new BadRequestError("OTP has expired or is invalid")
     }
 
     const updatedUser = await userRepository.updateUserStatus(user.id, "ACTIVE")
 
-    await userCache.deleteEmailVerificationOtp(email)
     await userCache.invalidateUser(user.id) // Clears user details and list cache
 
     return {
@@ -227,8 +219,7 @@ class UserService {
       throw new ConflictError("Email is already verified")
     }
 
-    const otp = generateOtp()
-    await userCache.setEmailVerificationOtp(email, otp)
+    const otp = await otpService.issue(user.id, "EMAIL_VERIFICATION")
 
     mailService
       .sendOtpEmail(email, otp)
@@ -255,8 +246,7 @@ class UserService {
       }
     }
 
-    const otp = generateOtp()
-    await userCache.setUserOtp(email, otp)
+    const otp = await otpService.issue(user.id, "PASSWORD_RESET")
 
     mailService
       .sendResetPasswordOtp(email, otp)
@@ -276,14 +266,9 @@ class UserService {
   async resetPassword(payload: TResetPassword) {
     const { email, otp, newPassword } = payload
 
-    const cachedOtp = await userCache.getUserOtp(email)
-    if (!cachedOtp || String(cachedOtp) !== String(otp)) {
-      throw new BadRequestError("Invalid or expired password reset OTP")
-    }
-
     const user = await userRepository.findUserByEmail(email)
-    if (!user) {
-      throw new NotFoundError("User not found")
+    if (!user || !(await otpService.consume(user.id, "PASSWORD_RESET", otp))) {
+      throw new BadRequestError("Invalid or expired password reset OTP")
     }
 
     const passwordHash = await hashPassword(newPassword)
@@ -292,8 +277,6 @@ class UserService {
     // Force log out of all active sessions for security
     await userRepository.deleteAllSessionsForUser(user.id)
 
-    // Invalidate the OTP and User cache details
-    await userCache.deleteUserOtp(email)
     await userCache.invalidateUser(user.id)
 
     return {

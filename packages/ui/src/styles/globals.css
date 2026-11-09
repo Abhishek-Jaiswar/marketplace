@@ -2,131 +2,121 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
 @source "../../../apps/**/*.{ts,tsx}";
 @source "../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
 
-/* ==========================================================================
-   CBS MARKETPLACE DESIGN SYSTEM TOKENS
-   Consumer E-Commerce Color Palette (Amazon / Flipkart / Meesho Inspired)
-   Centralized variables - easily configurable for future branding updates.
-   ========================================================================== */
+/*
+ * The design system's single source of tokens. The product is light only.
+ *
+ * Layers: raw palette, then semantic roles, then per-surface density and type
+ * width. Components use semantic roles; only this file names the raw palette.
+ */
 
 :root {
-  /* Surface & Canvas */
-  --background: oklch(0.985 0.004 247); /* Soft Warm Canvas (#F8FAFC) */
-  --foreground: oklch(0.18 0.015 250); /* Deep Charcoal (#0F172A) */
+  color-scheme: light;
 
-  /* Cards & Containers */
-  --card: oklch(1 0 0); /* Pure White (#FFFFFF) */
-  --card-foreground: oklch(0.18 0.015 250); /* Deep Charcoal (#0F172A) */
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.015 250);
+  /* Raw palette */
+  --mor-50: #e9f0f1;
+  --mor-100: #cfdfe2;
+  --mor-200: #a3c0c6;
+  --mor-300: #6f9aa3;
+  --mor-500: #2c6b79;
+  --mor-700: #155060;
+  --mor-800: #0e3f4b;
+  --mor-900: #0a2e37;
 
-  /* Brand Primary (Trust & Main Navigation) */
-  --primary: oklch(0.55 0.22 255); /* Warm Royal Cobalt Blue (#2563EB) */
-  --primary-foreground: oklch(0.99 0 0);
+  --haldi-100: #fdf1c9;
+  --haldi-400: #f9c933;
+  --haldi-500: #f5b800;
 
-  /* Action & Conversion (Buy Now / Add to Cart / Deal of Day) */
-  --secondary: oklch(0.68 0.22 45); /* Sunburst Saffron Orange (#F97316) */
-  --secondary-foreground: oklch(0.99 0 0);
+  --sindoor-100: #f8e4df;
+  --sindoor-600: #b8321e;
 
-  /* Deals & Discounts (Meesho Pink/Red) */
-  --accent: oklch(0.58 0.24 15); /* Rose Crimson (#E11D48) */
-  --accent-foreground: oklch(0.99 0 0);
+  --mehendi-100: #e7efdf;
+  --mehendi-600: #3f6b2a;
 
-  /* Neutral Muted & Borders */
-  --muted: oklch(0.96 0.005 247); /* Off-white Gray (#F1F5F9) */
-  --muted-foreground: oklch(0.5 0.015 250); /* Slate Gray (#64748B) */
-  --border: oklch(0.91 0.005 247); /* Crisp Light Border (#E2E8F0) */
-  --input: oklch(0.91 0.005 247);
-  --ring: oklch(0.55 0.22 255);
+  --kagaz-0: #ffffff;
+  --kagaz-50: #f3f6f4;
+  --kagaz-100: #e9eeeb;
+  --kagaz-200: #d7dfdb;
+  --kagaz-300: #bcc7c2;
 
-  /* Trust & Delivery Accents */
-  --trust-green: oklch(0.62 0.19 160); /* Emerald Mint (#10B981) */
-  --rating-gold: oklch(0.75 0.18 80); /* Star Rating Yellow (#F59E0B) */
+  --pencil-500: #5c6b70;
 
-  /* Destructive & Feedback */
-  --destructive: oklch(0.58 0.23 25);
-  --destructive-foreground: oklch(0.99 0 0);
+  /* Semantic roles */
+  --background: var(--kagaz-50);
+  --foreground: var(--mor-900);
+  --card: var(--kagaz-0);
+  --card-foreground: var(--mor-900);
+  --popover: var(--kagaz-0);
+  --popover-foreground: var(--mor-900);
 
-  /* Sidebars & Component Specifics */
-  --sidebar: oklch(0.99 0 0);
-  --sidebar-foreground: oklch(0.18 0.015 250);
-  --sidebar-primary: oklch(0.55 0.22 255);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.96 0.005 247);
-  --sidebar-accent-foreground: oklch(0.18 0.015 250);
-  --sidebar-border: oklch(0.91 0.005 247);
-  --sidebar-ring: oklch(0.55 0.22 255);
+  --primary: var(--mor-800);
+  --primary-foreground: var(--kagaz-0);
+  --secondary: var(--mor-50);
+  --secondary-foreground: var(--mor-800);
+  --accent: var(--mor-50);
+  --accent-foreground: var(--mor-800);
+  --muted: var(--kagaz-100);
+  --muted-foreground: var(--pencil-500);
 
-  /* Typography & Geometry */
-  --font-sans:
-    Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    sans-serif;
-  --font-serif: Merriweather, Georgia, serif;
-  --font-mono: "Geist Mono", "JetBrains Mono", monospace;
+  --border: var(--kagaz-200);
+  --input: var(--kagaz-300);
+  --ring: var(--mor-500);
 
-  /* Friendly Squircles (12px default) */
-  --radius: 0.75rem;
+  /* The one commit action on a screen: buy, ship, approve. */
+  --action: var(--haldi-500);
+  --action-hover: var(--haldi-400);
+  --action-foreground: var(--mor-900);
 
-  /* Soft Ambient Shadows */
-  --shadow-color: hsl(220 14% 10% / 0.08);
-  --shadow-sm: 0 1px 2px 0 var(--shadow-color);
-  --shadow-md:
-    0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
-  --shadow-lg:
-    0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
-  --shadow-xl:
-    0 20px 25px -5px var(--shadow-color), 0 8px 10px -6px var(--shadow-color);
+  --discount: var(--sindoor-600);
+  --destructive: var(--sindoor-600);
+  --destructive-foreground: var(--kagaz-0);
+  --destructive-soft: var(--sindoor-100);
+  --success: var(--mehendi-600);
+  --success-soft: var(--mehendi-100);
+  --warning-soft: var(--haldi-100);
+
+  --sidebar: var(--mor-800);
+  --sidebar-foreground: var(--mor-50);
+  --sidebar-primary: var(--haldi-500);
+  --sidebar-primary-foreground: var(--mor-900);
+  --sidebar-accent: var(--mor-700);
+  --sidebar-accent-foreground: var(--kagaz-0);
+  --sidebar-border: var(--mor-700);
+  --sidebar-ring: var(--mor-300);
+
+  --inverse-muted: var(--mor-100);
+
+  /* Surface defaults */
+  --type-width: 100%;
+  --type-width-display: 100%;
+  --density-row: 3rem;
 }
 
-.dark {
-  /* Dark Mode Surfaces */
-  --background: oklch(0.14 0.02 250); /* Deep Obsidian (#090D16) */
-  --foreground: oklch(0.98 0.005 247); /* Crisp Soft White (#F8FAFC) */
+/* Roomy and photo-led; display type runs wide so prices carry the page. */
+[data-surface="storefront"] {
+  --background: var(--kagaz-0);
+  --type-width: 100%;
+  --type-width-display: 125%;
+  --density-row: 3.5rem;
+}
 
-  /* Dark Mode Cards */
-  --card: oklch(0.2 0.02 250); /* Dark Slate (#1E293B) */
-  --card-foreground: oklch(0.98 0.005 247);
-  --popover: oklch(0.2 0.02 250);
-  --popover-foreground: oklch(0.98 0.005 247);
+/* A ledger: ruled, calm, equally usable on a phone. */
+[data-surface="seller"] {
+  --background: var(--kagaz-50);
+  --type-width: 100%;
+  --type-width-display: 100%;
+  --density-row: 3rem;
+}
 
-  /* Primary Brand (Adjusted for Dark Mode Contrast) */
-  --primary: oklch(0.62 0.22 255); /* Vivid Blue (#3B82F6) */
-  --primary-foreground: oklch(0.99 0 0);
-
-  /* Action & Conversion */
-  --secondary: oklch(0.68 0.22 45); /* Sunburst Saffron (#F97316) */
-  --secondary-foreground: oklch(0.99 0 0);
-
-  /* Deals & Discounts */
-  --accent: oklch(0.62 0.24 15); /* Rose Crimson (#F43F5E) */
-  --accent-foreground: oklch(0.99 0 0);
-
-  /* Dark Mode Neutrals */
-  --muted: oklch(0.25 0.02 250);
-  --muted-foreground: oklch(0.7 0.015 250);
-  --border: oklch(0.28 0.02 250); /* Slate Border (#334155) */
-  --input: oklch(0.28 0.02 250);
-  --ring: oklch(0.62 0.22 255);
-
-  /* Trust & Delivery */
-  --trust-green: oklch(0.65 0.19 160);
-  --rating-gold: oklch(0.78 0.18 80);
-
-  /* Dark Mode Sidebars */
-  --sidebar: oklch(0.18 0.02 250);
-  --sidebar-foreground: oklch(0.98 0.005 247);
-  --sidebar-primary: oklch(0.62 0.22 255);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.25 0.02 250);
-  --sidebar-accent-foreground: oklch(0.98 0.005 247);
-  --sidebar-border: oklch(0.28 0.02 250);
-  --sidebar-ring: oklch(0.62 0.22 255);
-
-  --shadow-color: hsl(0 0% 0% / 0.4);
+/* Condensed so queues and tables fit more on a desktop screen. */
+[data-surface="admin"] {
+  --background: var(--kagaz-50);
+  --type-width: 87.5%;
+  --type-width-display: 87.5%;
+  --density-row: 2.25rem;
 }
 
 @theme inline {
@@ -136,8 +126,6 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-
-  /* Named Semantic Color Tokens for easy inline usage across apps */
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
@@ -146,15 +134,21 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --color-trust: var(--trust-green);
-  --color-rating: var(--rating-gold);
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-action-foreground: var(--action-foreground);
+  --color-discount: var(--discount);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning-soft: var(--warning-soft);
+  --color-inverse-muted: var(--inverse-muted);
 
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
@@ -165,30 +159,91 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-  --font-serif: var(--font-serif);
+  --font-sans: var(--font-anek), ui-sans-serif, system-ui, sans-serif;
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.4;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.45;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.45;
+  --text-xl: 1.375rem;
+  --text-xl--line-height: 1.3;
+  --text-2xl: 1.75rem;
+  --text-2xl--line-height: 1.2;
+  --text-3xl: 2.25rem;
+  --text-3xl--line-height: 1.15;
+  --text-4xl: 3rem;
+  --text-4xl--line-height: 1.05;
+  --text-5xl: 4rem;
+  --text-5xl--line-height: 1;
+  --text-6xl: 6rem;
+  --text-6xl--line-height: 0.95;
 
-  --shadow-sm: var(--shadow-sm);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
+  /* Radius follows hierarchy: controls are tight, sheets are soft. */
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 16px;
+
+  /* Only things that float over the page cast a shadow. */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: 0 8px 24px rgb(10 46 55 / 0.14);
+  --shadow-xl: 0 16px 40px rgb(10 46 55 / 0.18);
+  --shadow-2xl: 0 16px 40px rgb(10 46 55 / 0.18);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
     @apply bg-background font-sans text-foreground antialiased;
   }
+
+  [data-surface] {
+    font-stretch: var(--type-width);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--haldi-100);
+    color: var(--mor-900);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Headlines and prices use the surface's display width. */
+@utility type-display {
+  font-stretch: var(--type-width-display);
+}
+
+@utility row-density {
+  min-height: var(--density-row);
 }
 
 @utility scrollbar-none {

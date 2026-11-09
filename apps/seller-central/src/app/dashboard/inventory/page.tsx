@@ -240,8 +240,8 @@ export default function SellerInventoryPage() {
         <div
           className={`flex items-center justify-between rounded-lg border p-4 text-sm ${
             statusMessage.type === "success"
-              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-              : "border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-400"
+              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600"
+              : "border-rose-500/30 bg-rose-500/10 text-rose-600"
           }`}
         >
           <div className="flex items-center gap-2">
@@ -322,7 +322,7 @@ export default function SellerInventoryPage() {
             <ShieldAlertIcon className="size-4 text-rose-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-rose-600 dark:text-rose-400">
+            <div className="text-2xl font-bold text-rose-600">
               {lowStockCount}
             </div>
             <p className="mt-1 text-xs text-muted-foreground">
@@ -456,7 +456,7 @@ export default function SellerInventoryPage() {
                             {item.onHand} units
                           </td>
                           <td className="px-4 py-3">
-                            <span className="font-medium text-amber-600 dark:text-amber-400">
+                            <span className="font-medium text-amber-600">
                               {item.reserved} held
                             </span>
                           </td>
@@ -464,8 +464,8 @@ export default function SellerInventoryPage() {
                             <span
                               className={`font-semibold ${
                                 available > 0
-                                  ? "text-emerald-600 dark:text-emerald-400"
-                                  : "text-rose-600 dark:text-rose-400"
+                                  ? "text-emerald-600"
+                                  : "text-rose-600"
                               }`}
                             >
                               {available} units
@@ -619,8 +619,8 @@ export default function SellerInventoryPage() {
                             <span
                               className={`inline-flex items-center gap-1 text-xs font-bold ${
                                 isPositive
-                                  ? "text-emerald-600 dark:text-emerald-400"
-                                  : "text-rose-600 dark:text-rose-400"
+                                  ? "text-emerald-600"
+                                  : "text-rose-600"
                               }`}
                             >
                               {isPositive ? (

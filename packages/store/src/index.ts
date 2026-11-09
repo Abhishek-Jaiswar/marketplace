@@ -1,5 +1,6 @@
 // Base API and RTK Query
 export { baseApi } from "./api/baseApi"
+export { getApiErrorMessage } from "./api/errors"
 
 // Store Factory & Provider
 export { makeStore } from "./store"
@@ -182,6 +183,7 @@ export type {
   ProductVariant,
   Product,
   SellerListing,
+  StorefrontPdp,
   ListBrandsParams,
   ListBrandsResponse,
   CreateBrandRequest,
@@ -204,6 +206,7 @@ export {
   useGetProductsQuery,
   useGetProductByIdQuery,
   useGetProductBySlugQuery,
+  useGetStorefrontPdpQuery,
   useCreateProductMutation,
   useReviewProductMutation,
   useCreateProductVariantMutation,

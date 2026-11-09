@@ -90,6 +90,7 @@ export const listProductsQuerySchema = z.object({
   search: z.string().trim().optional(),
   categoryId: z.string().trim().optional(),
   brandId: z.string().trim().optional(),
+  sellerId: z.string().trim().optional(),
   status: z
     .enum(["DRAFT", "PENDING_REVIEW", "APPROVED", "REJECTED", "ARCHIVED"])
     .optional(),

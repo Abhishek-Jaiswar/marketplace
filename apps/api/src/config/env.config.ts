@@ -33,6 +33,7 @@ const envSchema = z
     MAIL_USER: z.string(),
     MAIL_PASS: z.string(),
     JWT_SECRET: z.string().min(32).optional(),
+    BRAND_NAME: z.string().trim().min(1).default("CBS"),
   })
   .superRefine((env, context) => {
     if (env.NODE_ENV === "production" && !env.JWT_SECRET) {
@@ -63,6 +64,8 @@ export const parseEnv = (source: NodeJS.ProcessEnv = process.env) => {
 }
 
 export const Env = parseEnv()
+
+export const marketplaceName = `${Env.BRAND_NAME} Marketplace`
 
 export const isDevelopment = Env.NODE_ENV === "development"
 export const isProduction = Env.NODE_ENV === "production"

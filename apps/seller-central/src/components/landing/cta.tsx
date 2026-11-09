@@ -1,3 +1,4 @@
+import { brand } from "@workspace/ui/lib/brand"
 import React from "react"
 import { ArrowRight } from "lucide-react"
 
@@ -71,7 +72,7 @@ export default function CTA({ handleStartSelling }: CTAProps) {
               Ready to grow your business?
             </h4>
             <p className="text-[10px] leading-normal font-bold text-indigo-100">
-              Join CBS and start your selling journey today.
+              Join {brand.name} and start your selling journey today.
             </p>
           </div>
           <button

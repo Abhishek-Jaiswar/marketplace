@@ -1,5 +1,6 @@
 import { baseApi } from "../baseApi"
 import type {
+  StorefrontPdp,
   ListBrandsParams,
   ListBrandsResponse,
   CreateBrandRequest,
@@ -56,6 +57,7 @@ export const catalogApi = baseApi.injectEndpoints({
           if (params?.categoryId)
             queryParams.append("categoryId", params.categoryId)
           if (params?.brandId) queryParams.append("brandId", params.brandId)
+          if (params?.sellerId) queryParams.append("sellerId", params.sellerId)
           if (params?.status) queryParams.append("status", params.status)
           const qs = queryParams.toString()
           return `/catalog/products${qs ? `?${qs}` : ""}`
@@ -72,6 +74,10 @@ export const catalogApi = baseApi.injectEndpoints({
     getProductBySlug: builder.query<{ data: Product }, string>({
       query: (slug) => `/catalog/products/slug/${slug}`,
       providesTags: ["Product"],
+    }),
+    getStorefrontPdp: builder.query<{ data: StorefrontPdp }, string>({
+      query: (slug) => `/catalog/pdp/${slug}`,
+      providesTags: ["Product", "Listing"],
     }),
 
     createProduct: builder.mutation<
@@ -159,6 +165,7 @@ export const {
   useGetProductsQuery,
   useGetProductByIdQuery,
   useGetProductBySlugQuery,
+  useGetStorefrontPdpQuery,
   useCreateProductMutation,
   useReviewProductMutation,
   useCreateProductVariantMutation,

@@ -132,8 +132,8 @@ export function NavMain({
                       isActive={itemIsActive}
                       className={`group relative flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm font-medium transition-all ${
                         itemIsActive
-                          ? "bg-slate-200/80 font-semibold text-foreground shadow-2xs dark:bg-slate-800/80"
-                          : "text-foreground/80 hover:bg-slate-100 hover:text-foreground dark:hover:bg-slate-800/40"
+                          ? "bg-slate-200/80 font-semibold text-foreground shadow-2xs"
+                          : "text-foreground/80 hover:bg-slate-100 hover:text-foreground"
                       }`}
                     >
                       <RenderIcon
@@ -219,8 +219,8 @@ function CollapsibleNavItem({
             tooltip={item.title}
             className={`flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm font-medium transition-colors ${
               itemIsActive
-                ? "bg-slate-200/80 font-semibold text-foreground shadow-2xs dark:bg-slate-800/80"
-                : "text-foreground/90 hover:bg-slate-100 dark:hover:bg-slate-800/40"
+                ? "bg-slate-200/80 font-semibold text-foreground shadow-2xs"
+                : "text-foreground/90 hover:bg-slate-100"
             }`}
           />
         }
@@ -235,7 +235,7 @@ function CollapsibleNavItem({
         <ChevronDownIcon className="size-4 shrink-0 text-muted-foreground/70 transition-transform duration-200 group-data-open/collapsible:rotate-180" />
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div className="my-1 ml-4 flex flex-col gap-0.5 border-l-2 border-slate-200/80 pl-3.5 dark:border-slate-800/80">
+        <div className="my-1 ml-4 flex flex-col gap-0.5 border-l-2 border-slate-200/80 pl-3.5">
           {item.items?.map((subItem) => {
             const subIsActive =
               subItem.isActive || isUrlActive(subItem.url, activePath)
@@ -245,8 +245,8 @@ function CollapsibleNavItem({
                 href={subItem.url}
                 className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-xs transition-colors ${
                   subIsActive
-                    ? "bg-slate-200/70 font-semibold text-foreground shadow-2xs dark:bg-slate-800/70"
-                    : "text-muted-foreground hover:bg-slate-100/60 hover:text-foreground dark:hover:bg-slate-800/40"
+                    ? "bg-slate-200/70 font-semibold text-foreground shadow-2xs"
+                    : "text-muted-foreground hover:bg-slate-100/60 hover:text-foreground"
                 }`}
               >
                 {subItem.icon ? (

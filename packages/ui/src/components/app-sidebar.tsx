@@ -1,4 +1,5 @@
 "use client"
+import { brand } from "@workspace/ui/lib/brand"
 
 import * as React from "react"
 import {
@@ -41,8 +42,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 const defaultData: SidebarData = {
-  appName: "CBS Marketplace",
-  appSubtitle: "cbs-marketplace.studio",
+  appName: brand.marketplaceName,
   user: {
     name: "User",
     email: "user@example.com",
@@ -67,7 +67,7 @@ export function AppSidebar({
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r border-slate-200/60 bg-[#f8f9fc] font-sans dark:border-slate-800/60 dark:bg-[#0d0f14]"
+      className="border-r border-slate-200/60 bg-[#f8f9fc] font-sans"
       {...props}
     >
       {/* Header Section */}
@@ -78,7 +78,7 @@ export function AppSidebar({
               <div className="flex w-full items-center justify-between gap-2">
                 <SidebarMenuButton
                   size="lg"
-                  className="flex-1 rounded-xl p-1.5 transition-colors hover:bg-slate-200/50 dark:hover:bg-slate-800/40"
+                  className="flex-1 rounded-xl p-1.5 transition-colors hover:bg-slate-200/50"
                 >
                   <div className="flex aspect-square size-9 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white shadow-xs">
                     {data.appLogo || <StoreIcon className="size-4" />}
@@ -110,7 +110,7 @@ export function AppSidebar({
 
         {/* Bottom Utility Items */}
         {data.bottomItems && data.bottomItems.length > 0 && (
-          <div className="mt-auto border-t border-slate-200/60 pt-4 dark:border-slate-800/60">
+          <div className="mt-auto border-t border-slate-200/60 pt-4">
             <NavMain items={data.bottomItems} currentPath={currentPath} />
           </div>
         )}

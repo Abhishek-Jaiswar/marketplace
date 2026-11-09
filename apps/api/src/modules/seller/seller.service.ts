@@ -3,11 +3,7 @@ import { sellerRepository } from "./seller.repository.js"
 import { userRepository } from "../users/user.repository.js"
 import { userCache } from "../users/user.cache.js"
 import { db, type UserRole } from "@workspace/db"
-import {
-  hashPassword,
-  generateOtp,
-  signAccessToken,
-} from "../../utils/security.js"
+import { hashPassword, signAccessToken } from "../../utils/security.js"
 import {
   BadRequestError,
   ConflictError,
@@ -17,6 +13,7 @@ import {
 import { mailService } from "../../services/mail/mail.service.js"
 import { uploadService } from "../../services/storage/upload.service.js"
 import { sellerCache } from "./seller.cache.js"
+import { otpService } from "../users/otp.service.js"
 
 class SellerService {
   async registerSeller(payload: any) {
@@ -33,8 +30,7 @@ class SellerService {
     )
 
     try {
-      const otp = generateOtp()
-      await userCache.setEmailVerificationOtp(result.user.email, otp)
+      const otp = await otpService.issue(result.user.id, "EMAIL_VERIFICATION")
       await mailService.sendOtpEmail(result.user.email, otp)
       logger.info(
         `Seller verification OTP sent successfully to ${result.user.email}`

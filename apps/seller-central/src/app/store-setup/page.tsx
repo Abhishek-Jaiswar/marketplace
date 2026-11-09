@@ -1,4 +1,5 @@
 "use client"
+import { brand } from "@workspace/ui/lib/brand"
 
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -17,7 +18,7 @@ import {
   AlertCircle,
 } from "lucide-react"
 
-import Logo from "@/components/logo"
+import { Logo } from "@workspace/ui/components/logo"
 import {
   StoreBrandingSection,
   CATEGORIES,
@@ -217,7 +218,7 @@ export default function StoreSetupPage() {
       <header className="sticky top-0 z-30 border-b border-zinc-200/80 bg-white shadow-xs backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <Logo iconSize={26} subtitle="Store Setup Portal" />
+            <Logo size="md" descriptor="Store Setup Portal" />
             <div className="hidden items-center gap-2 border-l border-zinc-200 pl-3 sm:flex">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-extrabold text-emerald-700">
                 <CheckCircle2 className="h-3.5 w-3.5" /> Legal KYB Verified
@@ -248,8 +249,8 @@ export default function StoreSetupPage() {
           <div className="pointer-events-none absolute -right-10 -bottom-10 h-64 w-64 rounded-full bg-indigo-500/20 blur-3xl" />
           <div className="relative z-10 space-y-3">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-bold text-indigo-200">
-              <Sparkles className="h-3.5 w-3.5" /> Welcome to CBS Storefront
-              Setup
+              <Sparkles className="h-3.5 w-3.5" /> Welcome to {brand.name}{" "}
+              Storefront Setup
             </div>
             <h1 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
               Customize Your Digital Store & Pickup Address

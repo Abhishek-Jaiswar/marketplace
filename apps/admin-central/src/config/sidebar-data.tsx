@@ -1,3 +1,4 @@
+import { LogoMark } from "@workspace/ui/components/logo"
 import { SidebarData } from "@workspace/ui/components/app-sidebar"
 import {
   LayoutDashboardIcon,
@@ -5,7 +6,6 @@ import {
   StoreIcon,
   CreditCardIcon,
   SettingsIcon,
-  ShieldCheckIcon,
   BellIcon,
   HelpCircleIcon,
   UserPlusIcon,
@@ -15,7 +15,7 @@ import {
 export const adminSidebarData: SidebarData = {
   appName: "Admin Central",
   appSubtitle: "admin.cbsmarketplace.studio",
-  appLogo: <ShieldCheckIcon className="size-4" />,
+  appLogo: <LogoMark className="size-5" />,
   groups: [
     {
       groupTitle: "Overview",

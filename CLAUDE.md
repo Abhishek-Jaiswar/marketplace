@@ -53,7 +53,7 @@ CI (`.github/workflows/ci.yml`, Node 22) runs `db:generate`, `format:check`, `li
 
 ### Tests
 
-Vitest, in `apps/api` only so far. `*.test.ts` runs the real Express app through supertest with repositories mocked. `*.integration.test.ts` exercises repositories against Postgres, which is the only way to cover tenant scoping, row locks, and Prisma's query budgets.
+Vitest, in `apps/api` and `packages/store`. In the API, `*.test.ts` runs the real Express app through supertest with repositories mocked. `*.integration.test.ts` exercises repositories against Postgres, which is the only way to cover tenant scoping, row locks, and Prisma's query budgets.
 
 Integration tests use `TEST_DATABASE_URL`, or `DATABASE_URL` with `_test` appended, and refuse any database whose name does not end in `_test`. Setup creates the database and runs `prisma db update`. Tests isolate themselves with unique fixtures rather than cleaning up.
 
@@ -99,7 +99,7 @@ await db.transaction(async (tx) => { await tx.orm.public.Address.create({ ... })
 - Models live in `packages/db/src/prisma/schema/*.prisma`, split by domain. `prisma.config.ts` discovers every file in that directory and overrides the `contract.prisma` path it declares, so that file does not exist despite what `packages/db/README.md` says. ADRs that cite `packages/db/prisma/schema/` are also out of date.
 - `contract.json` and `contract.d.ts` are generated but committed; regenerate them rather than editing by hand.
 - Model and enum types are re-exported by hand from `packages/db/src/index.ts`. Add new ones there.
-- The client (`packages/db/src/prisma/db.ts`) uses lint middleware that turns `DELETE`/`UPDATE` without `WHERE` into errors, and budgets that **throw on any SELECT without a LIMIT**. Bound unpaginated `.all()` calls with `MAX_UNPAGED_ROWS` (`apps/api/src/utils/query-limits.ts`).
+- The client (`packages/db/src/prisma/db.ts`) uses lint middleware that turns `DELETE`/`UPDATE` without `WHERE` into errors, and budgets that log a warning on any SELECT without a LIMIT (the client runs in `permissive` mode; in `strict` mode every budget violation throws, including slow queries and `include` on `create`). Bound unpaginated `.all()` calls with `MAX_UNPAGED_ROWS` (`apps/api/src/utils/query-limits.ts`).
 - Read-then-write inside a transaction needs a row lock (`.forUpdate()`, or `.forNoKeyUpdate()` on rows other tables reference).
 - Prisma 8 reference: `packages/db/prisma-8.md`.
 
@@ -131,4 +131,20 @@ Each domain has `*.routes`, `*.controller`, `*.service`, `*.repository`, `*.cach
 - Auth: the access token is held in the Redux `auth` slice and sent as a Bearer header; the refresh token is an HTTP-only cookie. `baseQueryWithReauth` handles a 401 by calling `/users/refresh` behind a mutex and retrying.
 - The API base URL comes from `NEXT_PUBLIC_API_URL`, falling back to `http://localhost:4000/api` in development.
 - All apps use `makeStore` from `@workspace/store`; add new reducers in `packages/store/src/store.ts`.
+- Retries live in `packages/store/src/api/retry-policy.ts`: GET and HEAD only, on network errors, timeouts, and 408/502/503/504, up to 3 times with jittered backoff. Writes are never retried automatically, and a failed token refresh only signs the user out if the server rejected it.
+- Show errors with `getApiErrorMessage(error, fallback)` from `@workspace/store`; it never exposes server-side detail.
+- One-time codes are stored hashed in `VerificationToken` (`modules/users/otp.service.ts`), not Redis. Redis is optional everywhere: without it the API runs with no cache or rate limits and reconnects on its own.
+- Rebuilding `packages/db` during `pnpm dev` can stop the API child process. Saving any file in `apps/api/src` restarts it.
 - Shared components are imported as `@workspace/ui/components/<name>`.
+
+### Design system
+
+The product is light only and English only: do not add dark variants, theme switching, or translation.
+
+- `packages/ui/src/styles/globals.css` is the only token file. Screens use semantic roles (`bg-action`, `text-discount`, `text-muted-foreground`), never raw colours. Old screens still use Tailwind's default palette; clear it with `--color-*: initial` once they are rebuilt.
+- Each app's `<html>` sets `data-surface` (`storefront`, `seller`, `admin`), which controls type width and row density. Use `type-display` for headlines and prices, and `row-density` for list and table rows.
+- The brand name lives in `packages/ui/src/lib/brand.ts` (web) and `BRAND_NAME` (API). Never type it into a screen. Use `Logo` for every wordmark; it supports `variant` (`full`, `mark`, `name`), `orientation`, `size`, `tone`, and `descriptor`.
+- Show prices with `Price` and format money with `formatInr`, both of which take paise. Load Anek Latin with both `latin` and `latin-ext`, or the rupee sign falls back to another font.
+- `bg-action` (`Button variant="action"`) is for the single commit action on a screen. Avoid uppercase labels, gradients, glass effects, and emoji as imagery.
+- `/design-system` in `apps/web` is the live specimen (development only).
+- Build screens from the kit in `packages/ui/src/components`: `Field` with `Input`/`Textarea`/`Select`, `Checkbox`, `Switch`, `Tabs`, `DataTable`, `Pagination`, `StatusPill`, `EmptyState`, `ErrorState`, `PageHeader`, `MetricList`, `QueueSplit`, `Stepper`, `Timeline`. Add new API statuses to `StatusPill`, so wording stays the same on every surface.

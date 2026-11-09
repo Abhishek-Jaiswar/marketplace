@@ -36,6 +36,7 @@ export interface ListProductsQuery {
   search?: string | undefined
   categoryId?: string | undefined
   brandId?: string | undefined
+  sellerId?: string | undefined
   status?: ProductStatus | undefined
 }
 

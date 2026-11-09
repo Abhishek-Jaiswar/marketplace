@@ -1,4 +1,5 @@
 import { baseApi } from "../baseApi"
+import { UPLOAD_TIMEOUT_MS } from "../retry-policy"
 import { tokenReceived, userProfileReceived } from "../../slices/authSlice"
 import type {
   Seller,
@@ -107,6 +108,7 @@ export const sellerApi = baseApi.injectEndpoints({
     >({
       query: (formData) => ({
         url: "/sellers/documents",
+        timeout: UPLOAD_TIMEOUT_MS,
         method: "POST",
         body: formData,
         // FormData needs headers to be automatically set by the browser (multipart/form-data boundary)

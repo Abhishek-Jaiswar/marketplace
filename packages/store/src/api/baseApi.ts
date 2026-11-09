@@ -1,5 +1,13 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import {
+  createApi,
+  fetchBaseQuery,
+  retry,
+  type BaseQueryFn,
+  type FetchArgs,
+  type FetchBaseQueryError,
+} from "@reduxjs/toolkit/query/react"
 import { tokenReceived, loggedOut } from "../slices/authSlice"
+import { REQUEST_TIMEOUT_MS, retryDelay, shouldRetry } from "./retry-policy"
 
 class SimpleMutex {
   private promise: Promise<void> = Promise.resolve()
@@ -47,24 +55,51 @@ const getBaseApiUrl = (): string => {
 const baseQuery = fetchBaseQuery({
   baseUrl: getBaseApiUrl(),
   credentials: "include",
+  timeout: REQUEST_TIMEOUT_MS,
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as any).auth?.accessToken
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`)
+    const { auth } = getState() as { auth?: { accessToken: string | null } }
+    if (auth?.accessToken) {
+      headers.set("Authorization", `Bearer ${auth.accessToken}`)
     }
     return headers
   },
 })
 
-const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
+const baseQueryWithRetry = retry(baseQuery, {
+  retryCondition: (error, args, { attempt }) =>
+    shouldRetry(
+      error as FetchBaseQueryError,
+      args as string | FetchArgs,
+      attempt
+    ),
+  backoff: (attempt, _maxRetries, signal) =>
+    new Promise<void>((resolve) => {
+      const timer = setTimeout(resolve, retryDelay(attempt))
+      signal?.addEventListener("abort", () => {
+        clearTimeout(timer)
+        resolve()
+      })
+    }),
+})
+
+/** The server rejected the refresh token, as opposed to being unreachable. */
+const isRefreshRejected = (error: FetchBaseQueryError | undefined) =>
+  error?.status === 400 || error?.status === 401 || error?.status === 403
+
+const baseQueryWithReauth: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
   await mutex.waitForUnlock()
 
-  let result = await baseQuery(args, api, extraOptions)
+  let result = await baseQueryWithRetry(args, api, extraOptions)
 
-  if (result.error && result.error.status === 401) {
+  if (result.error?.status === 401) {
     if (!mutex.isLocked()) {
       const release = await mutex.acquire()
       try {
+        // Not retried: refresh tokens rotate, so a repeat could revoke the session.
         const refreshResult = await baseQuery(
           { url: "/users/refresh", method: "POST" },
           api,
@@ -74,8 +109,8 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
         if (refreshResult.data) {
           const data = refreshResult.data as { accessToken: string }
           api.dispatch(tokenReceived(data.accessToken))
-          result = await baseQuery(args, api, extraOptions)
-        } else {
+          result = await baseQueryWithRetry(args, api, extraOptions)
+        } else if (isRefreshRejected(refreshResult.error)) {
           api.dispatch(loggedOut())
         }
       } finally {
@@ -83,11 +118,11 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
       }
     } else {
       await mutex.waitForUnlock()
-      result = await baseQuery(args, api, extraOptions)
+      result = await baseQueryWithRetry(args, api, extraOptions)
     }
   }
 
-  return result
+  return result as Awaited<ReturnType<typeof baseQuery>>
 }
 
 export const baseApi = createApi({

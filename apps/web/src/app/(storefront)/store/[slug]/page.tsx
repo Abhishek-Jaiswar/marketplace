@@ -1,4 +1,5 @@
 "use client"
+import { brand } from "@workspace/ui/lib/brand"
 
 import React, { useState } from "react"
 import Link from "next/link"
@@ -24,21 +25,30 @@ import {
   RotateCcw,
   Building2,
 } from "lucide-react"
-import { mockProducts, Product } from "../../../../utils/mockData"
+import { ProductImage } from "../../../../components/product-image"
+import {
+  formatRupees,
+  useStorefrontProducts,
+  type Product,
+} from "../../../../lib/storefront-products"
 
 type StoreTab = "products" | "about" | "reviews" | "policies"
 
 export default function StorefrontPage() {
   const params = useParams()
-  const rawSlug =
-    (params?.slug as string) || "cartoon-retailers-maharashtra-division"
+  const rawSlug = (params?.slug as string) ?? ""
   const slug = decodeURIComponent(rawSlug)
 
-  const { data: apiData } = useGetPublicStoreBySlugQuery(slug, {
-    skip: !slug,
-  })
+  const { data: apiData, isLoading: isStoreLoading } =
+    useGetPublicStoreBySlugQuery(slug, {
+      skip: !slug,
+    })
 
   const store = apiData?.store
+  const { products } = useStorefrontProducts(
+    { sellerId: store?.sellerId ?? "" },
+    { skip: !store }
+  )
   const seller = store?.seller
   const address = store?.address
 
@@ -50,20 +60,10 @@ export default function StorefrontPage() {
   const [isFollowing, setIsFollowing] = useState(false)
   const [copiedLink, setCopiedLink] = useState(false)
 
-  // Fallback store display data if store is still loading or mocked
-  const displayName =
-    store?.displayName ||
-    slug
-      .split("-")
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ")
-  const businessName = seller?.businessName || `${displayName} Pvt. Ltd.`
-  const locationText = address
-    ? `${address.city}, ${address.state}`
-    : "Maharashtra, India"
-  const descriptionText =
-    store?.description ||
-    `Welcome to ${displayName}! We are an official verified merchant providing high quality products with fast shipping and 100% customer satisfaction guaranteed.`
+  const displayName = store?.displayName ?? ""
+  const businessName = seller?.businessName ?? displayName
+  const locationText = address ? `${address.city}, ${address.state}` : ""
+  const descriptionText = store?.description ?? ""
 
   const toggleWishlist = (id: string) => {
     setWishlist((prev) =>
@@ -84,7 +84,7 @@ export default function StorefrontPage() {
   }
 
   // Filter products by search and category
-  const filteredProducts = mockProducts.filter((p) => {
+  const filteredProducts = products.filter((p) => {
     const matchesSearch = p.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
@@ -95,8 +95,18 @@ export default function StorefrontPage() {
 
   const categories = [
     "All",
-    ...Array.from(new Set(mockProducts.map((p) => p.category))),
+    ...Array.from(new Set(products.map((p) => p.category))),
   ]
+
+  if (!store) {
+    return (
+      <p className="mx-auto w-full max-w-7xl px-4 py-16 text-muted-foreground sm:px-6 lg:px-8">
+        {isStoreLoading
+          ? "Loading this store."
+          : "This store could not be found."}
+      </p>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background py-6 text-foreground selection:bg-indigo-500 selection:text-white">
@@ -146,7 +156,7 @@ export default function StorefrontPage() {
                   <h1 className="text-2xl font-black tracking-tight text-foreground sm:text-3xl">
                     {displayName}
                   </h1>
-                  <span className="rounded-md border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 font-mono text-xs font-semibold text-indigo-700 dark:border-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300">
+                  <span className="rounded-md border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 font-mono text-xs font-semibold text-indigo-700">
                     @{slug}
                   </span>
                 </div>
@@ -199,19 +209,19 @@ export default function StorefrontPage() {
 
             {/* Key Value Props Cards */}
             <div className="mt-6 grid grid-cols-2 gap-3 border-t border-border pt-6 sm:grid-cols-4">
-              <div className="flex items-center gap-3 rounded-2xl border border-border bg-zinc-50 p-3 dark:bg-zinc-900/60">
+              <div className="flex items-center gap-3 rounded-2xl border border-border bg-zinc-50 p-3">
                 <Award className="h-5 w-5 shrink-0 text-indigo-600" />
                 <div>
                   <span className="block font-mono text-[10px] font-bold text-muted-foreground uppercase">
                     Status
                   </span>
-                  <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
+                  <span className="text-xs font-extrabold text-emerald-600">
                     99.2% Positive
                   </span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 rounded-2xl border border-border bg-zinc-50 p-3 dark:bg-zinc-900/60">
+              <div className="flex items-center gap-3 rounded-2xl border border-border bg-zinc-50 p-3">
                 <Truck className="h-5 w-5 shrink-0 text-indigo-600" />
                 <div>
                   <span className="block font-mono text-[10px] font-bold text-muted-foreground uppercase">
@@ -223,7 +233,7 @@ export default function StorefrontPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 rounded-2xl border border-border bg-zinc-50 p-3 dark:bg-zinc-900/60">
+              <div className="flex items-center gap-3 rounded-2xl border border-border bg-zinc-50 p-3">
                 <RotateCcw className="h-5 w-5 shrink-0 text-indigo-600" />
                 <div>
                   <span className="block font-mono text-[10px] font-bold text-muted-foreground uppercase">
@@ -235,14 +245,14 @@ export default function StorefrontPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 rounded-2xl border border-border bg-zinc-50 p-3 dark:bg-zinc-900/60">
+              <div className="flex items-center gap-3 rounded-2xl border border-border bg-zinc-50 p-3">
                 <Store className="h-5 w-5 shrink-0 text-indigo-600" />
                 <div>
                   <span className="block font-mono text-[10px] font-bold text-muted-foreground uppercase">
                     Products
                   </span>
                   <span className="text-xs font-extrabold text-foreground">
-                    {mockProducts.length}+ Listed
+                    {products.length} listed
                   </span>
                 </div>
               </div>
@@ -256,19 +266,19 @@ export default function StorefrontPage() {
             onClick={() => setActiveTab("products")}
             className={`flex cursor-pointer items-center gap-2 border-b-2 px-4 pb-3 text-xs font-bold transition-all ${
               activeTab === "products"
-                ? "border-indigo-600 text-indigo-600 dark:text-indigo-400"
+                ? "border-indigo-600 text-indigo-600"
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
             <Store className="h-4 w-4" />
-            <span>Products ({mockProducts.length})</span>
+            <span>Products ({products.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab("about")}
             className={`flex cursor-pointer items-center gap-2 border-b-2 px-4 pb-3 text-xs font-bold transition-all ${
               activeTab === "about"
-                ? "border-indigo-600 text-indigo-600 dark:text-indigo-400"
+                ? "border-indigo-600 text-indigo-600"
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -280,7 +290,7 @@ export default function StorefrontPage() {
             onClick={() => setActiveTab("reviews")}
             className={`flex cursor-pointer items-center gap-2 border-b-2 px-4 pb-3 text-xs font-bold transition-all ${
               activeTab === "reviews"
-                ? "border-indigo-600 text-indigo-600 dark:text-indigo-400"
+                ? "border-indigo-600 text-indigo-600"
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -292,7 +302,7 @@ export default function StorefrontPage() {
             onClick={() => setActiveTab("policies")}
             className={`flex cursor-pointer items-center gap-2 border-b-2 px-4 pb-3 text-xs font-bold transition-all ${
               activeTab === "policies"
-                ? "border-indigo-600 text-indigo-600 dark:text-indigo-400"
+                ? "border-indigo-600 text-indigo-600"
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -357,10 +367,11 @@ export default function StorefrontPage() {
                       className="group flex flex-col justify-between rounded-2xl border border-border bg-card p-4 transition-all hover:border-indigo-500/30 hover:shadow-xl"
                     >
                       <div>
-                        <div className="relative mb-3 flex h-44 w-full items-center justify-center overflow-hidden rounded-xl bg-zinc-100 text-6xl dark:bg-zinc-900">
-                          <span className="transition-transform group-hover:scale-110">
-                            {product.image}
-                          </span>
+                        <div className="relative mb-3 flex h-44 w-full items-center justify-center overflow-hidden rounded-xl bg-zinc-100 text-6xl">
+                          <ProductImage
+                            src={product.image}
+                            alt={product.name}
+                          />
                           <button
                             onClick={() => toggleWishlist(product.id)}
                             className={`absolute top-2.5 right-2.5 cursor-pointer rounded-full p-2 backdrop-blur-md transition-colors ${
@@ -383,13 +394,13 @@ export default function StorefrontPage() {
                         </Link>
                         <div className="mt-1 flex items-center gap-1 text-xs font-bold text-amber-500">
                           <Star className="h-3.5 w-3.5 fill-amber-500" />
-                          <span>{product.rating}</span>
+                          <span>{product.ratingLabel}</span>
                         </div>
                       </div>
 
                       <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
                         <span className="text-base font-black text-foreground">
-                          ${product.price.toFixed(2)}
+                          {formatRupees(product.price)}
                         </span>
                         <button
                           onClick={() => addToCart(product.id)}
@@ -455,7 +466,7 @@ export default function StorefrontPage() {
                 <MapPin className="h-5 w-5 text-indigo-600" />
                 Dispatch & Warehouse Address
               </h3>
-              <div className="space-y-1 rounded-xl border border-border bg-zinc-50 p-4 text-xs dark:bg-zinc-900/50">
+              <div className="space-y-1 rounded-xl border border-border bg-zinc-50 p-4 text-xs">
                 <p className="font-bold text-foreground">{displayName}</p>
                 <p className="text-muted-foreground">
                   {address?.street1 || "Central Industrial Logistics Zone"}
@@ -491,7 +502,7 @@ export default function StorefrontPage() {
         {/* TAB 3: RATINGS & REVIEWS */}
         {activeTab === "reviews" && (
           <div className="space-y-6 rounded-2xl border border-border bg-card p-6">
-            <div className="flex flex-col items-center gap-6 rounded-2xl border border-border bg-zinc-50 p-6 sm:flex-row dark:bg-zinc-900/50">
+            <div className="flex flex-col items-center gap-6 rounded-2xl border border-border bg-zinc-50 p-6 sm:flex-row">
               <div className="border-border text-center sm:border-r sm:pr-8">
                 <span className="block text-4xl font-black text-foreground">
                   4.8
@@ -511,21 +522,21 @@ export default function StorefrontPage() {
               <div className="w-full flex-1 space-y-2 text-xs">
                 <div className="flex items-center gap-3">
                   <span className="w-12 font-bold">5 Stars</span>
-                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
+                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-200">
                     <div className="h-full w-[88%] bg-amber-500" />
                   </div>
                   <span className="w-8 text-right font-mono">88%</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="w-12 font-bold">4 Stars</span>
-                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
+                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-200">
                     <div className="h-full w-[8%] bg-amber-500" />
                   </div>
                   <span className="w-8 text-right font-mono">8%</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="w-12 font-bold">3 Stars</span>
-                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
+                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-200">
                     <div className="h-full w-[3%] bg-amber-500" />
                   </div>
                   <span className="w-8 text-right font-mono">3%</span>
@@ -555,8 +566,8 @@ export default function StorefrontPage() {
                 Tracked Logistics Delivery
               </h3>
               <p className="text-xs leading-relaxed text-muted-foreground">
-                Orders are dispatched via CBS Marketplace logistics partners
-                with real-time tracking updates.
+                Orders are dispatched via {brand.marketplaceName} logistics
+                partners with real-time tracking updates.
               </p>
             </div>
 

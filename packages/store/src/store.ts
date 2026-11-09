@@ -12,7 +12,7 @@ export const makeStore = () => {
       auth: authReducer,
       onboarding: onboardingReducer,
     },
-    middleware: (getDefaultMiddleware: any) =>
+    middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(baseApi.middleware),
   })
 }

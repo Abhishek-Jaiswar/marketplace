@@ -143,7 +143,7 @@ class CatalogRepository {
     const page = params.page ?? 1
     const limit = params.limit ?? 20
     const skip = (page - 1) * limit
-    const { search, categoryId, brandId, status } = params
+    const { search, categoryId, brandId, status, sellerId } = params
 
     const where = (product: any) => {
       const conditions: Condition[] = []
@@ -155,6 +155,15 @@ class CatalogRepository {
       }
       if (brandId !== undefined) {
         conditions.push(product.brandId.eq(brandId))
+      }
+      if (sellerId !== undefined) {
+        conditions.push(
+          product.variants.some((variant: any) =>
+            variant.listings.some((listing: any) =>
+              listing.sellerId.eq(sellerId)
+            )
+          )
+        )
       }
       if (search) {
         const term = `%${search}%`
@@ -169,7 +178,18 @@ class CatalogRepository {
       .limit(limit)
       .include("category", (c) => c.select("id", "name", "slug"))
       .include("brand", (b) => b.select("id", "name", "slug", "isVerified"))
-      .include("variants", (v) => v.select("id", "sku", "status"))
+      .include("variants", (v) =>
+        v
+          .select("id", "sku", "status")
+          .include("listings", (l) =>
+            l.select("id", "sellerId", "mrpPrice", "sellingPrice", "status")
+          )
+      )
+      .include("media", (m) =>
+        m
+          .select("id", "isPrimary", "sortOrder")
+          .include("media", (media) => media.select("id", "url"))
+      )
 
     const [items, totals] = await Promise.all([
       query.all(),
@@ -340,7 +360,11 @@ class CatalogRepository {
       status: "ACTIVE",
     })
       .orderBy((l) => l.sellingPrice.asc())
-      .include("seller", (s) => s.select("id", "businessName"))
+      .include("seller", (s) =>
+        s
+          .select("id", "businessName", "status")
+          .include("store", (store) => store.select("slug", "displayName"))
+      )
       .include("inventoryItems", (inv) =>
         inv.select("id", "onHand", "reserved", "safetyStock", "locationId")
       )

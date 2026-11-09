@@ -74,7 +74,7 @@ export function NavbarSearch() {
           e.preventDefault()
           handleSearchSubmit()
         }}
-        className="flex h-10 w-full overflow-hidden rounded-xl border border-border bg-muted/30 transition-all duration-300 focus-within:border-primary/50 focus-within:bg-background focus-within:ring-2 focus-within:ring-primary/10 hover:border-border/80 dark:bg-white/[0.03]"
+        className="flex h-10 w-full overflow-hidden rounded-xl border border-border bg-muted/30 transition-all duration-300 focus-within:border-primary/50 focus-within:bg-background focus-within:ring-2 focus-within:ring-primary/10 hover:border-border/80"
       >
         {/* Category selector button */}
         <div className="relative flex h-full items-center">

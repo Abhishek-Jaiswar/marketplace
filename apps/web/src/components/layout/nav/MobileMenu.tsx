@@ -1,10 +1,10 @@
 "use client"
+import { Logo } from "@workspace/ui/components/logo"
 
 import React, { useState } from "react"
 import Link from "next/link"
 import {
   Menu,
-  ShoppingBag,
   Home,
   Package,
   Heart,
@@ -62,13 +62,8 @@ export function MobileMenu() {
         >
           <div>
             <DialogHeader className="mb-6 flex flex-row items-center justify-between border-b border-border/50 pb-4">
-              <DialogTitle className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-zinc-800 to-zinc-950 shadow-lg dark:from-zinc-100 dark:to-zinc-300">
-                  <ShoppingBag className="h-4.5 w-4.5 text-zinc-50 dark:text-zinc-950" />
-                </div>
-                <span className="text-md bg-gradient-to-r from-zinc-900 to-zinc-600 bg-clip-text font-extrabold tracking-tight text-transparent dark:from-white dark:to-zinc-400">
-                  CBS Market
-                </span>
+              <DialogTitle>
+                <Logo size="sm" />
               </DialogTitle>
             </DialogHeader>
 

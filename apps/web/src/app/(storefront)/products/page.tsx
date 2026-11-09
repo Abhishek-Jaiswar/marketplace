@@ -13,12 +13,13 @@ import {
   SlidersHorizontal,
   RotateCcw,
 } from "lucide-react"
+import { useGetCategoryTreeQuery } from "@workspace/store"
+import { ProductImage } from "../../../components/product-image"
 import {
-  mockProducts,
-  mockCategories,
-  mockVendors,
-  Product,
-} from "../../../utils/mockData"
+  formatRupees,
+  useStorefrontProducts,
+  type Product,
+} from "../../../lib/storefront-products"
 
 function ProductsPageContent() {
   const searchParams = useSearchParams()
@@ -51,8 +52,12 @@ function ProductsPageContent() {
     setCart((prev) => [...prev, id])
   }
 
+  const { products } = useStorefrontProducts()
+  const { data: categoryTree } = useGetCategoryTreeQuery()
+  const categories = categoryTree?.data ?? []
+
   // Filter logic
-  let filtered = mockProducts.filter((p: Product) => {
+  let filtered = products.filter((p: Product) => {
     const matchesSearch =
       !searchQuery.trim() ||
       p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -61,6 +66,7 @@ function ProductsPageContent() {
 
     const matchesCategory =
       selectedCategory === "All" ||
+      p.categorySlug === selectedCategory ||
       p.category.toLowerCase() === selectedCategory.toLowerCase()
 
     const matchesVendor =
@@ -157,41 +163,20 @@ function ProductsPageContent() {
                 >
                   All Categories
                 </button>
-                {mockCategories.map((cat) => (
+                {categories.map((cat) => (
                   <button
                     key={cat.id}
-                    onClick={() => setSelectedCategory(cat.name)}
+                    onClick={() => setSelectedCategory(cat.slug)}
                     className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-xs font-medium transition-colors ${
-                      selectedCategory.toLowerCase() === cat.name.toLowerCase()
+                      selectedCategory === cat.slug
                         ? "bg-primary font-bold text-primary-foreground"
                         : "text-muted-foreground hover:bg-muted"
                     }`}
                   >
-                    <span>
-                      {cat.image} {cat.name}
-                    </span>
+                    <span>{cat.name}</span>
                   </button>
                 ))}
               </div>
-            </div>
-
-            {/* Vendor Filter */}
-            <div className="border-t border-border pt-4">
-              <h3 className="mb-3 font-mono text-xs font-bold tracking-wider text-muted-foreground uppercase">
-                Store / Vendor
-              </h3>
-              <select
-                value={selectedVendor}
-                onChange={(e) => setSelectedVendor(e.target.value)}
-                className="w-full rounded-xl border border-border bg-background p-2.5 text-xs focus:border-primary focus:outline-none"
-              >
-                <option value="All">All Vendors</option>
-                {mockVendors.map((v) => (
-                  <option key={v.id} value={v.name}>
-                    {v.name}
-                  </option>
-                ))}
-              </select>
             </div>
           </aside>
 
@@ -254,9 +239,10 @@ function ProductsPageContent() {
                     >
                       <div>
                         <div className="relative mb-3 flex h-44 w-full items-center justify-center overflow-hidden rounded-xl bg-muted/40 text-6xl">
-                          <span className="transition-transform group-hover:scale-110">
-                            {product.image}
-                          </span>
+                          <ProductImage
+                            src={product.image}
+                            alt={product.name}
+                          />
                           <button
                             onClick={() => toggleWishlist(product.id)}
                             className={`absolute top-2.5 right-2.5 rounded-full p-2 backdrop-blur-md transition-colors ${
@@ -282,7 +268,7 @@ function ProductsPageContent() {
                         </Link>
                         <div className="mt-1 flex items-center gap-1 text-xs font-bold text-amber-500">
                           <Star className="h-3 w-3 fill-amber-500" />
-                          <span>{product.rating}</span>
+                          <span>{product.ratingLabel}</span>
                           <span className="font-normal text-muted-foreground">
                             ({product.reviewCount})
                           </span>
@@ -291,7 +277,7 @@ function ProductsPageContent() {
 
                       <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
                         <span className="text-base font-extrabold text-foreground">
-                          ${product.price.toFixed(2)}
+                          {formatRupees(product.price)}
                         </span>
                         <button
                           onClick={() => addToCart(product.id)}
