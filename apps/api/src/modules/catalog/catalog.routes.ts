@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { catalogController } from "./catalog.controller.js"
-import { requireAuth } from "../../middlewares/auth.middleware.js"
+import { optionalAuth, requireAuth } from "../../middlewares/auth.middleware.js"
 import { requireRole } from "../../middlewares/role.middleware.js"
 import { rateLimiter } from "../../middlewares/rate-limiter.middleware.js"
 
@@ -35,9 +35,13 @@ router.put(
 router.get("/pdp/:slug", catalogController.getStorefrontPDP)
 
 // ---------------- Master Products (SPU) ----------------
-router.get("/products", catalogController.getProducts)
-router.get("/products/slug/:slug", catalogController.getProductBySlug)
-router.get("/products/:id", catalogController.getProductById)
+router.get("/products", optionalAuth, catalogController.getProducts)
+router.get(
+  "/products/slug/:slug",
+  optionalAuth,
+  catalogController.getProductBySlug
+)
+router.get("/products/:id", optionalAuth, catalogController.getProductById)
 
 router.post(
   "/products",

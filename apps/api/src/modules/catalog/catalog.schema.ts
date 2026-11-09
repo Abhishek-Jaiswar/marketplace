@@ -89,6 +89,7 @@ export const listProductsQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(100).optional().default(20),
   search: z.string().trim().optional(),
   categoryId: z.string().trim().optional(),
+  category: z.string().trim().optional(),
   brandId: z.string().trim().optional(),
   sellerId: z.string().trim().optional(),
   status: z

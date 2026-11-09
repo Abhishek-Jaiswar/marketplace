@@ -119,6 +119,7 @@ export interface ListProductsParams {
   limit?: number
   search?: string
   categoryId?: string
+  category?: string
   brandId?: string
   sellerId?: string
   status?: "DRAFT" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "ARCHIVED"
@@ -203,6 +204,9 @@ export interface StorefrontOffer {
   mrpPrice: number
   sellingPrice: number
   availableStock: number
+  handlingTimeDays: number
+  codEnabled: boolean
+  condition: string
   isInStock: boolean
   seller?: {
     id: string
@@ -220,6 +224,7 @@ export interface StorefrontPdp {
     | "slug"
     | "description"
     | "highlights"
+    | "specifications"
     | "category"
     | "brand"
   > & { media?: ProductMedia[] }

@@ -1,240 +1,315 @@
-"use client"
-
-import React, { useState } from "react"
+import type { Metadata } from "next"
 import Link from "next/link"
-import { useParams } from "next/navigation"
-import {
-  Star,
-  ShieldCheck,
-  Truck,
-  RotateCcw,
-  ShoppingCart,
-  Heart,
-  Store,
-  ChevronRight,
-  Check,
-} from "lucide-react"
+import { notFound } from "next/navigation"
+import { Price } from "@workspace/ui/components/price"
+import { formatInr } from "@workspace/ui/lib/money"
+import { cn } from "@workspace/ui/lib/utils"
+
 import { ProductImage } from "../../../../components/product-image"
+import { Shelf } from "../../../../components/storefront/catalog"
 import {
-  formatRupees,
-  useStorefrontProduct,
-} from "../../../../lib/storefront-products"
+  BuyButtons,
+  DeliveryCheck,
+  MobileBuyBar,
+} from "../../../../components/storefront/commerce"
+import { RatingLine } from "../../../../components/storefront/rating"
+import { ReviewsPanel } from "../../../../components/storefront/reviews"
+import { mockDeliveryDate, mockOffers } from "../../../../lib/mock-data"
+import { getProductCards, getProductPage } from "../../../../lib/server-api"
 
-export default function ProductDetailPage() {
-  const params = useParams()
-  const slug = (params?.id as string) ?? ""
-  const { product, vendor, isLoading } = useStorefrontProduct(slug)
+type Props = {
+  params: Promise<{ id: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}
 
-  const [quantity, setQuantity] = useState(1)
-  const [isWishlisted, setIsWishlisted] = useState(false)
-  const [addedToCart, setAddedToCart] = useState(false)
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const page = await getProductPage((await params).id)
+  return page
+    ? { title: page.product.title, description: page.product.description }
+    : { title: "Product not found" }
+}
 
-  const handleAddToCart = () => {
-    setAddedToCart(true)
-    setTimeout(() => setAddedToCart(false), 2500)
-  }
+const dispatchText = (days: number) =>
+  days <= 1 ? "Ships within 1 day" : `Ships within ${days} days`
 
-  if (!product || !vendor) {
-    return (
-      <p className="mx-auto w-full max-w-7xl px-4 py-16 text-muted-foreground sm:px-6 lg:px-8">
-        {isLoading ? "Loading this product." : "This product is not available."}
-      </p>
-    )
-  }
+const variantLabel = (attributes: Record<string, unknown>) =>
+  Object.values(attributes).map(String).join(", ")
+
+export default async function ProductPage({ params, searchParams }: Props) {
+  const { id } = await params
+  const { variant: requested } = await searchParams
+  const page = await getProductPage(id)
+  if (!page) notFound()
+
+  const { product, variants } = page
+  const categorySlug = product.category?.slug
+  const related = categorySlug
+    ? (await getProductCards({ category: categorySlug, limit: 13 })).filter(
+        (card) => card.slug !== product.slug
+      )
+    : []
+
+  const variant =
+    variants.find((candidate) => candidate.sku === requested) ?? variants[0]
+  const offer = variant?.buyBoxWinner ?? null
+  const otherOffers = (variant?.allOffers ?? []).filter(
+    (candidate) => candidate.id !== offer?.id
+  )
+  const hasOptions = variants.some(
+    (candidate) => Object.keys(candidate.attributes).length > 0
+  )
+  const media = [...(product.media ?? [])].sort(
+    (a, b) => Number(b.isPrimary) - Number(a.isPrimary)
+  )
+  const specifications = Object.entries(product.specifications ?? {})
+  const store = offer?.seller?.store
+  const inStock = offer?.isInStock ?? false
+  const optionLabel = variant ? variantLabel(variant.attributes) : ""
+  const cartItem = offer
+    ? {
+        key: offer.id,
+        slug: product.slug,
+        title: product.title,
+        option: optionLabel || null,
+        image: media[0]?.media?.url ?? null,
+        seller: store?.displayName ?? offer.seller?.businessName ?? null,
+        price: offer.sellingPrice,
+        mrp: offer.mrpPrice,
+      }
+    : null
 
   return (
-    <div className="min-h-screen bg-background py-8 text-foreground">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <nav className="mb-6 flex items-center gap-2 font-mono text-xs text-muted-foreground">
-          <Link href="/" className="hover:text-foreground">
-            Home
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5" />
-          <Link href="/products" className="hover:text-foreground">
+    <div className="space-y-2 pb-20 sm:space-y-3 md:pb-0">
+      {product.category ? (
+        <nav
+          aria-label="Breadcrumb"
+          className="px-3 pt-2 text-sm text-muted-foreground sm:px-0 sm:pt-0"
+        >
+          <Link href="/products" className="hover:underline">
             Products
           </Link>
-          <ChevronRight className="h-3.5 w-3.5" />
-          <span className="truncate font-bold text-foreground">
-            {product.name}
-          </span>
+          <span aria-hidden="true"> / </span>
+          <Link
+            href={`/products?category=${product.category.slug}`}
+            className="hover:underline"
+          >
+            {product.category.name}
+          </Link>
         </nav>
+      ) : null}
 
-        {/* Product Details Section */}
-        <div className="grid grid-cols-1 gap-12 rounded-3xl border border-border bg-card p-6 shadow-xl sm:p-10 lg:grid-cols-2">
-          {/* Left Column: Visual Showcase */}
-          <div className="space-y-4">
-            <div className="relative flex h-[400px] w-full items-center justify-center overflow-hidden rounded-2xl border border-border bg-zinc-100 text-9xl shadow-inner">
-              <ProductImage src={product.image} alt={product.name} />
-              {product.tag && (
-                <span className="absolute top-4 left-4 rounded-full bg-rose-600 px-3 py-1 font-mono text-xs font-black text-white shadow-md">
-                  {product.tag}
-                </span>
-              )}
-              <button
-                onClick={() => setIsWishlisted(!isWishlisted)}
-                className={`absolute top-4 right-4 rounded-full border p-3 backdrop-blur-md transition-all ${
-                  isWishlisted
-                    ? "border-rose-500 bg-rose-500 text-white"
-                    : "border-border bg-background/80 text-muted-foreground"
-                }`}
-              >
-                <Heart
-                  className={`h-5 w-5 ${isWishlisted ? "fill-white" : ""}`}
-                />
-              </button>
-            </div>
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-2 sm:gap-3 md:grid-cols-2 xl:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_19rem]">
+        <section className="self-start bg-card p-3 sm:rounded-lg md:sticky md:top-28">
+          <div className="relative aspect-square overflow-hidden rounded-md bg-muted">
+            <ProductImage
+              src={media[0]?.media?.url ?? null}
+              alt={product.title}
+              sizes="(min-width: 1280px) 40vw, (min-width: 768px) 50vw, 100vw"
+              eager
+            />
+          </div>
+          {media.length > 1 ? (
+            <ul className="mt-2 grid grid-cols-5 gap-2">
+              {media.slice(1).map((item) => (
+                <li
+                  key={item.id}
+                  className="relative aspect-square overflow-hidden rounded-sm bg-muted"
+                >
+                  <ProductImage
+                    src={item.media?.url ?? null}
+                    alt=""
+                    sizes="96px"
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </section>
 
-            {/* Micro badges */}
-            <div className="grid grid-cols-3 gap-3 text-center text-xs">
-              <div className="rounded-xl border border-border bg-zinc-100 p-3">
-                <Truck className="mx-auto mb-1 h-4 w-4 text-blue-500" />
-                <span className="block font-semibold">Free Delivery</span>
-              </div>
-              <div className="rounded-xl border border-border bg-zinc-100 p-3">
-                <ShieldCheck className="mx-auto mb-1 h-4 w-4 text-emerald-500" />
-                <span className="block font-semibold">1 Yr Warranty</span>
-              </div>
-              <div className="rounded-xl border border-border bg-zinc-100 p-3">
-                <RotateCcw className="mx-auto mb-1 h-4 w-4 text-amber-500" />
-                <span className="block font-semibold">Easy Returns</span>
-              </div>
+        <section className="bg-card p-4 sm:rounded-lg">
+          {product.brand ? (
+            <p className="text-sm text-muted-foreground">
+              {product.brand.name}
+            </p>
+          ) : null}
+          <h1 className="text-xl leading-snug font-semibold sm:text-2xl">
+            {product.title}
+          </h1>
+          <RatingLine slug={product.slug} />
+
+          {offer ? (
+            <Price
+              className="mt-3 border-t border-border pt-3"
+              amount={offer.sellingPrice}
+              mrp={offer.mrpPrice}
+              size="lg"
+              showTaxNote
+            />
+          ) : null}
+
+          {offer ? (
+            <div className="mt-4">
+              <h2 className="text-sm font-medium">Offers</h2>
+              <ul className="mt-1.5 space-y-1">
+                {mockOffers(offer.sellingPrice).map((text) => (
+                  <li key={text} className="text-sm">
+                    {text}
+                  </li>
+                ))}
+              </ul>
             </div>
+          ) : null}
+
+          {hasOptions ? (
+            <div className="mt-4">
+              <h2 className="text-sm font-medium">Options</h2>
+              <ul className="mt-1.5 flex flex-wrap gap-2">
+                {variants.map((candidate) => (
+                  <li key={candidate.id}>
+                    <Link
+                      href={`/products/${product.slug}?variant=${candidate.sku}`}
+                      aria-current={
+                        candidate.id === variant?.id ? "true" : undefined
+                      }
+                      className={cn(
+                        "block rounded-md border px-3 py-1.5",
+                        candidate.id === variant?.id
+                          ? "border-primary bg-tint-sky font-semibold"
+                          : "border-input hover:border-primary"
+                      )}
+                    >
+                      {variantLabel(candidate.attributes)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {product.highlights?.length ? (
+            <div className="mt-4">
+              <h2 className="text-sm font-medium">Highlights</h2>
+              <ul className="mt-1.5 list-disc space-y-1 pl-5">
+                {product.highlights.map((highlight) => (
+                  <li key={highlight}>{highlight}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          <div className="mt-4 border-t border-border pt-3">
+            <h2 className="font-semibold">About this product</h2>
+            <p className="mt-1 max-w-prose">{product.description}</p>
           </div>
 
-          {/* Right Column: Specs & Actions */}
-          <div className="flex flex-col justify-between space-y-6">
-            <div>
-              {/* Category & Rating */}
-              <div className="mb-2 flex items-center justify-between">
-                <span className="font-mono text-xs font-bold tracking-widest text-blue-600 uppercase">
-                  {product.category}
-                </span>
-                <div className="flex items-center gap-1.5 text-xs font-extrabold text-amber-500">
-                  <Star className="h-4 w-4 fill-amber-500" />
-                  <span>{product.ratingLabel}</span>
-                  <span className="font-normal text-muted-foreground">
-                    ({product.reviewCount} verified reviews)
-                  </span>
-                </div>
-              </div>
-
-              <h1 className="text-2xl leading-tight font-black tracking-tight text-foreground sm:text-4xl">
-                {product.name}
-              </h1>
-
-              {/* Vendor Info Box */}
-              <div className="mt-3 inline-flex items-center gap-2 rounded-xl border border-border bg-zinc-100 p-2 px-3 text-xs">
-                <Store className="h-4 w-4 text-emerald-500" />
-                <span className="text-muted-foreground">Sold by:</span>
-                <Link
-                  href={`/store/${vendor.slug}`}
-                  className="font-bold text-foreground hover:underline"
-                >
-                  {product.vendorName || vendor.name}
-                </Link>
-                {vendor.verified && (
-                  <span className="ml-1 rounded bg-emerald-500 px-1.5 py-0.5 font-mono text-[10px] font-bold text-white">
-                    VERIFIED
-                  </span>
-                )}
-              </div>
-
-              {/* Price Tag */}
-              <div className="mt-6 flex items-baseline gap-3">
-                <span className="text-3xl font-black text-foreground">
-                  {formatRupees(product.price)}
-                </span>
-                {product.originalPrice && (
-                  <span className="font-mono text-base text-muted-foreground line-through">
-                    {formatRupees(product.originalPrice)}
-                  </span>
-                )}
-                <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 font-mono text-xs font-bold text-emerald-600">
-                  In Stock & Ready to Ship
-                </span>
-              </div>
-
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                {product.description}
-              </p>
-
-              {/* Product Features checklist */}
-              {product.features && (
-                <div className="mt-6 space-y-2">
-                  <h4 className="font-mono text-xs font-bold tracking-wider text-foreground uppercase">
-                    Key Highlights:
-                  </h4>
-                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    {product.features.map((feat, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center gap-2 text-xs font-medium text-foreground"
-                      >
-                        <Check className="h-3.5 w-3.5 shrink-0 text-blue-500" />
-                        <span>{feat}</span>
-                      </div>
-                    ))}
+          {specifications.length > 0 ? (
+            <div className="mt-4 border-t border-border pt-3">
+              <h2 className="font-semibold">Specifications</h2>
+              <dl className="mt-1 divide-y divide-border">
+                {specifications.map(([label, value]) => (
+                  <div key={label} className="grid grid-cols-2 gap-4 py-1.5">
+                    <dt className="text-muted-foreground">{label}</dt>
+                    <dd>{String(value)}</dd>
                   </div>
-                </div>
-              )}
+                ))}
+              </dl>
             </div>
+          ) : null}
+        </section>
 
-            {/* Quantity & CTA */}
-            <div className="space-y-4 border-t border-border pt-6">
-              <div className="flex items-center gap-4">
-                <label className="font-mono text-xs font-bold text-muted-foreground uppercase">
-                  Quantity:
-                </label>
-                <div className="flex items-center overflow-hidden rounded-xl border border-border bg-background">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3.5 py-1.5 text-sm font-bold hover:bg-zinc-100"
-                  >
-                    -
-                  </button>
-                  <span className="px-4 py-1.5 font-mono text-xs font-extrabold">
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="px-3.5 py-1.5 text-sm font-bold hover:bg-zinc-100"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center gap-3 sm:flex-row">
-                <button
-                  onClick={handleAddToCart}
-                  className={`flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-sm font-extrabold shadow-xl transition-all sm:flex-1 ${
-                    addedToCart
-                      ? "bg-emerald-600 text-white"
-                      : "bg-blue-600 text-white hover:scale-[1.01] hover:bg-blue-700"
-                  }`}
-                >
-                  {addedToCart ? (
-                    <>
-                      <Check className="h-4 w-4" /> Added To Cart!
-                    </>
-                  ) : (
-                    <>
-                      <ShoppingCart className="h-4 w-4" /> Add To Shopping Cart
-                    </>
-                  )}
-                </button>
-                <Link
-                  href="/checkout"
-                  className="w-full rounded-2xl bg-foreground px-8 py-4 text-center text-sm font-black text-background transition-opacity hover:opacity-90 sm:w-auto"
-                >
-                  Buy Now
+        <aside className="self-start bg-card p-4 sm:rounded-lg md:col-span-2 xl:sticky xl:top-28 xl:col-span-1">
+          {offer ? (
+            <Price amount={offer.sellingPrice} mrp={offer.mrpPrice} size="md" />
+          ) : null}
+          <p
+            className={cn(
+              "mt-3 font-semibold",
+              inStock ? "text-success" : "text-destructive"
+            )}
+          >
+            {inStock ? "In stock" : "Out of stock"}
+          </p>
+          {offer ? (
+            <ul className="mt-1 space-y-0.5 text-sm">
+              {inStock ? (
+                <li className="font-medium">
+                  Delivery by {mockDeliveryDate(offer.handlingTimeDays)}
+                </li>
+              ) : null}
+              <li>{dispatchText(offer.handlingTimeDays)}</li>
+              {offer.codEnabled ? <li>Cash on delivery available</li> : null}
+            </ul>
+          ) : null}
+          {offer?.seller ? (
+            <p className="mt-3 text-sm">
+              Sold by{" "}
+              {store ? (
+                <Link href={`/store/${store.slug}`} className="underline">
+                  {store.displayName}
                 </Link>
-              </div>
+              ) : (
+                offer.seller.businessName
+              )}
+            </p>
+          ) : null}
+
+          {offer ? (
+            <DeliveryCheck handlingDays={offer.handlingTimeDays} />
+          ) : null}
+
+          {cartItem ? (
+            <div className="mt-4 max-md:hidden">
+              <BuyButtons item={cartItem} disabled={!inStock} />
             </div>
-          </div>
-        </div>
+          ) : null}
+
+          {otherOffers.length > 0 ? (
+            <div className="mt-4 border-t border-border pt-3">
+              <h2 className="font-semibold">Other sellers</h2>
+              <ul className="mt-1 divide-y divide-border">
+                {otherOffers.map((other) => (
+                  <li
+                    key={other.id}
+                    className="flex items-center justify-between gap-3 py-1.5 text-sm"
+                  >
+                    {other.seller?.store ? (
+                      <Link
+                        href={`/store/${other.seller.store.slug}`}
+                        className="underline"
+                      >
+                        {other.seller.store.displayName}
+                      </Link>
+                    ) : (
+                      <span>{other.seller?.businessName}</span>
+                    )}
+                    <span className="font-semibold tabular-nums">
+                      {formatInr(other.sellingPrice)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </aside>
       </div>
+
+      <ReviewsPanel slug={product.slug} />
+
+      {categorySlug ? (
+        <Shelf
+          title={`More in ${product.category?.name}`}
+          href={`/products?category=${categorySlug}`}
+          products={related}
+        />
+      ) : null}
+
+      {cartItem && offer ? (
+        <MobileBuyBar
+          item={cartItem}
+          disabled={!inStock}
+          priceLabel={formatInr(offer.sellingPrice)}
+        />
+      ) : null}
     </div>
   )
 }

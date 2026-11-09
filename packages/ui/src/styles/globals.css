@@ -95,11 +95,48 @@
   --density-row: 3rem;
 }
 
-/* Roomy and photo-led; display type runs wide so prices carry the page. */
+/*
+ * Storefront: light tints on a cool mist canvas, with one dark ink for
+ * structure. Each department owns a tint, so colour works as wayfinding.
+ */
 [data-surface="storefront"] {
-  --background: var(--kagaz-0);
+  --neel-900: #18264a;
+  --neel-700: #2a3b66;
+
+  --tint-wheat: #f3e4c4;
+  --tint-sky: #cfe4f4;
+  --tint-pista: #dce9cc;
+  --tint-jamun: #e4ddf2;
+  --tint-aam: #fbe0ca;
+
+  --background: #edf1f5;
+  --foreground: var(--neel-900);
+  --card-foreground: var(--neel-900);
+  --popover-foreground: var(--neel-900);
+  --primary: var(--neel-900);
+  --secondary: #eaeff4;
+  --secondary-foreground: var(--neel-900);
+  --accent: #eaeff4;
+  --accent-foreground: var(--neel-900);
+  --muted: #eaeff4;
+  --muted-foreground: #4f5b75;
+  --border: #dfe5eb;
+  --input: #c4ceda;
+  --ring: #2f62b5;
+
+  --card: #ffffff;
+  --popover: #ffffff;
+  --action: var(--neel-900);
+  --action-hover: var(--neel-700);
+  --action-foreground: #ffffff;
+  --discount: #a12d1e;
+  --destructive: #a12d1e;
+  --success: #2b6339;
+
+  --logo-tag: #ecc98a;
+
   --type-width: 100%;
-  --type-width-display: 125%;
+  --type-width-display: 100%;
   --density-row: 3.5rem;
 }
 
@@ -149,6 +186,11 @@
   --color-success-soft: var(--success-soft);
   --color-warning-soft: var(--warning-soft);
   --color-inverse-muted: var(--inverse-muted);
+  --color-tint-wheat: var(--tint-wheat);
+  --color-tint-sky: var(--tint-sky);
+  --color-tint-pista: var(--tint-pista);
+  --color-tint-jamun: var(--tint-jamun);
+  --color-tint-aam: var(--tint-aam);
 
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);

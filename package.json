@@ -21,6 +21,7 @@
     "db:verify": "pnpm --filter @workspace/db db:verify",
     "migration:plan": "pnpm --filter @workspace/db migration:plan",
     "db:seed": "pnpm --filter @workspace/db db:seed",
+    "db:seed:catalog": "pnpm --filter @workspace/db db:seed:catalog",
     "db:reset": "pnpm --filter @workspace/db db:reset",
     "redis:up": "docker compose up -d redis",
     "redis:down": "docker compose down"

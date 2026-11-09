@@ -139,11 +139,36 @@ class CatalogRepository {
       .first()
   }
 
-  async findProducts(params: ListProductsQuery) {
+  /** The category with this slug plus everything beneath it. */
+  async findCategoryTreeIds(slug: string): Promise<string[]> {
+    const categories = await db.orm.public.Category.select(
+      "id",
+      "slug",
+      "parentId"
+    )
+      .limit(MAX_UNPAGED_ROWS)
+      .all()
+
+    const root = categories.find((category) => category.slug === slug)
+    if (!root) return []
+
+    const ids = [root.id]
+    for (let index = 0; index < ids.length; index += 1) {
+      for (const category of categories) {
+        if (category.parentId === ids[index]) ids.push(category.id)
+      }
+    }
+    return ids
+  }
+
+  async findProducts(
+    params: ListProductsQuery & { categoryIds?: string[] | undefined }
+  ) {
     const page = params.page ?? 1
     const limit = params.limit ?? 20
     const skip = (page - 1) * limit
-    const { search, categoryId, brandId, status, sellerId } = params
+    const { search, categoryId, categoryIds, brandId, status, sellerId } =
+      params
 
     const where = (product: any) => {
       const conditions: Condition[] = []
@@ -152,6 +177,12 @@ class CatalogRepository {
       }
       if (categoryId !== undefined) {
         conditions.push(product.categoryId.eq(categoryId))
+      }
+      if (categoryIds !== undefined) {
+        // An unknown slug must match nothing, not everything.
+        conditions.push(
+          product.categoryId.in(categoryIds.length ? categoryIds : [""])
+        )
       }
       if (brandId !== undefined) {
         conditions.push(product.brandId.eq(brandId))

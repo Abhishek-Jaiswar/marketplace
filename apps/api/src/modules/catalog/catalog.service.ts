@@ -23,6 +23,7 @@ import type {
   ListSellerListingsQuery,
 } from "./catalog.types.js"
 import type { ProductStatus } from "@workspace/db"
+import { type AuthUser, isAdmin } from "../../utils/http/request.js"
 
 function slugify(text: string): string {
   return text
@@ -93,28 +94,48 @@ class CatalogService {
   }
 
   // ---------------- Master Products (SPU) ----------------
-  async getProducts(query: ListProductsQuery) {
+  private isVisible(status: ProductStatus, viewer?: AuthUser): boolean {
+    return status === "APPROVED" || this.canSeeUnapproved(viewer)
+  }
+
+  /** Unapproved products are visible to admins only. */
+  private canSeeUnapproved(viewer?: AuthUser): boolean {
+    return viewer ? isAdmin(viewer) : false
+  }
+
+  async getProducts(requested: ListProductsQuery, viewer?: AuthUser) {
+    const query: ListProductsQuery = this.canSeeUnapproved(viewer)
+      ? requested
+      : { ...requested, status: "APPROVED" }
+
     return catalogCache.getOrSetProductList(
       query.page ?? 1,
       query.limit ?? 20,
       query.search,
-      query.categoryId,
+      query.category ?? query.categoryId,
       query.brandId,
       query.status,
       query.sellerId,
-      () => catalogRepository.findProducts(query)
+      async () => {
+        const categoryIds = query.category
+          ? await catalogRepository.findCategoryTreeIds(query.category)
+          : undefined
+        return catalogRepository.findProducts({ ...query, categoryIds })
+      }
     )
   }
 
-  async getProductById(id: string) {
+  async getProductById(id: string, viewer?: AuthUser) {
     const product = await catalogRepository.findProductById(id)
-    if (!product) throw new NotFoundError("Product not found")
+    if (!product || !this.isVisible(product.status, viewer))
+      throw new NotFoundError("Product not found")
     return product
   }
 
-  async getProductBySlug(slug: string) {
+  async getProductBySlug(slug: string, viewer?: AuthUser) {
     const product = await catalogRepository.findProductBySlug(slug)
-    if (!product) throw new NotFoundError("Product not found")
+    if (!product || !this.isVisible(product.status, viewer))
+      throw new NotFoundError("Product not found")
     return product
   }
 

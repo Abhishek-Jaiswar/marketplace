@@ -56,6 +56,7 @@ export const catalogApi = baseApi.injectEndpoints({
           if (params?.search) queryParams.append("search", params.search)
           if (params?.categoryId)
             queryParams.append("categoryId", params.categoryId)
+          if (params?.category) queryParams.append("category", params.category)
           if (params?.brandId) queryParams.append("brandId", params.brandId)
           if (params?.sellerId) queryParams.append("sellerId", params.sellerId)
           if (params?.status) queryParams.append("status", params.status)

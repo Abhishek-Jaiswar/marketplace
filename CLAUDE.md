@@ -67,7 +67,8 @@ pnpm migration:plan      # create a migration in packages/db/migrations
 pnpm db:migrate          # apply planned migrations
 pnpm db:update           # update database state directly, without a migration
 pnpm db:verify
-pnpm db:seed
+pnpm db:seed             # DESTRUCTIVE: deletes all rows first
+pnpm db:seed:catalog     # adds demo sellers and products; safe to re-run
 pnpm db:reset            # DESTRUCTIVE: see below
 ```
 
@@ -132,6 +133,8 @@ Each domain has `*.routes`, `*.controller`, `*.service`, `*.repository`, `*.cach
 - The API base URL comes from `NEXT_PUBLIC_API_URL`, falling back to `http://localhost:4000/api` in development.
 - All apps use `makeStore` from `@workspace/store`; add new reducers in `packages/store/src/store.ts`.
 - Retries live in `packages/store/src/api/retry-policy.ts`: GET and HEAD only, on network errors, timeouts, and 408/502/503/504, up to 3 times with jittered backoff. Writes are never retried automatically, and a failed token refresh only signs the user out if the server rejected it.
+- Storefront pages are Server Components reading through `apps/web/src/lib/server-api.ts`, which retries transient failures. Only sign-in state and auth forms use RTK Query there.
+- Catalog and category responses are cached in Redis, so direct database changes such as seeding need the `catalog:version`-style keys bumped before they appear.
 - Show errors with `getApiErrorMessage(error, fallback)` from `@workspace/store`; it never exposes server-side detail.
 - One-time codes are stored hashed in `VerificationToken` (`modules/users/otp.service.ts`), not Redis. Redis is optional everywhere: without it the API runs with no cache or rate limits and reconnects on its own.
 - Rebuilding `packages/db` during `pnpm dev` can stop the API child process. Saving any file in `apps/api/src` restarts it.
@@ -147,4 +150,5 @@ The product is light only and English only: do not add dark variants, theme swit
 - Show prices with `Price` and format money with `formatInr`, both of which take paise. Load Anek Latin with both `latin` and `latin-ext`, or the rupee sign falls back to another font.
 - `bg-action` (`Button variant="action"`) is for the single commit action on a screen. Avoid uppercase labels, gradients, glass effects, and emoji as imagery.
 - `/design-system` in `apps/web` is the live specimen (development only).
+- The storefront follows familiar marketplace structure: sticky header with department-scoped search, filters beside results, a buy box on the product page. Features without an API (ratings, reviews, delivery estimates, offers, deal timers, cart) use placeholders from `apps/web/src/lib/mock-data.ts` and `mock-cart.ts`; replace them as the APIs ship.
 - Build screens from the kit in `packages/ui/src/components`: `Field` with `Input`/`Textarea`/`Select`, `Checkbox`, `Switch`, `Tabs`, `DataTable`, `Pagination`, `StatusPill`, `EmptyState`, `ErrorState`, `PageHeader`, `MetricList`, `QueueSplit`, `Stepper`, `Timeline`. Add new API statuses to `StatusPill`, so wording stays the same on every surface.

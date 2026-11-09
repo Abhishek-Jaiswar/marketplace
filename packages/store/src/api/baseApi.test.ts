@@ -11,6 +11,9 @@ vi.mock("./retry-policy", async (importOriginal) => ({
 const api = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     readThing: builder.query<{ ok: boolean }, void>({ query: () => "/thing" }),
+    signIn: builder.mutation<{ ok: boolean }, void>({
+      query: () => ({ url: "/users/login", method: "POST" }),
+    }),
     writeThing: builder.mutation<{ ok: boolean }, void>({
       query: () => ({ url: "/thing", method: "POST" }),
     }),
@@ -105,6 +108,14 @@ describe("session refresh", () => {
     expect(result.data).toEqual({ ok: true })
     expect(paths()).toEqual(["/api/thing", "/api/users/refresh", "/api/thing"])
     expect(store.getState().auth.accessToken).toBe("new-token")
+  })
+
+  it("does not refresh after a failed sign-in", async () => {
+    fetchMock.mockResolvedValueOnce(json(401))
+
+    await makeStore().dispatch(api.endpoints.signIn.initiate())
+
+    expect(paths()).toEqual(["/api/users/login"])
   })
 
   it("signs out when the server rejects the refresh", async () => {

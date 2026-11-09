@@ -1,5 +1,7 @@
 "use client"
 
+import { formatInr } from "@workspace/ui/lib/money"
+
 import React, { useState } from "react"
 import {
   useGetInventoryQuery,
@@ -682,7 +684,8 @@ export default function SellerInventoryPage() {
                 <option value="">Select listing...</option>
                 {listings.map((l) => (
                   <option key={l.id} value={l.id}>
-                    {l.sellerSku} — ₹{l.sellingPrice} ({l.variant?.sku})
+                    {l.sellerSku} — {formatInr(l.sellingPrice)} (
+                    {l.variant?.sku})
                   </option>
                 ))}
               </select>

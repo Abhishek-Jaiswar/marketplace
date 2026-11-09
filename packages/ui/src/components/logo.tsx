@@ -29,7 +29,7 @@ export function LogoMark({ className }: LogoMarkProps) {
       className={cn("shrink-0", className)}
     >
       <path
-        fill="var(--action)"
+        fill="var(--logo-tag, var(--action))"
         d="M12 3h15a2 2 0 0 1 2 2v22a2 2 0 0 1-2 2H12a2 2 0 0 1-1.5-.7l-7.3-11a2 2 0 0 1 0-2.6l7.3-11A2 2 0 0 1 12 3Z"
       />
       <circle cx="10.5" cy="16" r="2.25" fill="var(--foreground)" />

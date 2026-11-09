@@ -1,4 +1,6 @@
 "use client"
+
+import { formatInr } from "@workspace/ui/lib/money"
 import { brand } from "@workspace/ui/lib/brand"
 
 import React, { useState } from "react"
@@ -135,8 +137,8 @@ export default function SellerProductsPage() {
     e.preventDefault()
     if (!selectedVariantId) return
 
-    const mrp = parseInt(listingForm.mrpPrice, 10)
-    const selling = parseInt(listingForm.sellingPrice, 10)
+    const mrp = Math.round(parseFloat(listingForm.mrpPrice) * 100)
+    const selling = Math.round(parseFloat(listingForm.sellingPrice) * 100)
 
     if (selling > mrp) {
       setStatusMessage({
@@ -214,8 +216,8 @@ export default function SellerProductsPage() {
     try {
       await updateListing({
         id: editingListing.id,
-        sellingPrice: parseInt(editPriceForm.sellingPrice, 10),
-        mrpPrice: parseInt(editPriceForm.mrpPrice, 10),
+        sellingPrice: Math.round(parseFloat(editPriceForm.sellingPrice) * 100),
+        mrpPrice: Math.round(parseFloat(editPriceForm.mrpPrice) * 100),
         status: editPriceForm.status,
       }).unwrap()
 
@@ -409,10 +411,10 @@ export default function SellerProductsPage() {
                               </Badge>
                             </td>
                             <td className="px-4 py-3 text-xs text-muted-foreground line-through">
-                              ₹{listing.mrpPrice.toLocaleString("en-IN")}
+                              {formatInr(listing.mrpPrice)}
                             </td>
                             <td className="px-4 py-3 font-semibold text-emerald-600">
-                              ₹{listing.sellingPrice.toLocaleString("en-IN")}
+                              {formatInr(listing.sellingPrice)}
                             </td>
                             <td className="px-4 py-3">
                               <span
@@ -450,8 +452,10 @@ export default function SellerProductsPage() {
                                 onClick={() => {
                                   setEditingListing(listing)
                                   setEditPriceForm({
-                                    sellingPrice: String(listing.sellingPrice),
-                                    mrpPrice: String(listing.mrpPrice),
+                                    sellingPrice: String(
+                                      listing.sellingPrice / 100
+                                    ),
+                                    mrpPrice: String(listing.mrpPrice / 100),
                                     status:
                                       listing.status === "ACTIVE"
                                         ? "ACTIVE"

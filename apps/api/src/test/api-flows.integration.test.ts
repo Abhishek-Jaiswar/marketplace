@@ -453,6 +453,23 @@ describe("selling, from onboarding to a product page", () => {
       201
     ).data
 
+    const anonymousDrafts = ok(
+      await request(app).get(
+        `/api/catalog/products?status=DRAFT&categoryId=${categoryId}`
+      )
+    )
+    expect(
+      anonymousDrafts.items.some((p: { id: string }) => p.id === product.id)
+    ).toBe(false)
+    expect(
+      (await request(app).get(`/api/catalog/products/${product.id}`)).status
+    ).toBe(404)
+    ok(
+      await request(app)
+        .get(`/api/catalog/products/${product.id}`)
+        .set(auth(admin))
+    )
+
     const reviewed = ok(
       await request(app)
         .patch(`/api/catalog/products/${product.id}/review`)

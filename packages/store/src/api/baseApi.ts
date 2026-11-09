@@ -86,6 +86,13 @@ const baseQueryWithRetry = retry(baseQuery, {
 const isRefreshRejected = (error: FetchBaseQueryError | undefined) =>
   error?.status === 400 || error?.status === 401 || error?.status === 403
 
+/** On these routes a 401 means wrong details, not an expired session. */
+const CREDENTIAL_ROUTES =
+  /\/users\/(login|register|verify|resend-otp|forgot-password|reset-password)$/
+
+const isCredentialRequest = (args: string | FetchArgs) =>
+  CREDENTIAL_ROUTES.test(typeof args === "string" ? args : args.url)
+
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
@@ -95,7 +102,7 @@ const baseQueryWithReauth: BaseQueryFn<
 
   let result = await baseQueryWithRetry(args, api, extraOptions)
 
-  if (result.error?.status === 401) {
+  if (result.error?.status === 401 && !isCredentialRequest(args)) {
     if (!mutex.isLocked()) {
       const release = await mutex.acquire()
       try {

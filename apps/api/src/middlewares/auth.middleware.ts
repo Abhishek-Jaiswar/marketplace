@@ -15,6 +15,23 @@ declare global {
   }
 }
 
+/** Identifies the caller when a valid token is sent, and never rejects. */
+export function optionalAuth(
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): void {
+  const token = req.headers.authorization?.match(/^Bearer (.+)$/)?.[1]
+  if (token) {
+    try {
+      req.user = verifyAccessToken(token)
+    } catch {
+      // An expired token on a public route is treated as anonymous.
+    }
+  }
+  next()
+}
+
 export function requireAuth(
   req: Request,
   _res: Response,

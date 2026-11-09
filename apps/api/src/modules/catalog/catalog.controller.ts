@@ -128,7 +128,7 @@ class CatalogController {
           parsed.error.issues[0]?.message || "Invalid query parameters"
         )
       }
-      const result = await catalogService.getProducts(parsed.data)
+      const result = await catalogService.getProducts(parsed.data, req.user)
       res.status(200).json(result)
     } catch (error) {
       next(error)
@@ -142,7 +142,7 @@ class CatalogController {
   ): Promise<void> => {
     try {
       const id = getSingleParam(req.params.id)
-      const product = await catalogService.getProductById(id)
+      const product = await catalogService.getProductById(id, req.user)
       res.status(200).json({ data: product })
     } catch (error) {
       next(error)
@@ -156,7 +156,7 @@ class CatalogController {
   ): Promise<void> => {
     try {
       const slug = getSingleParam(req.params.slug)
-      const product = await catalogService.getProductBySlug(slug)
+      const product = await catalogService.getProductBySlug(slug, req.user)
       res.status(200).json({ data: product })
     } catch (error) {
       next(error)

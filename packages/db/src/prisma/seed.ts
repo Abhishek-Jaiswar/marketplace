@@ -1,5 +1,6 @@
 import argon2 from "argon2"
 import { db } from "./db.js"
+import { seedCatalog } from "./seed-catalog.js"
 
 interface SeedCategory {
   name: string
@@ -573,7 +574,7 @@ const categoriesData: SeedCategory[] = [
     slug: "toys-games-baby",
     excerpt:
       "Interactive toys, board games, action figures, and baby care essentials.",
-    image: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800",
+    image: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=800",
     storageKey: "categories/toys-games-baby.jpg",
     altText: "Toys and board games",
     isActive: true,
@@ -756,6 +757,8 @@ async function main() {
   console.log(
     `✅ Successfully seeded ${totalCategories} categories across multiple hierarchical levels.`
   )
+
+  await seedCatalog()
 
   console.log("\n===========================================")
   console.log("🎉 Database reset & seeded successfully!")
