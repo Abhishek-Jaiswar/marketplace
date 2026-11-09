@@ -17,8 +17,7 @@ class SellerRepository {
       db.orm.public.Seller.aggregate((aggregate) => ({
         total: aggregate.count(),
       })),
-      db.orm.public.Seller
-        .orderBy((seller) => seller.createdAt.desc())
+      db.orm.public.Seller.orderBy((seller) => seller.createdAt.desc())
         .offset(skip)
         .limit(limit)
         .include("owner", (owner) =>
@@ -28,15 +27,15 @@ class SellerRepository {
             "lastName",
             "email",
             "status",
-            "roles",
-          ),
+            "roles"
+          )
         )
         .include("bankAccounts")
         .include("store", (store) => store.include("address"))
         .include("verification", (verification) =>
           verification.include("documents", (documents) =>
-            documents.include("media"),
-          ),
+            documents.include("media")
+          )
         )
         .all(),
     ])
@@ -51,36 +50,33 @@ class SellerRepository {
   }
 
   async findSellerById(sellerId: string) {
-    return db.orm.public.Seller
-      .include("owner", (owner) =>
-        owner.select(
-          "id",
-          "firstName",
-          "lastName",
-          "email",
-          "status",
-          "roles",
-        ),
-      )
+    return db.orm.public.Seller.include("owner", (owner) =>
+      owner.select("id", "firstName", "lastName", "email", "status", "roles")
+    )
       .include("bankAccounts")
       .include("store", (store) => store.include("address"))
       .include("verification", (verification) =>
         verification.include("documents", (documents) =>
-          documents.include("media"),
-        ),
+          documents.include("media")
+        )
       )
       .where({ id: sellerId })
       .first()
   }
 
+  async findSellerIdentityByOwnerId(ownerUserId: string) {
+    return db.orm.public.Seller.select("id", "status")
+      .where({ ownerUserId })
+      .first()
+  }
+
   async findSellerByOwnerId(ownerUserId: string) {
-    return db.orm.public.Seller
-      .include("bankAccounts")
+    return db.orm.public.Seller.include("bankAccounts")
       .include("store", (store) => store.include("address"))
       .include("verification", (verification) =>
         verification.include("documents", (documents) =>
-          documents.include("media"),
-        ),
+          documents.include("media")
+        )
       )
       .where({ ownerUserId })
       .first()
@@ -92,25 +88,17 @@ class SellerRepository {
     businessType: BusinessType,
     contactEmail?: string,
     contactPhone?: string,
-    gstin?: string,
+    gstin?: string
   ) {
-    return db.orm.public.Seller
-      .include("owner", (owner) =>
-        owner.select(
-          "id",
-          "firstName",
-          "lastName",
-          "email",
-          "status",
-          "roles",
-        ),
-      )
+    return db.orm.public.Seller.include("owner", (owner) =>
+      owner.select("id", "firstName", "lastName", "email", "status", "roles")
+    )
       .include("bankAccounts")
       .include("store", (store) => store.include("address"))
       .include("verification", (verification) =>
         verification.include("documents", (documents) =>
-          documents.include("media"),
-        ),
+          documents.include("media")
+        )
       )
       .create({
         ownerUserId,
@@ -133,45 +121,42 @@ class SellerRepository {
       contactPhone?: string
       status?: SellerStatus
       approvedAt?: Date | string | null
-    },
+    }
   ) {
-    return db.orm.public.Seller
-      .where({ id: sellerId })
-      .update({
-        ...(data.businessName !== undefined && {
-          businessName: data.businessName,
-        }),
-        ...(data.businessType !== undefined && {
-          businessType: data.businessType,
-        }),
-        ...(data.gstin !== undefined && { gstin: data.gstin ?? null }),
-        ...(data.contactEmail !== undefined && {
-          contactEmail: data.contactEmail ?? null,
-        }),
-        ...(data.contactPhone !== undefined && {
-          contactPhone: data.contactPhone ?? null,
-        }),
-        ...(data.status !== undefined && { status: data.status }),
-        ...(data.approvedAt !== undefined && {
-          approvedAt:
-            data.approvedAt instanceof Date
-              ? data.approvedAt.toISOString()
-              : data.approvedAt,
-        }),
-      })
+    return db.orm.public.Seller.where({ id: sellerId }).update({
+      ...(data.businessName !== undefined && {
+        businessName: data.businessName,
+      }),
+      ...(data.businessType !== undefined && {
+        businessType: data.businessType,
+      }),
+      ...(data.gstin !== undefined && { gstin: data.gstin ?? null }),
+      ...(data.contactEmail !== undefined && {
+        contactEmail: data.contactEmail ?? null,
+      }),
+      ...(data.contactPhone !== undefined && {
+        contactPhone: data.contactPhone ?? null,
+      }),
+      ...(data.status !== undefined && { status: data.status }),
+      ...(data.approvedAt !== undefined && {
+        approvedAt:
+          data.approvedAt instanceof Date
+            ? data.approvedAt.toISOString()
+            : data.approvedAt,
+      }),
+    })
   }
 
   async updateUserRoles(userId: string, roles: UserRole[]) {
-    return db.orm.public.User
-      .select(
-        "id",
-        "firstName",
-        "lastName",
-        "email",
-        "status",
-        "roles",
-        "emailVerified",
-      )
+    return db.orm.public.User.select(
+      "id",
+      "firstName",
+      "lastName",
+      "email",
+      "status",
+      "roles",
+      "emailVerified"
+    )
       .where({ id: userId })
       .update({
         roles,
@@ -194,29 +179,28 @@ class SellerRepository {
         country: string
         phoneNumber?: string
       }
-    },
+    }
   ) {
     let addressId: string | undefined
 
     if (storeData.address) {
-      const existingStore = await db.orm.public.Store
-        .select("addressId")
+      const existingStore = await db.orm.public.Store.select("addressId")
         .where({ sellerId })
         .first()
 
       if (existingStore?.addressId) {
-        const updatedAddress = await db.orm.public.Address
-          .where({ id: existingStore.addressId })
-          .update({
-            street1: storeData.address.street1,
-            street2: storeData.address.street2 ?? null,
-            landmark: storeData.address.landmark ?? null,
-            city: storeData.address.city,
-            state: storeData.address.state,
-            postalCode: storeData.address.postalCode,
-            country: storeData.address.country,
-            phoneNumber: storeData.address.phoneNumber ?? null,
-          })
+        const updatedAddress = await db.orm.public.Address.where({
+          id: existingStore.addressId,
+        }).update({
+          street1: storeData.address.street1,
+          street2: storeData.address.street2 ?? null,
+          landmark: storeData.address.landmark ?? null,
+          city: storeData.address.city,
+          state: storeData.address.state,
+          postalCode: storeData.address.postalCode,
+          country: storeData.address.country,
+          phoneNumber: storeData.address.phoneNumber ?? null,
+        })
 
         addressId = updatedAddress?.id
       } else {
@@ -256,8 +240,7 @@ class SellerRepository {
   }
 
   async findStoreBySlug(slug: string) {
-    return db.orm.public.Store
-      .include("address")
+    return db.orm.public.Store.include("address")
       .include("seller", (seller) =>
         seller.select(
           "id",
@@ -266,8 +249,8 @@ class SellerRepository {
           "contactEmail",
           "contactPhone",
           "status",
-          "createdAt",
-        ),
+          "createdAt"
+        )
       )
       .where({ slug })
       .first()
@@ -280,27 +263,26 @@ class SellerRepository {
       accountNumber: string
       ifscCode: string
       bankName: string
-    },
+    }
   ) {
-    const existing = await db.orm.public.BankAccount
-      .where({ sellerId, isPrimary: true })
-      .first()
+    const existing = await db.orm.public.BankAccount.where({
+      sellerId,
+      isPrimary: true,
+    }).first()
 
     if (existing) {
-      return db.orm.public.BankAccount
-        .where({ id: existing.id })
-        .update({
-          accountHolderName: bankData.accountHolderName,
-          accountNumber: bankData.accountNumber,
-          ifscCode: bankData.ifscCode,
-          bankName: bankData.bankName,
-          status: "PENDING",
-        })
+      return db.orm.public.BankAccount.where({ id: existing.id }).update({
+        accountHolderName: bankData.accountHolderName,
+        accountNumber: bankData.accountNumber,
+        ifscCode: bankData.ifscCode,
+        bankName: bankData.bankName,
+        status: "PENDING",
+      })
     }
 
-    await db.orm.public.BankAccount
-      .where({ sellerId })
-      .updateAll({ isPrimary: false })
+    await db.orm.public.BankAccount.where({ sellerId }).updateAll({
+      isPrimary: false,
+    })
 
     return db.orm.public.BankAccount.create({
       sellerId,
@@ -314,8 +296,10 @@ class SellerRepository {
   }
 
   async getOrCreateVerification(sellerId: string) {
-    const existing = await db.orm.public.SellerVerification
-      .include("documents", (documents) => documents.include("media"))
+    const existing = await db.orm.public.SellerVerification.include(
+      "documents",
+      (documents) => documents.include("media")
+    )
       .where({ sellerId })
       .first()
 
@@ -323,12 +307,12 @@ class SellerRepository {
       return existing
     }
 
-    return db.orm.public.SellerVerification
-      .include("documents", (documents) => documents.include("media"))
-      .create({
-        sellerId,
-        status: "PENDING",
-      })
+    return db.orm.public.SellerVerification.include("documents", (documents) =>
+      documents.include("media")
+    ).create({
+      sellerId,
+      status: "PENDING",
+    })
   }
 
   async updateVerificationStatus(
@@ -345,22 +329,24 @@ class SellerRepository {
       bankRejectionReason?: string | null
       documentsStatus?: VerificationStatus
       documentsRejectionReason?: string | null
-    },
+    }
   ) {
     const verification = await this.getOrCreateVerification(sellerId)
 
-    return db.orm.public.SellerVerification
-      .where({ id: verification.id })
-      .update({
-        status,
-        reviewedBy: reviewedBy ?? null,
-        remarks: remarks ?? null,
-        ...(stepData ?? {}),
-        ...(status === "UNDER_REVIEW" && { submittedAt: new Date().toISOString() }),
-        ...(["APPROVED", "REJECTED"].includes(status) && {
-          reviewedAt: new Date().toISOString(),
-        }),
-      })
+    return db.orm.public.SellerVerification.where({
+      id: verification.id,
+    }).update({
+      status,
+      reviewedBy: reviewedBy ?? null,
+      remarks: remarks ?? null,
+      ...(stepData ?? {}),
+      ...(status === "UNDER_REVIEW" && {
+        submittedAt: new Date().toISOString(),
+      }),
+      ...(["APPROVED", "REJECTED"].includes(status) && {
+        reviewedAt: new Date().toISOString(),
+      }),
+    })
   }
 
   async createMedia(mediaData: {
@@ -392,65 +378,54 @@ class SellerRepository {
   async addDocument(
     verificationId: string,
     mediaId: string,
-    type: SellerDocumentType,
+    type: SellerDocumentType
   ) {
-    const existing = await db.orm.public.SellerDocument
-      .where({ verificationId, type })
-      .first()
+    const existing = await db.orm.public.SellerDocument.where({
+      verificationId,
+      type,
+    }).first()
 
     if (existing) {
       await db.orm.public.SellerDocument.where({ id: existing.id }).delete()
     }
 
-    return db.orm.public.SellerDocument
-      .include("media")
-      .create({
-        verificationId,
-        mediaId,
-        type,
-        status: "PENDING",
-      })
+    return db.orm.public.SellerDocument.include("media").create({
+      verificationId,
+      mediaId,
+      type,
+      status: "PENDING",
+    })
   }
 
   async registerSellerTransaction(payload: any, passwordHash: string) {
     return db.transaction(async (tx) => {
-      const user = await tx.orm.public.User
-        .select(
-          "id",
-          "firstName",
-          "lastName",
-          "email",
-          "status",
-          "roles",
-          "createdAt",
-        )
-        .create({
-          firstName: payload.firstName,
-          lastName: payload.lastName || null,
-          email: payload.email,
-          roles: ["CUSTOMER", "SELLER"],
-          status: "UNVERIFIED",
-          credential: (credential) => credential.create({ passwordHash }),
-          customer: (customer) => customer.create({}),
-        })
+      const user = await tx.orm.public.User.select(
+        "id",
+        "firstName",
+        "lastName",
+        "email",
+        "status",
+        "roles",
+        "createdAt"
+      ).create({
+        firstName: payload.firstName,
+        lastName: payload.lastName || null,
+        email: payload.email,
+        roles: ["CUSTOMER", "SELLER"],
+        status: "UNVERIFIED",
+        credential: (credential) => credential.create({ passwordHash }),
+        customer: (customer) => customer.create({}),
+      })
 
-      const seller = await tx.orm.public.Seller
-        .include("owner", (owner) =>
-          owner.select(
-            "id",
-            "firstName",
-            "lastName",
-            "email",
-            "status",
-            "roles",
-          ),
-        )
+      const seller = await tx.orm.public.Seller.include("owner", (owner) =>
+        owner.select("id", "firstName", "lastName", "email", "status", "roles")
+      )
         .include("bankAccounts")
         .include("store", (store) => store.include("address"))
         .include("verification", (verification) =>
           verification.include("documents", (documents) =>
-            documents.include("media"),
-          ),
+            documents.include("media")
+          )
         )
         .create({
           ownerUserId: user.id,

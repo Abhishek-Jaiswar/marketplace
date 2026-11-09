@@ -36,19 +36,28 @@ export const listBrandsQuerySchema = z.object({
   isVerified: z
     .string()
     .optional()
-    .transform((val) => (val === "true" ? true : val === "false" ? false : undefined)),
+    .transform((val) =>
+      val === "true" ? true : val === "false" ? false : undefined
+    ),
 })
 
 // ---------------- Products (Master SPU) ----------------
 export const createProductSchema = z.object({
-  title: z.string().trim().min(3, "Title must be at least 3 characters").max(255),
+  title: z
+    .string()
+    .trim()
+    .min(3, "Title must be at least 3 characters")
+    .max(255),
   slug: z
     .string()
     .trim()
     .toLowerCase()
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be URL-friendly")
     .optional(),
-  description: z.string().trim().min(10, "Description must be at least 10 characters"),
+  description: z
+    .string()
+    .trim()
+    .min(10, "Description must be at least 10 characters"),
   highlights: z.array(z.string().trim().min(1)).optional().default([]),
   specifications: z.record(z.string(), z.unknown()).optional(),
   categoryId: z.string().trim().min(1, "Category is required"),
@@ -80,7 +89,9 @@ export const listProductsQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(100).optional().default(20),
   search: z.string().trim().optional(),
   categoryId: z.string().trim().optional(),
+  category: z.string().trim().optional(),
   brandId: z.string().trim().optional(),
+  sellerId: z.string().trim().optional(),
   status: z
     .enum(["DRAFT", "PENDING_REVIEW", "APPROVED", "REJECTED", "ARCHIVED"])
     .optional(),
@@ -113,51 +124,62 @@ export const addProductMediaSchema = z.object({
 })
 
 // ---------------- Seller Listings (Offers) ----------------
-export const createSellerListingSchema = z.object({
-  variantId: z.string().trim().min(1, "Variant ID is required"),
-  sellerSku: z.string().trim().min(1, "Seller SKU is required").max(100),
-  mrpPrice: z.number().int().positive("MRP must be greater than 0"),
-  sellingPrice: z.number().int().positive("Selling price must be greater than 0"),
-  currency: z.string().trim().length(3).optional().default("INR"),
-  condition: z
-    .enum(["NEW", "REFURBISHED", "USED_LIKE_NEW", "USED_GOOD", "USED_FAIR"])
-    .optional()
-    .default("NEW"),
-  conditionNote: z.string().trim().max(500).nullable().optional(),
-  handlingTimeDays: z.number().int().min(0).max(30).optional().default(1),
-  warranty: z.string().trim().max(255).nullable().optional(),
-}).refine((data) => data.sellingPrice <= data.mrpPrice, {
-  message: "Selling price cannot exceed MRP",
-  path: ["sellingPrice"],
-})
-
-export const updateSellerListingSchema = z.object({
-  mrpPrice: z.number().int().positive().optional(),
-  sellingPrice: z.number().int().positive().optional(),
-  condition: z
-    .enum(["NEW", "REFURBISHED", "USED_LIKE_NEW", "USED_GOOD", "USED_FAIR"])
-    .optional(),
-  conditionNote: z.string().trim().max(500).nullable().optional(),
-  handlingTimeDays: z.number().int().min(0).max(30).optional(),
-  warranty: z.string().trim().max(255).nullable().optional(),
-  status: z.enum(["ACTIVE", "INACTIVE", "OUT_OF_STOCK", "SUSPENDED"]).optional(),
-}).refine(
-  (data) => {
-    if (data.mrpPrice && data.sellingPrice) {
-      return data.sellingPrice <= data.mrpPrice
-    }
-    return true
-  },
-  {
+export const createSellerListingSchema = z
+  .object({
+    variantId: z.string().trim().min(1, "Variant ID is required"),
+    sellerSku: z.string().trim().min(1, "Seller SKU is required").max(100),
+    mrpPrice: z.number().int().positive("MRP must be greater than 0"),
+    sellingPrice: z
+      .number()
+      .int()
+      .positive("Selling price must be greater than 0"),
+    currency: z.string().trim().length(3).optional().default("INR"),
+    condition: z
+      .enum(["NEW", "REFURBISHED", "USED_LIKE_NEW", "USED_GOOD", "USED_FAIR"])
+      .optional()
+      .default("NEW"),
+    conditionNote: z.string().trim().max(500).nullable().optional(),
+    handlingTimeDays: z.number().int().min(0).max(30).optional().default(1),
+    warranty: z.string().trim().max(255).nullable().optional(),
+  })
+  .refine((data) => data.sellingPrice <= data.mrpPrice, {
     message: "Selling price cannot exceed MRP",
     path: ["sellingPrice"],
-  }
-)
+  })
+
+export const updateSellerListingSchema = z
+  .object({
+    mrpPrice: z.number().int().positive().optional(),
+    sellingPrice: z.number().int().positive().optional(),
+    condition: z
+      .enum(["NEW", "REFURBISHED", "USED_LIKE_NEW", "USED_GOOD", "USED_FAIR"])
+      .optional(),
+    conditionNote: z.string().trim().max(500).nullable().optional(),
+    handlingTimeDays: z.number().int().min(0).max(30).optional(),
+    warranty: z.string().trim().max(255).nullable().optional(),
+    status: z
+      .enum(["ACTIVE", "INACTIVE", "OUT_OF_STOCK", "SUSPENDED"])
+      .optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.mrpPrice && data.sellingPrice) {
+        return data.sellingPrice <= data.mrpPrice
+      }
+      return true
+    },
+    {
+      message: "Selling price cannot exceed MRP",
+      path: ["sellingPrice"],
+    }
+  )
 
 export const listSellerListingsQuerySchema = z.object({
   page: z.coerce.number().int().positive().optional().default(1),
   limit: z.coerce.number().int().positive().max(100).optional().default(20),
   variantId: z.string().trim().optional(),
-  status: z.enum(["ACTIVE", "INACTIVE", "OUT_OF_STOCK", "SUSPENDED"]).optional(),
+  status: z
+    .enum(["ACTIVE", "INACTIVE", "OUT_OF_STOCK", "SUSPENDED"])
+    .optional(),
   sellerId: z.string().trim().optional(),
 })

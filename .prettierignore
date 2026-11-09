@@ -3,5 +3,17 @@ node_modules/
 .next/
 .turbo/
 coverage/
+logs/
 pnpm-lock.yaml
 .pnpm-store/
+.agents/
+.claude/
+.cursor/
+.devin/
+postman/
+docs/
+*.md
+packages/db/migrations/
+packages/db/skills-lock.json
+packages/db/src/prisma/contract.json
+packages/db/src/prisma/contract.d.ts

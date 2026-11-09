@@ -1,278 +1,350 @@
-"use client";
+import type { Metadata } from "next"
+import Link from "next/link"
+import { XIcon } from "lucide-react"
+import type { CategoryTreeNode } from "@workspace/store"
+import { discountPercent } from "@workspace/ui/lib/money"
+import { EmptyState } from "@workspace/ui/components/states"
+import { cn } from "@workspace/ui/lib/utils"
 
-import React, { useState, useEffect, Suspense } from "react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { Search, Star, ShoppingCart, Heart, ArrowUpDown, ChevronRight, SlidersHorizontal, RotateCcw } from "lucide-react";
-import { mockProducts, mockCategories, mockVendors, Product } from "../../../utils/mockData";
+import { ResultGrid } from "../../../components/storefront/catalog"
+import {
+  FilterSheet,
+  type FilterGroup,
+} from "../../../components/storefront/filter-sheet"
+import { mockRating } from "../../../lib/mock-data"
+import { getCategoryTree, getProductCards } from "../../../lib/server-api"
 
-function ProductsPageContent() {
-  const searchParams = useSearchParams();
+export const metadata: Metadata = { title: "Products" }
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedVendor, setSelectedVendor] = useState("All");
-  const [sortBy, setSortBy] = useState("featured");
-  const [wishlist, setWishlist] = useState<string[]>([]);
-  const [, setCart] = useState<string[]>([]);
+const PAGE_SIZE = 24
 
-  // Sync state with URL search params (e.g. when coming from Navbar search)
-  useEffect(() => {
-    const qParam = searchParams.get("q") || "";
-    const catParam = searchParams.get("category") || "All";
-    const vendorParam = searchParams.get("vendor") || "All";
+const sorts = [
+  { value: "newest", label: "Newest" },
+  { value: "price-low", label: "Price: low to high" },
+  { value: "price-high", label: "Price: high to low" },
+  { value: "discount", label: "Biggest discount" },
+  { value: "rating", label: "Top rated" },
+]
 
-    setSearchQuery(qParam);
-    setSelectedCategory(catParam);
-    setSelectedVendor(vendorParam);
-  }, [searchParams]);
+// Paise bounds; the upper bound is exclusive.
+const prices = [
+  { value: "under-1000", label: "Under ₹1,000", min: 0, max: 100000 },
+  { value: "1000-5000", label: "₹1,000 to ₹5,000", min: 100000, max: 500000 },
+  { value: "over-5000", label: "Over ₹5,000", min: 500000, max: Infinity },
+]
 
-  const toggleWishlist = (id: string) => {
-    setWishlist((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
+const discounts = [10, 25, 40]
+const ratings = [4, 3]
 
-  const addToCart = (id: string) => {
-    setCart((prev) => [...prev, id]);
-  };
+type SearchParams = Record<string, string | string[] | undefined>
+const single = (value: string | string[] | undefined) =>
+  typeof value === "string" ? value : undefined
 
-  // Filter logic
-  let filtered = mockProducts.filter((p: Product) => {
-    const matchesSearch =
-      !searchQuery.trim() ||
-      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.category.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesCategory =
-      selectedCategory === "All" ||
-      p.category.toLowerCase() === selectedCategory.toLowerCase();
-
-    const matchesVendor =
-      selectedVendor === "All" ||
-      p.vendorName?.toLowerCase() === selectedVendor.toLowerCase();
-
-    return matchesSearch && matchesCategory && matchesVendor;
-  });
-
-  // Sort logic
-  if (sortBy === "price-low") {
-    filtered = [...filtered].sort((a, b) => a.price - b.price);
-  } else if (sortBy === "price-high") {
-    filtered = [...filtered].sort((a, b) => b.price - a.price);
-  } else if (sortBy === "rating") {
-    filtered = [...filtered].sort((a, b) => b.rating - a.rating);
+function findPath(
+  nodes: CategoryTreeNode[],
+  slug: string
+): CategoryTreeNode[] | null {
+  for (const node of nodes) {
+    if (node.slug === slug) return [node]
+    const below = findPath(node.children ?? [], slug)
+    if (below) return [node, ...below]
   }
-
-  return (
-    <div className="min-h-screen bg-background text-foreground py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs text-muted-foreground mb-6 font-mono">
-          <Link href="/" className="hover:text-foreground">Home</Link>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-foreground font-bold">Search Catalog</span>
-        </nav>
-
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 pb-6 border-b border-border">
-          <div>
-            <h1 className="text-3xl font-black tracking-tight">
-              {searchQuery ? `Search Results for "${searchQuery}"` : "All Marketplace Products"}
-            </h1>
-            <p className="text-xs text-muted-foreground mt-1">
-              Showing {filtered.length} products matching your query
-            </p>
-          </div>
-
-          {/* Search bar inside page */}
-          <div className="relative max-w-md w-full">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Refine search query..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-card border border-border text-xs focus:outline-none focus:border-primary transition-colors"
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar Filters */}
-          <aside className="space-y-6 bg-card border border-border p-6 rounded-2xl h-fit">
-            <div className="flex items-center justify-between font-bold text-sm border-b border-border pb-4">
-              <div className="flex items-center gap-2">
-                <SlidersHorizontal className="w-4 h-4 text-primary" />
-                <span>Refine Search</span>
-              </div>
-              {(searchQuery || selectedCategory !== "All" || selectedVendor !== "All") && (
-                <button
-                  onClick={() => { setSelectedCategory("All"); setSelectedVendor("All"); setSearchQuery(""); }}
-                  className="text-[11px] font-semibold text-rose-500 hover:underline flex items-center gap-1"
-                >
-                  <RotateCcw className="w-3 h-3" /> Reset
-                </button>
-              )}
-            </div>
-
-            {/* Categories */}
-            <div>
-              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 font-mono">
-                Categories
-              </h3>
-              <div className="space-y-1.5">
-                <button
-                  onClick={() => setSelectedCategory("All")}
-                  className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                    selectedCategory === "All"
-                      ? "bg-primary text-primary-foreground font-bold"
-                      : "hover:bg-muted text-muted-foreground"
-                  }`}
-                >
-                  All Categories
-                </button>
-                {mockCategories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setSelectedCategory(cat.name)}
-                    className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-colors flex items-center justify-between ${
-                      selectedCategory.toLowerCase() === cat.name.toLowerCase()
-                        ? "bg-primary text-primary-foreground font-bold"
-                        : "hover:bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    <span>{cat.image} {cat.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Vendor Filter */}
-            <div className="pt-4 border-t border-border">
-              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 font-mono">
-                Store / Vendor
-              </h3>
-              <select
-                value={selectedVendor}
-                onChange={(e) => setSelectedVendor(e.target.value)}
-                className="w-full p-2.5 rounded-xl bg-background border border-border text-xs focus:outline-none focus:border-primary"
-              >
-                <option value="All">All Vendors</option>
-                {mockVendors.map((v) => (
-                  <option key={v.id} value={v.name}>{v.name}</option>
-                ))}
-              </select>
-            </div>
-          </aside>
-
-          {/* Product Grid Area */}
-          <main className="lg:col-span-3 space-y-6">
-            {/* Sorting bar */}
-            <div className="flex items-center justify-between bg-card border border-border px-4 py-3 rounded-2xl text-xs">
-              <span className="text-muted-foreground font-medium">
-                Results: <strong className="text-foreground">{filtered.length}</strong> items found
-              </span>
-
-              <div className="flex items-center gap-2">
-                <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground" />
-                <span className="font-semibold">Sort By:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-background border border-border px-3 py-1.5 rounded-xl text-xs focus:outline-none font-medium"
-                >
-                  <option value="featured">Relevance & Featured</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Highest Rated</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Products Grid */}
-            {filtered.length === 0 ? (
-              <div className="text-center py-16 bg-card border border-border rounded-2xl space-y-3">
-                <p className="text-lg font-extrabold text-foreground">No matching products found.</p>
-                <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-                  We couldn&apos;t find any items matching &ldquo;{searchQuery}&rdquo;. Try checking for typos or searching for generic terms like &ldquo;headphones&rdquo; or &ldquo;keyboard&rdquo;.
-                </p>
-                <button
-                  onClick={() => { setSelectedCategory("All"); setSelectedVendor("All"); setSearchQuery(""); }}
-                  className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground font-bold text-xs shadow-md"
-                >
-                  Clear Search Filters
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filtered.map((product: Product) => {
-                  const isWishlisted = wishlist.includes(product.id);
-                  return (
-                    <div
-                      key={product.id}
-                      className="bg-card border border-border rounded-2xl p-4 flex flex-col justify-between hover:border-primary/40 hover:shadow-xl transition-all group"
-                    >
-                      <div>
-                        <div className="relative w-full h-44 rounded-xl bg-muted/40 flex items-center justify-center text-6xl mb-3 overflow-hidden">
-                          <span className="group-hover:scale-110 transition-transform">
-                            {product.image}
-                          </span>
-                          <button
-                            onClick={() => toggleWishlist(product.id)}
-                            className={`absolute top-2.5 right-2.5 p-2 rounded-full backdrop-blur-md transition-colors ${
-                              isWishlisted ? "bg-accent text-white" : "bg-background/80 text-muted-foreground"
-                            }`}
-                          >
-                            <Heart className={`w-3.5 h-3.5 ${isWishlisted ? "fill-white" : ""}`} />
-                          </button>
-                        </div>
-
-                        <span className="text-[10px] font-mono text-muted-foreground uppercase">
-                          {product.vendorName || "Verified Store"}
-                        </span>
-                        <Link
-                          href={`/products/${product.id}`}
-                          className="text-sm font-bold text-foreground block line-clamp-1 hover:text-primary transition-colors"
-                        >
-                          {product.name}
-                        </Link>
-                        <div className="flex items-center gap-1 mt-1 text-amber-500 text-xs font-bold">
-                          <Star className="w-3 h-3 fill-amber-500" />
-                          <span>{product.rating}</span>
-                          <span className="text-muted-foreground font-normal">({product.reviewCount})</span>
-                        </div>
-                      </div>
-
-                      <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
-                        <span className="text-base font-extrabold text-foreground">
-                          ${product.price.toFixed(2)}
-                        </span>
-                        <button
-                          onClick={() => addToCart(product.id)}
-                          className="p-2 rounded-xl bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold transition-all shadow-md active:scale-95"
-                          aria-label="Add to Cart"
-                        >
-                          <ShoppingCart className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </main>
-        </div>
-      </div>
-    </div>
-  );
+  return null
 }
 
-export default function ProductsPage() {
+function FilterList({ groups }: { groups: FilterGroup[] }) {
   return (
-    <Suspense fallback={<div className="p-12 text-center text-sm font-bold">Loading marketplace catalog...</div>}>
-      <ProductsPageContent />
-    </Suspense>
-  );
+    <div className="divide-y divide-border">
+      {groups.map((group) => (
+        <section key={group.title} className="py-3 first:pt-0">
+          <h3 className="mb-1.5 font-semibold">{group.title}</h3>
+          <ul className="space-y-1">
+            {group.options.map((option) => (
+              <li key={option.label}>
+                <Link
+                  href={option.href}
+                  aria-current={option.active ? "true" : undefined}
+                  className="flex items-center gap-2 text-sm hover:underline"
+                >
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "size-4 shrink-0 rounded-sm border",
+                      option.active
+                        ? "border-primary bg-primary"
+                        : "border-input"
+                    )}
+                  />
+                  {option.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  )
+}
+
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>
+}) {
+  const params = await searchParams
+  const search = single(params.q)?.trim() || undefined
+  const category = single(params.category) || undefined
+  const sort = single(params.sort) ?? "newest"
+  const price = single(params.price)
+  const off = Number(single(params.off)) || 0
+  const minRating = Number(single(params.rating)) || 0
+  const page = Math.max(1, Number(single(params.page)) || 1)
+
+  const [tree, fetched] = await Promise.all([
+    getCategoryTree(),
+    getProductCards({ search, category }),
+  ])
+
+  const path = category ? findPath(tree, category) : null
+  const current = path?.at(-1)
+  const department = path?.[0]
+  const band = prices.find((option) => option.value === price)
+  const saving = (product: { mrp: number; price: number }) =>
+    discountPercent(product.mrp, product.price)
+
+  const products = fetched.filter(
+    (product) =>
+      (!band || (product.price >= band.min && product.price < band.max)) &&
+      saving(product) >= off &&
+      mockRating(product.slug).rating >= minRating
+  )
+  if (sort === "price-low") products.sort((a, b) => a.price - b.price)
+  if (sort === "price-high") products.sort((a, b) => b.price - a.price)
+  if (sort === "discount") products.sort((a, b) => saving(b) - saving(a))
+  if (sort === "rating") {
+    products.sort(
+      (a, b) => mockRating(b.slug).rating - mockRating(a.slug).rating
+    )
+  }
+
+  const totalPages = Math.max(1, Math.ceil(products.length / PAGE_SIZE))
+  const visible = products.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
+  const href = (changes: Record<string, string | undefined>) => {
+    const next = new URLSearchParams()
+    const merged = {
+      q: search,
+      category,
+      sort,
+      price,
+      off: off ? String(off) : undefined,
+      rating: minRating ? String(minRating) : undefined,
+      page: undefined,
+      ...changes,
+    }
+    for (const [key, value] of Object.entries(merged)) {
+      if (value && !(key === "sort" && value === "newest")) {
+        next.set(key, value)
+      }
+    }
+    const query = next.toString()
+    return query ? `/products?${query}` : "/products"
+  }
+
+  const title = search
+    ? `Results for “${search}”`
+    : (current?.name ?? "All products")
+
+  const departmentOptions = (
+    department?.children?.length ? department.children : tree
+  ).map((node) => ({
+    label: node.name,
+    href: href({
+      category: current?.id === node.id ? department?.slug : node.slug,
+    }),
+    active: current?.id === node.id,
+  }))
+
+  const filterGroups: FilterGroup[] = [
+    {
+      title: department ? department.name : "Department",
+      options: departmentOptions,
+    },
+    {
+      title: "Price",
+      options: prices.map((option) => ({
+        label: option.label,
+        href: href({
+          price: price === option.value ? undefined : option.value,
+        }),
+        active: price === option.value,
+      })),
+    },
+    {
+      title: "Customer rating",
+      options: ratings.map((value) => ({
+        label: `${value} stars and up`,
+        href: href({ rating: minRating === value ? undefined : String(value) }),
+        active: minRating === value,
+      })),
+    },
+    {
+      title: "Discount",
+      options: discounts.map((value) => ({
+        label: `${value}% off or more`,
+        href: href({ off: off === value ? undefined : String(value) }),
+        active: off === value,
+      })),
+    },
+  ]
+
+  const sheetGroups: FilterGroup[] = [
+    {
+      title: "Sort by",
+      options: sorts.map((option) => ({
+        label: option.label,
+        href: href({ sort: option.value }),
+        active: sort === option.value,
+      })),
+    },
+    ...filterGroups,
+  ]
+
+  const applied = [
+    search ? { label: `“${search}”`, href: href({ q: undefined }) } : null,
+    band ? { label: band.label, href: href({ price: undefined }) } : null,
+    off
+      ? { label: `${off}% off or more`, href: href({ off: undefined }) }
+      : null,
+    minRating
+      ? {
+          label: `${minRating} stars and up`,
+          href: href({ rating: undefined }),
+        }
+      : null,
+  ].filter((chip) => chip !== null)
+
+  return (
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[15rem_minmax(0,1fr)]">
+      <aside
+        aria-label="Filters"
+        className="hidden self-start rounded-lg bg-card p-4 lg:block"
+      >
+        <FilterList groups={filterGroups} />
+      </aside>
+
+      <div className="min-w-0 space-y-2 sm:space-y-3">
+        <div className="bg-card p-3 sm:rounded-lg sm:px-4">
+          {path && path.length > 1 ? (
+            <nav aria-label="Breadcrumb" className="mb-1 text-sm">
+              {path.slice(0, -1).map((node) => (
+                <span key={node.id}>
+                  <Link
+                    href={href({ category: node.slug })}
+                    className="text-muted-foreground hover:underline"
+                  >
+                    {node.name}
+                  </Link>
+                  <span aria-hidden="true" className="text-muted-foreground">
+                    {" / "}
+                  </span>
+                </span>
+              ))}
+            </nav>
+          ) : null}
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-baseline gap-2">
+              <h1 className="text-xl font-semibold">{title}</h1>
+              <p className="text-sm text-muted-foreground tabular-nums">
+                {products.length} {products.length === 1 ? "result" : "results"}
+              </p>
+            </div>
+            <div className="lg:hidden">
+              <FilterSheet groups={sheetGroups} />
+            </div>
+          </div>
+
+          <nav
+            aria-label="Sort products"
+            className="mt-2 hidden flex-wrap items-center gap-x-5 border-t border-border pt-2 text-sm lg:flex"
+          >
+            <span className="font-medium">Sort by</span>
+            {sorts.map((option) => (
+              <Link
+                key={option.value}
+                href={href({ sort: option.value })}
+                aria-current={sort === option.value ? "true" : undefined}
+                className={cn(
+                  "py-0.5 hover:underline",
+                  sort === option.value &&
+                    "border-b-2 border-primary font-semibold"
+                )}
+              >
+                {option.label}
+              </Link>
+            ))}
+          </nav>
+
+          {applied.length > 0 ? (
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {applied.map((chip) => (
+                <li key={chip.label}>
+                  <Link
+                    href={chip.href}
+                    aria-label={`Remove filter ${chip.label}`}
+                    className="flex items-center gap-1 rounded-full bg-muted px-3 py-1 text-sm"
+                  >
+                    {chip.label}
+                    <XIcon className="size-3.5" aria-hidden="true" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+
+        {visible.length > 0 ? (
+          <ResultGrid products={visible} />
+        ) : (
+          <div className="bg-card sm:rounded-lg">
+            <EmptyState
+              title="No products match"
+              description="Remove a filter or try a different department."
+            />
+          </div>
+        )}
+
+        {totalPages > 1 ? (
+          <nav
+            aria-label="Pagination"
+            className="flex items-center justify-between bg-card p-3 sm:rounded-lg"
+          >
+            {page > 1 ? (
+              <Link
+                href={href({ page: String(page - 1) })}
+                className="underline"
+              >
+                Previous
+              </Link>
+            ) : (
+              <span />
+            )}
+            <span className="text-muted-foreground tabular-nums">
+              Page {page} of {totalPages}
+            </span>
+            {page < totalPages ? (
+              <Link
+                href={href({ page: String(page + 1) })}
+                className="underline"
+              >
+                Next
+              </Link>
+            ) : (
+              <span />
+            )}
+          </nav>
+        ) : null}
+      </div>
+    </div>
+  )
 }

@@ -59,9 +59,8 @@ const BUSINESS_TYPE_OPTIONS: { label: string; value: BusinessType }[] = [
 ]
 
 export default function SettingsPage() {
-  const { data: sellerData, isLoading: sellerLoading, refetch: refetchSeller } =
-    useGetSellerMeQuery()
-  const { data: userData, isLoading: userLoading } = useGetMeQuery()
+  const { data: sellerData, refetch: refetchSeller } = useGetSellerMeQuery()
+  const { data: userData } = useGetMeQuery()
 
   const [updateStore, { isLoading: isUpdatingStore }] = useUpdateStoreMutation()
   const [updateProfile, { isLoading: isUpdatingProfile }] =
@@ -139,7 +138,9 @@ export default function SettingsPage() {
         gstin: seller.gstin || "",
       })
 
-      const primaryBank = seller.bankAccounts?.find((b) => b.isPrimary) || seller.bankAccounts?.[0]
+      const primaryBank =
+        seller.bankAccounts?.find((b) => b.isPrimary) ||
+        seller.bankAccounts?.[0]
       if (primaryBank) {
         setBankForm({
           accountHolderName: primaryBank.accountHolderName || "",
@@ -225,11 +226,11 @@ export default function SettingsPage() {
   }
 
   const statusColorMap: Record<string, string> = {
-    APPROVED: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-    UNDER_REVIEW: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
-    DOCUMENTS_PENDING: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
-    DRAFT: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20",
-    REJECTED: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
+    APPROVED: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+    UNDER_REVIEW: "bg-amber-500/10 text-amber-600 border-amber-500/20",
+    DOCUMENTS_PENDING: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+    DRAFT: "bg-slate-500/10 text-slate-600 border-slate-500/20",
+    REJECTED: "bg-rose-500/10 text-rose-600 border-rose-500/20",
   }
 
   const userInitials = user?.firstName
@@ -267,7 +268,7 @@ export default function SettingsPage() {
                   {seller?.status || "DRAFT"}
                 </Badge>
               </div>
-              <p className="mt-1 flex items-center gap-2 text-xs hover:text-primary cursor-pointer">
+              <p className="mt-1 flex cursor-pointer items-center gap-2 text-xs hover:text-primary">
                 <GlobeIcon className="size-3.5 text-indigo-400" />
                 <span>
                   {seller?.store?.slug
@@ -303,14 +304,14 @@ export default function SettingsPage() {
         <div
           className={`flex items-center gap-3 rounded-xl border p-4 text-xs font-medium shadow-xs transition-all ${
             feedback.type === "success"
-              ? "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-950 dark:bg-emerald-900/30 dark:text-emerald-300"
-              : "border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-950 dark:bg-rose-900/30 dark:text-rose-300"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-rose-200 bg-rose-50 text-rose-800"
           }`}
         >
           {feedback.type === "success" ? (
-            <CheckCircle2Icon className="size-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <CheckCircle2Icon className="size-5 shrink-0 text-emerald-600" />
           ) : (
-            <AlertCircleIcon className="size-5 shrink-0 text-rose-600 dark:text-rose-400" />
+            <AlertCircleIcon className="size-5 shrink-0 text-rose-600" />
           )}
           <span>{feedback.message}</span>
         </div>
@@ -320,13 +321,13 @@ export default function SettingsPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         {/* Navigation Tabs */}
         <div className="space-y-1 lg:col-span-1">
-          <nav className="flex space-x-1 overflow-x-auto rounded-xl bg-slate-100 p-1.5 lg:flex-col lg:space-y-1 lg:space-x-0 dark:bg-slate-900">
+          <nav className="flex space-x-1 overflow-x-auto rounded-xl bg-slate-100 p-1.5 lg:flex-col lg:space-y-1 lg:space-x-0">
             <button
               onClick={() => setActiveTab("store")}
               className={`flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-xs font-medium transition-all ${
                 activeTab === "store"
-                  ? "bg-white text-indigo-600 shadow-xs dark:bg-slate-800 dark:text-indigo-400"
-                  : "text-slate-600 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:bg-slate-800/50"
+                  ? "bg-white text-indigo-600 shadow-xs"
+                  : "text-slate-600 hover:bg-slate-200/60"
               }`}
             >
               <StoreIcon className="size-4 shrink-0" />
@@ -337,8 +338,8 @@ export default function SettingsPage() {
               onClick={() => setActiveTab("personal")}
               className={`flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-xs font-medium transition-all ${
                 activeTab === "personal"
-                  ? "bg-white text-indigo-600 shadow-xs dark:bg-slate-800 dark:text-indigo-400"
-                  : "text-slate-600 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:bg-slate-800/50"
+                  ? "bg-white text-indigo-600 shadow-xs"
+                  : "text-slate-600 hover:bg-slate-200/60"
               }`}
             >
               <UserIcon className="size-4 shrink-0" />
@@ -349,8 +350,8 @@ export default function SettingsPage() {
               onClick={() => setActiveTab("business")}
               className={`flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-xs font-medium transition-all ${
                 activeTab === "business"
-                  ? "bg-white text-indigo-600 shadow-xs dark:bg-slate-800 dark:text-indigo-400"
-                  : "text-slate-600 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:bg-slate-800/50"
+                  ? "bg-white text-indigo-600 shadow-xs"
+                  : "text-slate-600 hover:bg-slate-200/60"
               }`}
             >
               <Building2Icon className="size-4 shrink-0" />
@@ -361,8 +362,8 @@ export default function SettingsPage() {
               onClick={() => setActiveTab("banking")}
               className={`flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-xs font-medium transition-all ${
                 activeTab === "banking"
-                  ? "bg-white text-indigo-600 shadow-xs dark:bg-slate-800 dark:text-indigo-400"
-                  : "text-slate-600 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:bg-slate-800/50"
+                  ? "bg-white text-indigo-600 shadow-xs"
+                  : "text-slate-600 hover:bg-slate-200/60"
               }`}
             >
               <CreditCardIcon className="size-4 shrink-0" />
@@ -373,8 +374,8 @@ export default function SettingsPage() {
               onClick={() => setActiveTab("security")}
               className={`flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-xs font-medium transition-all ${
                 activeTab === "security"
-                  ? "bg-white text-indigo-600 shadow-xs dark:bg-slate-800 dark:text-indigo-400"
-                  : "text-slate-600 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:bg-slate-800/50"
+                  ? "bg-white text-indigo-600 shadow-xs"
+                  : "text-slate-600 hover:bg-slate-200/60"
               }`}
             >
               <LockIcon className="size-4 shrink-0" />
@@ -383,12 +384,12 @@ export default function SettingsPage() {
           </nav>
 
           {/* Quick Help Box */}
-          <div className="hidden rounded-xl border border-indigo-100 bg-indigo-50/50 p-4 text-xs lg:block dark:border-indigo-900/30 dark:bg-indigo-950/20">
-            <div className="flex items-center gap-2 font-semibold text-indigo-950 dark:text-indigo-300">
+          <div className="hidden rounded-xl border border-indigo-100 bg-indigo-50/50 p-4 text-xs lg:block">
+            <div className="flex items-center gap-2 font-semibold text-indigo-950">
               <SparklesIcon className="size-4 text-indigo-600" />
               <span>Storefront Tip</span>
             </div>
-            <p className="mt-1.5 text-slate-600 dark:text-slate-400">
+            <p className="mt-1.5 text-slate-600">
               Keep your store description clear and set your accurate pickup
               address to ensure smooth logistics calculation.
             </p>
@@ -414,7 +415,7 @@ export default function SettingsPage() {
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         Display Name <span className="text-rose-500">*</span>
                       </label>
                       <Input
@@ -430,7 +431,7 @@ export default function SettingsPage() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         Store Slug / Handle
                       </label>
                       <div className="relative">
@@ -455,7 +456,7 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                    <label className="text-xs font-medium text-slate-700">
                       Store Description
                     </label>
                     <textarea
@@ -468,7 +469,7 @@ export default function SettingsPage() {
                       }
                       rows={3}
                       placeholder="Describe products, return promises, and store highlights..."
-                      className="w-full rounded-xl border border-slate-200 bg-background p-3 text-xs outline-hidden focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-800"
+                      className="w-full rounded-xl border border-slate-200 bg-background p-3 text-xs outline-hidden focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                     />
                   </div>
                 </CardContent>
@@ -489,7 +490,7 @@ export default function SettingsPage() {
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="space-y-1.5 md:col-span-2">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         Street Line 1 <span className="text-rose-500">*</span>
                       </label>
                       <Input
@@ -506,7 +507,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         Street Line 2
                       </label>
                       <Input
@@ -522,7 +523,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         Landmark
                       </label>
                       <Input
@@ -538,7 +539,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         City <span className="text-rose-500">*</span>
                       </label>
                       <Input
@@ -552,7 +553,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         State <span className="text-rose-500">*</span>
                       </label>
                       <Input
@@ -566,7 +567,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         PIN / Postal Code{" "}
                         <span className="text-rose-500">*</span>
                       </label>
@@ -584,7 +585,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         Contact Phone
                       </label>
                       <Input
@@ -600,7 +601,7 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className="flex justify-end border-t bg-slate-50/50 py-3 dark:bg-slate-900/30">
+                <CardFooter className="flex justify-end border-t bg-slate-50/50 py-3">
                   <Button
                     type="submit"
                     disabled={isUpdatingStore}
@@ -631,8 +632,8 @@ export default function SettingsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="flex items-center gap-4 rounded-xl bg-slate-100/70 p-4 dark:bg-slate-900/50">
-                  <Avatar className="size-14 border border-slate-200 dark:border-slate-800">
+                <div className="flex items-center gap-4 rounded-xl bg-slate-100/70 p-4">
+                  <Avatar className="size-14 border border-slate-200">
                     <AvatarImage src="/avatars/seller.jpg" />
                     <AvatarFallback className="bg-indigo-600 font-bold text-white">
                       {userInitials}
@@ -654,31 +655,31 @@ export default function SettingsPage() {
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                    <label className="text-xs font-medium text-slate-700">
                       First Name
                     </label>
                     <Input
                       value={user?.firstName || ""}
                       disabled
                       readOnly
-                      className="bg-slate-50 dark:bg-slate-900"
+                      className="bg-slate-50"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                    <label className="text-xs font-medium text-slate-700">
                       Last Name
                     </label>
                     <Input
                       value={user?.lastName || ""}
                       disabled
                       readOnly
-                      className="bg-slate-50 dark:bg-slate-900"
+                      className="bg-slate-50"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                    <label className="text-xs font-medium text-slate-700">
                       Email Address
                     </label>
                     <div className="relative">
@@ -686,14 +687,14 @@ export default function SettingsPage() {
                         value={user?.email || ""}
                         disabled
                         readOnly
-                        className="bg-slate-50 pr-9 dark:bg-slate-900"
+                        className="bg-slate-50 pr-9"
                       />
                       <MailIcon className="absolute top-2.5 right-3 size-4 text-slate-400" />
                     </div>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                    <label className="text-xs font-medium text-slate-700">
                       Primary Phone
                     </label>
                     <div className="relative">
@@ -701,7 +702,7 @@ export default function SettingsPage() {
                         value={seller?.contactPhone || "Not set"}
                         disabled
                         readOnly
-                        className="bg-slate-50 pr-9 dark:bg-slate-900"
+                        className="bg-slate-50 pr-9"
                       />
                       <PhoneIcon className="absolute top-2.5 right-3 size-4 text-slate-400" />
                     </div>
@@ -728,7 +729,7 @@ export default function SettingsPage() {
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="space-y-1.5 md:col-span-2">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         Legal Business Name{" "}
                         <span className="text-rose-500">*</span>
                       </label>
@@ -745,7 +746,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         Business Entity Type{" "}
                         <span className="text-rose-500">*</span>
                       </label>
@@ -757,7 +758,7 @@ export default function SettingsPage() {
                             businessType: e.target.value as BusinessType,
                           })
                         }
-                        className="w-full rounded-xl border border-slate-200 bg-background px-3 py-2 text-xs outline-hidden focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-800"
+                        className="w-full rounded-xl border border-slate-200 bg-background px-3 py-2 text-xs outline-hidden focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                       >
                         {BUSINESS_TYPE_OPTIONS.map((opt) => (
                           <option key={opt.value} value={opt.value}>
@@ -768,7 +769,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         GSTIN Identification Number
                       </label>
                       <div className="relative">
@@ -789,7 +790,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         Business Contact Email
                       </label>
                       <Input
@@ -806,7 +807,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         Business Contact Phone
                       </label>
                       <Input
@@ -823,7 +824,7 @@ export default function SettingsPage() {
                   </div>
 
                   {/* Verification Status Banner */}
-                  <div className="mt-4 rounded-xl border border-slate-200/80 bg-slate-50/50 p-4 dark:border-slate-800 dark:bg-slate-900/40">
+                  <div className="mt-4 rounded-xl border border-slate-200/80 bg-slate-50/50 p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-xs font-semibold">
                         <ShieldCheckIcon className="size-4 text-indigo-600" />
@@ -844,7 +845,7 @@ export default function SettingsPage() {
                     )}
                   </div>
                 </CardContent>
-                <CardFooter className="flex justify-end border-t bg-slate-50/50 py-3 dark:bg-slate-900/30">
+                <CardFooter className="flex justify-end border-t bg-slate-50/50 py-3">
                   <Button
                     type="submit"
                     disabled={isUpdatingProfile}
@@ -879,7 +880,7 @@ export default function SettingsPage() {
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="space-y-1.5 md:col-span-2">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         Account Holder Name{" "}
                         <span className="text-rose-500">*</span>
                       </label>
@@ -897,7 +898,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         Bank Name <span className="text-rose-500">*</span>
                       </label>
                       <Input
@@ -911,7 +912,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         IFSC Code <span className="text-rose-500">*</span>
                       </label>
                       <Input
@@ -928,7 +929,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-1.5 md:col-span-2">
-                      <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label className="text-xs font-medium text-slate-700">
                         Account Number <span className="text-rose-500">*</span>
                       </label>
                       <div className="relative">
@@ -961,7 +962,7 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className="flex justify-end border-t bg-slate-50/50 py-3 dark:bg-slate-900/30">
+                <CardFooter className="flex justify-end border-t bg-slate-50/50 py-3">
                   <Button
                     type="submit"
                     disabled={isUpdatingBank}
@@ -992,7 +993,7 @@ export default function SettingsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-4 rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                <div className="space-y-4 rounded-xl border border-slate-200 p-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="text-xs font-semibold">
@@ -1009,10 +1010,10 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="space-y-3">
-                  <h4 className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  <h4 className="text-xs font-semibold text-slate-700">
                     Security Recommendations
                   </h4>
-                  <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
+                  <ul className="space-y-2 text-xs text-slate-600">
                     <li className="flex items-center gap-2">
                       <CheckIcon className="size-4 shrink-0 text-emerald-500" />
                       <span>

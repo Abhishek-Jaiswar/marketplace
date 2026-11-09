@@ -1,0 +1,56 @@
+// use prisma-8
+
+model Cart {
+  id String @id @onCreate(cuid(2))
+
+  customerId String?   @unique
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  // Set for signed-out shoppers; merged into the customer's cart at sign-in.
+  guestToken String? @unique
+  expiresAt  TimestampString(3)?
+
+  items CartItem[]
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([expiresAt])
+}
+
+model CartItem {
+  id String @id @onCreate(cuid(2))
+
+  cartId String
+  cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  sellerListingId String
+  sellerListing   SellerListing @relation(fields: [sellerListingId], references: [id], onDelete: Cascade)
+
+  quantity Int
+
+  // Lets the cart tell the shopper when a price moved after they added it.
+  unitPriceAtAdd Int
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@unique([cartId, sellerListingId])
+  @@index([sellerListingId])
+  @@check(expression: sql`"quantity" > 0`, name: "cart_item_quantity_positive")
+}
+
+model WishlistItem {
+  id String @id @onCreate(cuid(2))
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+
+  @@unique([customerId, productId])
+  @@index([productId])
+}

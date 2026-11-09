@@ -1,0 +1,98 @@
+// use prisma-8
+//
+// How sellers get paid. Every rupee owed to or by a seller is an append-only
+// ledger row; a payout is itself a ledger row that draws the balance down.
+// All money in this file is integer paise.
+
+// Resolution order: seller and category, then seller, then category, then the
+// platform default (both null). The winning rate is copied onto each OrderItem.
+model CommissionRule {
+  id String @id @onCreate(cuid(2))
+
+  sellerId String?
+  seller   Seller? @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  rateBps  Int
+  isActive Boolean @default(true)
+
+  validFrom TimestampString(3) @default(now())
+  validTo   TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([sellerId])
+  @@index([categoryId])
+  @@index([isActive])
+  @@check(expression: sql`"rateBps" BETWEEN 0 AND 10000`, name: "commission_rate_in_range")
+}
+
+model SellerLedgerEntry {
+  id String @id @onCreate(cuid(2))
+
+  sellerId String
+  seller   Seller @relation(fields: [sellerId], references: [id], onDelete: Restrict)
+
+  type SellerLedgerEntryType
+
+  // Signed: credits are positive, debits negative.
+  amount       Int
+  balanceAfter BigInt
+
+  // Prevents posting the same sale, fee or reversal twice.
+  idempotencyKey String @unique
+
+  sellerOrderId String?
+  sellerOrder   SellerOrder? @relation(fields: [sellerOrderId], references: [id], onDelete: Restrict)
+
+  orderItemId String?
+  orderItem   OrderItem? @relation(fields: [orderItemId], references: [id], onDelete: Restrict)
+
+  payoutId String?
+  payout   Payout? @relation(fields: [payoutId], references: [id], onDelete: Restrict)
+
+  // Funds stay unavailable until the return window for the sale has closed.
+  availableAt TimestampString(3)?
+  note        String?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+
+  @@index([sellerId, createdAt])
+  @@index([sellerOrderId])
+  @@index([orderItemId])
+  @@index([payoutId])
+  @@index([type])
+  @@index([availableAt])
+}
+
+model Payout {
+  id           String @id @onCreate(cuid(2))
+  payoutNumber String @unique
+
+  sellerId String
+  seller   Seller @relation(fields: [sellerId], references: [id], onDelete: Restrict)
+
+  bankAccountId String
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id], onDelete: Restrict)
+
+  amount BigInt
+  status PayoutStatus @default(PENDING)
+
+  periodStart TimestampString(3)
+  periodEnd   TimestampString(3)
+
+  // Bank reference a seller quotes when tracing a transfer.
+  utrNumber     String?
+  failureReason String?
+  paidAt        TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([sellerId, status])
+  @@index([bankAccountId])
+  @@index([status])
+}

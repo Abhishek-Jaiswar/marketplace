@@ -1,14 +1,16 @@
 import { customerRepository } from "./customer.repository.js"
+import { cartRepository } from "../cart/cart.repository.js"
 import { customerCache } from "./customer.cache.js"
+import { NotFoundError, ForbiddenError } from "../../utils/errors/index.js"
 import {
-  NotFoundError,
-  ForbiddenError,
-  BadRequestError,
-} from "../../utils/errors/index.js"
-import { TCreateAddress, TUpdateAddress, TUpdateProfile } from "./customer.types.js"
+  TCreateAddress,
+  TUpdateAddress,
+  TUpdateProfile,
+} from "./customer.types.js"
 
 class CustomerService {
   async getCustomerProfile(userId: string) {
+    await cartRepository.ensureCustomerId(userId)
     return customerCache.getOrSetCustomerDetails(userId, async () => {
       const customer = await customerRepository.findCustomerByUserId(userId)
       if (!customer) {
@@ -25,12 +27,16 @@ class CustomerService {
       throw new NotFoundError("Customer profile not found")
     }
 
-    const updatedCustomer = await customerRepository.updateCustomerProfile(userId, data)
+    const updatedCustomer = await customerRepository.updateCustomerProfile(
+      userId,
+      data
+    )
     await customerCache.invalidateCustomer(userId)
     return updatedCustomer
   }
 
   async createCustomerAddress(userId: string, data: TCreateAddress) {
+    await cartRepository.ensureCustomerId(userId)
     const customer = await customerRepository.findCustomerByUserId(userId)
     if (!customer) {
       throw new NotFoundError("Customer profile not found")
@@ -41,7 +47,11 @@ class CustomerService {
     return address
   }
 
-  async updateCustomerAddress(userId: string, addressId: string, data: TUpdateAddress) {
+  async updateCustomerAddress(
+    userId: string,
+    addressId: string,
+    data: TUpdateAddress
+  ) {
     const customer = await customerRepository.findCustomerByUserId(userId)
     if (!customer) {
       throw new NotFoundError("Customer profile not found")
@@ -56,7 +66,10 @@ class CustomerService {
       throw new ForbiddenError("You are not authorized to modify this address")
     }
 
-    const updatedAddress = await customerRepository.updateAddress(addressId, data)
+    const updatedAddress = await customerRepository.updateAddress(
+      addressId,
+      data
+    )
     await customerCache.invalidateCustomer(userId)
     return updatedAddress
   }
@@ -96,7 +109,10 @@ class CustomerService {
       throw new ForbiddenError("You are not authorized to use this address")
     }
 
-    const updatedCustomer = await customerRepository.setDefaultShippingAddress(userId, addressId)
+    const updatedCustomer = await customerRepository.setDefaultShippingAddress(
+      userId,
+      addressId
+    )
     await customerCache.invalidateCustomer(userId)
     return updatedCustomer
   }
@@ -116,7 +132,10 @@ class CustomerService {
       throw new ForbiddenError("You are not authorized to use this address")
     }
 
-    const updatedCustomer = await customerRepository.setDefaultBillingAddress(userId, addressId)
+    const updatedCustomer = await customerRepository.setDefaultBillingAddress(
+      userId,
+      addressId
+    )
     await customerCache.invalidateCustomer(userId)
     return updatedCustomer
   }

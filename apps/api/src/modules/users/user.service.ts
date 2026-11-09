@@ -1,9 +1,9 @@
 import { logger } from "@workspace/logger"
 import { userRepository } from "./user.repository.js"
 import { userCache } from "./user.cache.js"
+import { otpService } from "./otp.service.js"
 import {
   hashPassword,
-  generateOtp,
   comparePassword,
   signAccessToken,
   generateRefreshToken,
@@ -29,17 +29,24 @@ class UserService {
     const passwordHash = await hashPassword(payload.password)
     const user = await userRepository.registerUser(payload, passwordHash)
 
-    const otp = generateOtp()
-    await userCache.setEmailVerificationOtp(user.email, otp)
+    const otp = await otpService.issue(user.id, "EMAIL_VERIFICATION")
 
     // Send verification email in background without blocking HTTP response
     mailService
       .sendOtpEmail(user.email, otp)
-      .then(() => logger.info(`Verification OTP sent successfully to ${user.email}`))
-      .catch((err) => logger.error(`Failed to send verification OTP email to ${user.email}`, err))
+      .then(() =>
+        logger.info(`Verification OTP sent successfully to ${user.email}`)
+      )
+      .catch((err) =>
+        logger.error(
+          `Failed to send verification OTP email to ${user.email}`,
+          err
+        )
+      )
 
     return {
-      message: "User registered successfully. Please verify your email using the OTP sent.",
+      message:
+        "User registered successfully. Please verify your email using the OTP sent.",
       user,
     }
   }
@@ -49,23 +56,16 @@ class UserService {
       throw new BadRequestError("Email and OTP are required")
     }
 
-    const cachedOtp = await userCache.getEmailVerificationOtp(email)
-    if (!cachedOtp) {
-      throw new BadRequestError("OTP has expired or is invalid")
-    }
-
-    if (cachedOtp !== otp) {
-      throw new BadRequestError("Invalid OTP")
-    }
-
     const user = await userRepository.findUserByEmail(email)
-    if (!user) {
-      throw new NotFoundError("User not found")
+    if (
+      !user ||
+      !(await otpService.consume(user.id, "EMAIL_VERIFICATION", otp))
+    ) {
+      throw new BadRequestError("OTP has expired or is invalid")
     }
 
     const updatedUser = await userRepository.updateUserStatus(user.id, "ACTIVE")
 
-    await userCache.deleteEmailVerificationOtp(email)
     await userCache.invalidateUser(user.id) // Clears user details and list cache
 
     return {
@@ -83,7 +83,9 @@ class UserService {
 
   async getUserById(userId: string) {
     return await userCache.getOrSetUserDetails(userId, async () => {
-      logger.info(`User details cache miss - fetching user ${userId} from database`)
+      logger.info(
+        `User details cache miss - fetching user ${userId} from database`
+      )
       const foundUser = await userRepository.findUserById(userId)
       if (!foundUser) {
         throw new NotFoundError("User not found")
@@ -99,14 +101,21 @@ class UserService {
     }
 
     if (!user.emailVerified) {
-      throw new ForbiddenError("Please verify your email address before logging in")
+      throw new ForbiddenError(
+        "Please verify your email address before logging in"
+      )
     }
 
     if (user.status === "SUSPENDED") {
-      throw new ForbiddenError("Your account has been suspended. Please contact support.")
+      throw new ForbiddenError(
+        "Your account has been suspended. Please contact support."
+      )
     }
 
-    const isPasswordValid = await comparePassword(payload.password, user.credential.passwordHash)
+    const isPasswordValid = await comparePassword(
+      payload.password,
+      user.credential.passwordHash
+    )
     if (!isPasswordValid) {
       throw new UnauthorizedError("Invalid email or password")
     }
@@ -121,7 +130,13 @@ class UserService {
     const refreshTokenHash = hashRefreshToken(plainRefreshToken)
 
     const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
-    await userRepository.createSession(user.id, refreshTokenHash, expiresAt, userAgent, ipAddress)
+    await userRepository.createSession(
+      user.id,
+      refreshTokenHash,
+      expiresAt,
+      userAgent,
+      ipAddress
+    )
 
     return {
       accessToken,
@@ -143,7 +158,11 @@ class UserService {
     await userRepository.deleteSessionByHash(hash)
   }
 
-  async refreshAccessToken(refreshToken: string, userAgent?: string, ipAddress?: string) {
+  async refreshAccessToken(
+    refreshToken: string,
+    userAgent?: string,
+    ipAddress?: string
+  ) {
     const hash = hashRefreshToken(refreshToken)
     const session = await userRepository.findSessionByHash(hash)
 
@@ -190,23 +209,30 @@ class UserService {
     const user = await userRepository.findUserByEmail(email)
     if (!user) {
       // Return generic success to prevent email scanning
-      return { message: "If the email is registered and unverified, a new OTP has been sent." }
+      return {
+        message:
+          "If the email is registered and unverified, a new OTP has been sent.",
+      }
     }
 
     if (user.emailVerified) {
       throw new ConflictError("Email is already verified")
     }
 
-    const otp = generateOtp()
-    await userCache.setEmailVerificationOtp(email, otp)
+    const otp = await otpService.issue(user.id, "EMAIL_VERIFICATION")
 
     mailService
       .sendOtpEmail(email, otp)
-      .then(() => logger.info(`Resent verification OTP successfully to ${email}`))
-      .catch((err) => logger.error(`Failed to resend verification OTP email to ${email}`, err))
+      .then(() =>
+        logger.info(`Resent verification OTP successfully to ${email}`)
+      )
+      .catch((err) =>
+        logger.error(`Failed to resend verification OTP email to ${email}`, err)
+      )
 
     return {
-      message: "If the email is registered and unverified, a new OTP has been sent.",
+      message:
+        "If the email is registered and unverified, a new OTP has been sent.",
     }
   }
 
@@ -214,35 +240,35 @@ class UserService {
     const user = await userRepository.findUserByEmail(email)
     // Return generic success to prevent email scanning
     if (!user || !user.emailVerified || user.status === "SUSPENDED") {
-      return { message: "If the email is registered, a password reset OTP has been sent." }
+      return {
+        message:
+          "If the email is registered, a password reset OTP has been sent.",
+      }
     }
 
-    const otp = generateOtp()
-    await userCache.setUserOtp(email, otp)
+    const otp = await otpService.issue(user.id, "PASSWORD_RESET")
 
     mailService
       .sendResetPasswordOtp(email, otp)
-      .then(() => logger.info(`Password reset OTP sent successfully to ${email}`))
-      .catch((err) => logger.error(`Failed to send password reset OTP email to ${email}`, err))
+      .then(() =>
+        logger.info(`Password reset OTP sent successfully to ${email}`)
+      )
+      .catch((err) =>
+        logger.error(`Failed to send password reset OTP email to ${email}`, err)
+      )
 
     return {
-      message: "If the email is registered, a password reset OTP has been sent.",
+      message:
+        "If the email is registered, a password reset OTP has been sent.",
     }
   }
-
-  
 
   async resetPassword(payload: TResetPassword) {
     const { email, otp, newPassword } = payload
 
-    const cachedOtp = await userCache.getUserOtp(email)
-    if (!cachedOtp || String(cachedOtp) !== String(otp)) {
-      throw new BadRequestError("Invalid or expired password reset OTP")
-    }
-
     const user = await userRepository.findUserByEmail(email)
-    if (!user) {
-      throw new NotFoundError("User not found")
+    if (!user || !(await otpService.consume(user.id, "PASSWORD_RESET", otp))) {
+      throw new BadRequestError("Invalid or expired password reset OTP")
     }
 
     const passwordHash = await hashPassword(newPassword)
@@ -251,12 +277,11 @@ class UserService {
     // Force log out of all active sessions for security
     await userRepository.deleteAllSessionsForUser(user.id)
 
-    // Invalidate the OTP and User cache details
-    await userCache.deleteUserOtp(email)
     await userCache.invalidateUser(user.id)
 
     return {
-      message: "Password reset successfully. Please login with your new password.",
+      message:
+        "Password reset successfully. Please login with your new password.",
     }
   }
 }

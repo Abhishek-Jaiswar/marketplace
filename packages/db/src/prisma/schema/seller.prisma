@@ -10,6 +10,7 @@ model Seller {
   businessType BusinessType
 
   gstin String? @unique
+  panNumber String?
 
   contactEmail String?
   contactPhone String?
@@ -17,6 +18,9 @@ model Seller {
   status SellerStatus @default(DRAFT)
 
   approvedAt TimestampString(3)?
+
+  ratingCount Int @default(0)
+  ratingTotal Int @default(0)
 
   createdAt TimestampString(3) @default(now()) @onCreate(now())
   updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())

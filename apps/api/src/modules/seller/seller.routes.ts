@@ -48,6 +48,10 @@ router.post("/submit", sellerController.submit)
 
 // Admin verification & list routes
 router.get("/", requireRole(["ADMIN"]), sellerController.getSellers)
-router.post("/:sellerId/verify", requireRole(["ADMIN"]), sellerController.verifySeller)
+router.post(
+  "/:sellerId/verify",
+  requireRole(["ADMIN"]),
+  sellerController.verifySeller
+)
 
 export { router as sellerRouter }

@@ -23,6 +23,7 @@ import type {
   ListSellerListingsQuery,
 } from "./catalog.types.js"
 import type { ProductStatus } from "@workspace/db"
+import { type AuthUser, isAdmin } from "../../utils/http/request.js"
 
 function slugify(text: string): string {
   return text
@@ -63,7 +64,8 @@ class CatalogService {
 
     const slug = data.slug || slugify(data.name)
     const existingSlug = await catalogRepository.findBrandBySlug(slug)
-    if (existingSlug) throw new ConflictError("Brand with this slug already exists")
+    if (existingSlug)
+      throw new ConflictError("Brand with this slug already exists")
 
     const brand = await catalogRepository.createBrand({ ...data, slug })
     await catalogCache.invalidateCatalog()
@@ -76,12 +78,14 @@ class CatalogService {
 
     if (data.name && data.name !== existing.name) {
       const nameConflict = await catalogRepository.findBrandByName(data.name)
-      if (nameConflict) throw new ConflictError("Brand with this name already exists")
+      if (nameConflict)
+        throw new ConflictError("Brand with this name already exists")
     }
 
     if (data.slug && data.slug !== existing.slug) {
       const slugConflict = await catalogRepository.findBrandBySlug(data.slug)
-      if (slugConflict) throw new ConflictError("Brand with this slug already exists")
+      if (slugConflict)
+        throw new ConflictError("Brand with this slug already exists")
     }
 
     const brand = await catalogRepository.updateBrand(id, data)
@@ -90,27 +94,48 @@ class CatalogService {
   }
 
   // ---------------- Master Products (SPU) ----------------
-  async getProducts(query: ListProductsQuery) {
+  private isVisible(status: ProductStatus, viewer?: AuthUser): boolean {
+    return status === "APPROVED" || this.canSeeUnapproved(viewer)
+  }
+
+  /** Unapproved products are visible to admins only. */
+  private canSeeUnapproved(viewer?: AuthUser): boolean {
+    return viewer ? isAdmin(viewer) : false
+  }
+
+  async getProducts(requested: ListProductsQuery, viewer?: AuthUser) {
+    const query: ListProductsQuery = this.canSeeUnapproved(viewer)
+      ? requested
+      : { ...requested, status: "APPROVED" }
+
     return catalogCache.getOrSetProductList(
       query.page ?? 1,
       query.limit ?? 20,
       query.search,
-      query.categoryId,
+      query.category ?? query.categoryId,
       query.brandId,
       query.status,
-      () => catalogRepository.findProducts(query)
+      query.sellerId,
+      async () => {
+        const categoryIds = query.category
+          ? await catalogRepository.findCategoryTreeIds(query.category)
+          : undefined
+        return catalogRepository.findProducts({ ...query, categoryIds })
+      }
     )
   }
 
-  async getProductById(id: string) {
+  async getProductById(id: string, viewer?: AuthUser) {
     const product = await catalogRepository.findProductById(id)
-    if (!product) throw new NotFoundError("Product not found")
+    if (!product || !this.isVisible(product.status, viewer))
+      throw new NotFoundError("Product not found")
     return product
   }
 
-  async getProductBySlug(slug: string) {
+  async getProductBySlug(slug: string, viewer?: AuthUser) {
     const product = await catalogRepository.findProductBySlug(slug)
-    if (!product) throw new NotFoundError("Product not found")
+    if (!product || !this.isVisible(product.status, viewer))
+      throw new NotFoundError("Product not found")
     return product
   }
 
@@ -130,7 +155,8 @@ class CatalogService {
 
     const slug = data.slug || slugify(data.title)
     const existingSlug = await catalogRepository.findProductBySlug(slug)
-    if (existingSlug) throw new ConflictError("Product with this slug already exists")
+    if (existingSlug)
+      throw new ConflictError("Product with this slug already exists")
 
     const isAdmin = user.roles.includes("ADMIN")
     // Amazon/Flipkart workflow: Sellers proposing new products submit to PENDING_REVIEW; Admins can auto-approve
@@ -152,7 +178,9 @@ class CatalogService {
     if (!existing) throw new NotFoundError("Product not found")
 
     if (data.categoryId) {
-      const category = await db.orm.public.Category.first({ id: data.categoryId })
+      const category = await db.orm.public.Category.first({
+        id: data.categoryId,
+      })
       if (!category || !category.isActive) {
         throw new NotFoundError("Category not found or inactive")
       }
@@ -165,7 +193,8 @@ class CatalogService {
 
     if (data.slug && data.slug !== existing.slug) {
       const slugConflict = await catalogRepository.findProductBySlug(data.slug)
-      if (slugConflict) throw new ConflictError("Product with this slug already exists")
+      if (slugConflict)
+        throw new ConflictError("Product with this slug already exists")
     }
 
     const product = await catalogRepository.updateProduct(id, data)
@@ -173,12 +202,18 @@ class CatalogService {
     return product
   }
 
-  async reviewProduct(id: string, adminUserId: string, data: ReviewProductInput) {
+  async reviewProduct(
+    id: string,
+    adminUserId: string,
+    data: ReviewProductInput
+  ) {
     const existing = await catalogRepository.findProductById(id)
     if (!existing) throw new NotFoundError("Product not found")
 
     if (existing.status !== "PENDING_REVIEW" && existing.status !== "DRAFT") {
-      throw new BadRequestError(`Cannot review product in ${existing.status} status`)
+      throw new BadRequestError(
+        `Cannot review product in ${existing.status} status`
+      )
     }
 
     const updated = await catalogRepository.updateProductStatus(
@@ -198,11 +233,17 @@ class CatalogService {
     if (!product) throw new NotFoundError("Product not found")
 
     const existingSku = await catalogRepository.findVariantBySku(data.sku)
-    if (existingSku) throw new ConflictError(`Variant with SKU '${data.sku}' already exists`)
+    if (existingSku)
+      throw new ConflictError(`Variant with SKU '${data.sku}' already exists`)
 
     if (data.barcode) {
-      const existingBarcode = await db.orm.public.ProductVariant.where({ barcode: data.barcode }).first()
-      if (existingBarcode) throw new ConflictError(`Variant with barcode '${data.barcode}' already exists`)
+      const existingBarcode = await db.orm.public.ProductVariant.where({
+        barcode: data.barcode,
+      }).first()
+      if (existingBarcode)
+        throw new ConflictError(
+          `Variant with barcode '${data.barcode}' already exists`
+        )
     }
 
     const variant = await catalogRepository.createVariant(productId, data)
@@ -216,12 +257,18 @@ class CatalogService {
 
     if (data.sku && data.sku !== existing.sku) {
       const skuConflict = await catalogRepository.findVariantBySku(data.sku)
-      if (skuConflict) throw new ConflictError(`Variant with SKU '${data.sku}' already exists`)
+      if (skuConflict)
+        throw new ConflictError(`Variant with SKU '${data.sku}' already exists`)
     }
 
     if (data.barcode && data.barcode !== existing.barcode) {
-      const barcodeConflict = await db.orm.public.ProductVariant.where({ barcode: data.barcode }).first()
-      if (barcodeConflict) throw new ConflictError(`Variant with barcode '${data.barcode}' already exists`)
+      const barcodeConflict = await db.orm.public.ProductVariant.where({
+        barcode: data.barcode,
+      }).first()
+      if (barcodeConflict)
+        throw new ConflictError(
+          `Variant with barcode '${data.barcode}' already exists`
+        )
     }
 
     const variant = await catalogRepository.updateVariant(id, data)
@@ -260,17 +307,21 @@ class CatalogService {
     }
 
     const variant = await catalogRepository.findVariantById(data.variantId)
-    if (!variant || !variant.product) throw new NotFoundError("Product variant not found")
+    if (!variant || !variant.product)
+      throw new NotFoundError("Product variant not found")
     if (variant.product.status !== "APPROVED") {
       throw new BadRequestError("Cannot list offer on unapproved product")
     }
 
-    const existingListing = await catalogRepository.findListingBySellerAndVariant(
-      seller.id,
-      data.variantId
-    )
+    const existingListing =
+      await catalogRepository.findListingBySellerAndVariant(
+        seller.id,
+        data.variantId
+      )
     if (existingListing) {
-      throw new ConflictError("You already have an active listing for this variant")
+      throw new ConflictError(
+        "You already have an active listing for this variant"
+      )
     }
 
     const skuConflict = await catalogRepository.findListingBySellerAndSku(
@@ -278,7 +329,9 @@ class CatalogService {
       data.sellerSku
     )
     if (skuConflict) {
-      throw new ConflictError(`Seller SKU '${data.sellerSku}' is already used in your catalog`)
+      throw new ConflictError(
+        `Seller SKU '${data.sellerSku}' is already used in your catalog`
+      )
     }
 
     const listing = await catalogRepository.createListing(seller.id, data)
@@ -298,7 +351,9 @@ class CatalogService {
     if (!isAdmin) {
       const seller = await db.orm.public.Seller.first({ ownerUserId: userId })
       if (!seller || seller.id !== listing.sellerId) {
-        throw new ForbiddenError("You do not have permission to modify this listing")
+        throw new ForbiddenError(
+          "You do not have permission to modify this listing"
+        )
       }
     }
 
@@ -325,10 +380,22 @@ class CatalogService {
 
         // Compute available stock per offer across all locations
         const offersWithStock = offers.map((offer) => {
-          const totalOnHand = offer.inventoryItems.reduce((acc, item) => acc + item.onHand, 0)
-          const totalReserved = offer.inventoryItems.reduce((acc, item) => acc + item.reserved, 0)
-          const totalSafety = offer.inventoryItems.reduce((acc, item) => acc + item.safetyStock, 0)
-          const availableStock = Math.max(0, totalOnHand - totalReserved - totalSafety)
+          const totalOnHand = offer.inventoryItems.reduce(
+            (acc, item) => acc + item.onHand,
+            0
+          )
+          const totalReserved = offer.inventoryItems.reduce(
+            (acc, item) => acc + item.reserved,
+            0
+          )
+          const totalSafety = offer.inventoryItems.reduce(
+            (acc, item) => acc + item.safetyStock,
+            0
+          )
+          const availableStock = Math.max(
+            0,
+            totalOnHand - totalReserved - totalSafety
+          )
 
           return {
             ...offer,
@@ -339,7 +406,10 @@ class CatalogService {
 
         // Buy Box algorithm: in-stock offers first, sorted by lowest selling price
         const eligibleOffers = offersWithStock.filter((o) => o.isInStock)
-        const buyBoxWinner = eligibleOffers.length > 0 ? eligibleOffers[0] : (offersWithStock[0] ?? null)
+        const buyBoxWinner =
+          eligibleOffers.length > 0
+            ? eligibleOffers[0]
+            : (offersWithStock[0] ?? null)
 
         return {
           ...variant,

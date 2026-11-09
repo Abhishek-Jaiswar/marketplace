@@ -1,24 +1,27 @@
-import React from "react";
-import { Grid, Tag, Lock, Check, Loader2, Store } from "lucide-react";
+import { brand } from "@workspace/ui/lib/brand"
+import React from "react"
+import { Grid, Tag, Lock, Check, Loader2, Store } from "lucide-react"
 
 export interface OnboardGstinVerificationProps {
-  gstin: string;
-  setGstin: (val: string) => void;
-  verified: boolean;
+  gstin: string
+  setGstin: (val: string) => void
+  verified: boolean
   details: {
-    tradeName: string;
-    legalName: string;
-    businessType: string;
-    state: string;
-    status: string;
-  } | null;
-  isVerifying: boolean;
-  onVerify: () => void;
-  categoryMode?: "all" | "specific";
-  setCategoryMode?: (val: "all" | "specific") => void;
+    tradeName: string
+    legalName: string
+    businessType: string
+    state: string
+    status: string
+  } | null
+  isVerifying: boolean
+  onVerify: () => void
+  categoryMode?: "all" | "specific"
+  setCategoryMode?: (val: "all" | "specific") => void
 }
 
-export const OnboardGstinVerification: React.FC<OnboardGstinVerificationProps> = ({
+export const OnboardGstinVerification: React.FC<
+  OnboardGstinVerificationProps
+> = ({
   gstin = "",
   setGstin,
   verified = false,
@@ -29,13 +32,13 @@ export const OnboardGstinVerification: React.FC<OnboardGstinVerificationProps> =
   setCategoryMode,
 }) => {
   return (
-    <div className="bg-white border border-zinc-200/80 rounded-3xl p-6 shadow-xs flex flex-col gap-5 text-left">
+    <div className="flex flex-col gap-5 rounded-3xl border border-zinc-200/80 bg-white p-6 text-left shadow-xs">
       {/* Header */}
       <div className="flex items-center gap-2">
-        <div className="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
-          <Store className="w-4 h-4" />
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-indigo-100 bg-indigo-50 text-indigo-600">
+          <Store className="h-4 w-4" />
         </div>
-        <h3 className="text-sm font-extrabold text-zinc-900 leading-none">
+        <h3 className="text-sm leading-none font-extrabold text-zinc-900">
           Business & GSTIN Verification
         </h3>
       </div>
@@ -44,26 +47,26 @@ export const OnboardGstinVerification: React.FC<OnboardGstinVerificationProps> =
       {setCategoryMode && (
         <div className="space-y-3">
           <span className="block text-xs font-bold text-zinc-800">
-            What do you plan to sell on CBS?
+            What do you plan to sell on {brand.name}?
           </span>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <button
               type="button"
               onClick={() => setCategoryMode("all")}
-              className={`p-4 rounded-2xl border text-left flex gap-3.5 transition-all cursor-pointer ${
+              className={`flex cursor-pointer gap-3.5 rounded-2xl border p-4 text-left transition-all ${
                 categoryMode === "all"
                   ? "border-indigo-600 bg-indigo-50/20 shadow-sm"
                   : "border-zinc-200 bg-white hover:bg-zinc-50"
               }`}
             >
               <div
-                className={`h-9 w-9 shrink-0 rounded-xl flex items-center justify-center border transition-colors ${
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${
                   categoryMode === "all"
-                    ? "bg-indigo-600 border-indigo-600 text-white"
-                    : "bg-zinc-50 border-zinc-200 text-zinc-400"
+                    ? "border-indigo-600 bg-indigo-600 text-white"
+                    : "border-zinc-200 bg-zinc-50 text-zinc-400"
                 }`}
               >
-                <Grid className="w-4.5 h-4.5" />
+                <Grid className="h-4.5 w-4.5" />
               </div>
               <div className="flex flex-col leading-tight">
                 <span
@@ -73,7 +76,7 @@ export const OnboardGstinVerification: React.FC<OnboardGstinVerificationProps> =
                 >
                   All Categories
                 </span>
-                <span className="text-[10px] text-zinc-400 font-semibold mt-0.5">
+                <span className="mt-0.5 text-[10px] font-semibold text-zinc-400">
                   I want to sell across all categories
                 </span>
               </div>
@@ -82,30 +85,32 @@ export const OnboardGstinVerification: React.FC<OnboardGstinVerificationProps> =
             <button
               type="button"
               onClick={() => setCategoryMode("specific")}
-              className={`p-4 rounded-2xl border text-left flex gap-3.5 transition-all cursor-pointer ${
+              className={`flex cursor-pointer gap-3.5 rounded-2xl border p-4 text-left transition-all ${
                 categoryMode === "specific"
                   ? "border-indigo-600 bg-indigo-50/20 shadow-sm"
                   : "border-zinc-200 bg-white hover:bg-zinc-50"
               }`}
             >
               <div
-                className={`h-9 w-9 shrink-0 rounded-xl flex items-center justify-center border transition-colors ${
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${
                   categoryMode === "specific"
-                    ? "bg-indigo-600 border-indigo-600 text-white"
-                    : "bg-zinc-50 border-zinc-200 text-zinc-400"
+                    ? "border-indigo-600 bg-indigo-600 text-white"
+                    : "border-zinc-200 bg-zinc-50 text-zinc-400"
                 }`}
               >
-                <Tag className="w-4.5 h-4.5" />
+                <Tag className="h-4.5 w-4.5" />
               </div>
               <div className="flex flex-col leading-tight">
                 <span
                   className={`text-xs font-extrabold transition-colors ${
-                    categoryMode === "specific" ? "text-indigo-600" : "text-zinc-700"
+                    categoryMode === "specific"
+                      ? "text-indigo-600"
+                      : "text-zinc-700"
                   }`}
                 >
                   Specific Category
                 </span>
-                <span className="text-[10px] text-zinc-400 font-semibold mt-0.5">
+                <span className="mt-0.5 text-[10px] font-semibold text-zinc-400">
                   I want to sell in select categories only
                 </span>
               </div>
@@ -119,18 +124,18 @@ export const OnboardGstinVerification: React.FC<OnboardGstinVerificationProps> =
         <label className="block text-xs font-bold text-zinc-800">
           Enter your GSTIN <span className="text-red-500">*</span>
         </label>
-        <div className="relative border border-zinc-300 focus-within:border-indigo-600 rounded-xl p-1 bg-zinc-50/50 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+        <div className="relative flex flex-col items-stretch gap-2 rounded-xl border border-zinc-300 bg-zinc-50/50 p-1 focus-within:border-indigo-600 sm:flex-row sm:items-center">
           <input
             type="text"
             value={gstin}
             onChange={(e) => setGstin(e.target.value.toUpperCase())}
             placeholder="e.g. 27ABCDE1234F1Z5"
             disabled={verified}
-            className="flex-1 bg-transparent border-none text-xs font-mono font-bold tracking-wider uppercase px-3 py-2.5 focus:outline-none placeholder-zinc-400 min-w-0"
+            className="min-w-0 flex-1 border-none bg-transparent px-3 py-2.5 font-mono text-xs font-bold tracking-wider uppercase placeholder-zinc-400 focus:outline-none"
           />
           {verified ? (
-            <div className="flex items-center justify-center gap-1 text-[10px] font-extrabold text-emerald-600 uppercase tracking-wider px-3.5 py-2 select-none shrink-0">
-              <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+            <div className="flex shrink-0 items-center justify-center gap-1 px-3.5 py-2 text-[10px] font-extrabold tracking-wider text-emerald-600 uppercase select-none">
+              <Check className="h-3.5 w-3.5 stroke-[2.5]" />
               <span>Verified</span>
             </div>
           ) : (
@@ -138,10 +143,10 @@ export const OnboardGstinVerification: React.FC<OnboardGstinVerificationProps> =
               type="button"
               onClick={onVerify}
               disabled={isVerifying}
-              className="h-10 sm:h-9 px-5 shrink-0 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold transition-colors cursor-pointer disabled:opacity-55 flex items-center justify-center gap-1.5 shadow-xs"
+              className="flex h-10 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-indigo-600 px-5 text-xs font-extrabold text-white shadow-xs transition-colors hover:bg-indigo-700 disabled:opacity-55 sm:h-9"
             >
               {isVerifying ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
               ) : (
                 "Verify GSTIN"
               )}
@@ -151,24 +156,38 @@ export const OnboardGstinVerification: React.FC<OnboardGstinVerificationProps> =
 
         {/* Sync feedback panel */}
         {verified && details && (
-          <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs space-y-1.5 mt-2">
-            <div className="flex items-center gap-1 text-emerald-700 font-extrabold uppercase tracking-wide text-[10px]">
-              <Check className="w-3 h-3" /> Entity Synced Successfully
+          <div className="mt-2 space-y-1.5 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs">
+            <div className="flex items-center gap-1 text-[10px] font-extrabold tracking-wide text-emerald-700 uppercase">
+              <Check className="h-3 w-3" /> Entity Synced Successfully
             </div>
-            <div className="text-zinc-600 text-[11px] grid grid-cols-2 gap-y-1 font-semibold leading-normal">
-              <span>Trade Name: <strong className="text-zinc-900">{details.tradeName}</strong></span>
-              <span>Legal Name: <strong className="text-zinc-900">{details.legalName}</strong></span>
-              <span>State Division: <strong className="text-zinc-900">{details.state}</strong></span>
-              <span>Tax Status: <strong className="text-zinc-900">{details.status}</strong></span>
+            <div className="grid grid-cols-2 gap-y-1 text-[11px] leading-normal font-semibold text-zinc-600">
+              <span>
+                Trade Name:{" "}
+                <strong className="text-zinc-900">{details.tradeName}</strong>
+              </span>
+              <span>
+                Legal Name:{" "}
+                <strong className="text-zinc-900">{details.legalName}</strong>
+              </span>
+              <span>
+                State Division:{" "}
+                <strong className="text-zinc-900">{details.state}</strong>
+              </span>
+              <span>
+                Tax Status:{" "}
+                <strong className="text-zinc-900">{details.status}</strong>
+              </span>
             </div>
           </div>
         )}
 
-        <div className="flex items-center gap-1.5 text-[10px] font-semibold text-zinc-400 mt-1 pb-1">
-          <Lock className="w-3.5 h-3.5 text-zinc-400" />
-          <span>GSTIN is mandatory to sell products on CBS Marketplace.</span>
+        <div className="mt-1 flex items-center gap-1.5 pb-1 text-[10px] font-semibold text-zinc-400">
+          <Lock className="h-3.5 w-3.5 text-zinc-400" />
+          <span>
+            GSTIN is mandatory to sell products on {brand.marketplaceName}.
+          </span>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

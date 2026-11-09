@@ -13,7 +13,10 @@ export async function hashPassword(password: string): Promise<string> {
   return await argon2.hash(password)
 }
 
-export async function comparePassword(password: string, hash: string): Promise<boolean> {
+export async function comparePassword(
+  password: string,
+  hash: string
+): Promise<boolean> {
   return await argon2.verify(hash, password)
 }
 
@@ -29,6 +32,14 @@ export function signAccessToken(payload: AccessTokenPayload): string {
 
 export function verifyAccessToken(token: string): AccessTokenPayload {
   return jwt.verify(token, Env.JWT_SECRET) as AccessTokenPayload
+}
+
+/** Keyed and bound to the user, so a leaked table cannot be brute-forced. */
+export function hashOtp(userId: string, type: string, otp: string): string {
+  return crypto
+    .createHmac("sha256", Env.JWT_SECRET)
+    .update(`${userId}:${type}:${otp}`)
+    .digest("hex")
 }
 
 export function generateRefreshToken(): string {

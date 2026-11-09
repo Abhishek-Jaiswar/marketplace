@@ -1,4 +1,4 @@
 export type StorageAsset = {
-  url: string;
-  storageKey: string;
-};
+  url: string
+  storageKey: string
+}

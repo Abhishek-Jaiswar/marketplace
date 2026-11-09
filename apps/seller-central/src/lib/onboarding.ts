@@ -1,12 +1,12 @@
 export interface SellerLike {
-  id?: string;
-  status?: string;
-  gstin?: string | null;
-  bankAccounts?: any[];
+  id?: string
+  status?: string
+  gstin?: string | null
+  bankAccounts?: any[]
   store?: {
-    addressId?: string | null;
-    address?: any;
-  } | null;
+    addressId?: string | null
+    address?: any
+  } | null
 }
 
 /**
@@ -18,7 +18,7 @@ export function getSellerOnboardingRedirect(
   seller?: SellerLike | null
 ): string | null {
   if (!seller) {
-    return "/onboard?step=1";
+    return "/onboard?step=1"
   }
 
   // Submitted / Active statuses: onboarding phase completed
@@ -27,20 +27,20 @@ export function getSellerOnboardingRedirect(
     seller.status === "UNDER_REVIEW" ||
     seller.status === "REJECTED"
   ) {
-    return null;
+    return null
   }
 
   // Incomplete status: DRAFT or DOCUMENTS_PENDING
-  const hasBusinessDetails = Boolean(seller.gstin);
+  const hasBusinessDetails = Boolean(seller.gstin)
   const hasBankAccounts = Boolean(
     seller.bankAccounts && seller.bankAccounts.length > 0
-  );
+  )
 
   if (hasBusinessDetails && hasBankAccounts) {
-    return "/store-setup";
+    return "/store-setup"
   } else if (hasBusinessDetails) {
-    return "/onboard?step=2";
+    return "/onboard?step=2"
   } else {
-    return "/onboard?step=1";
+    return "/onboard?step=1"
   }
 }

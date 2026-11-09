@@ -75,7 +75,8 @@ export function SellerInspectionModal({
 
   // Per-step rejection state
   const [stepRejectReasonInput, setStepRejectReasonInput] = useState<string>("")
-  const [rejectingStep, setRejectingStep] = useState<VerificationStepKey | null>(null)
+  const [rejectingStep, setRejectingStep] =
+    useState<VerificationStepKey | null>(null)
 
   // Global rejection state
   const [showRejectForm, setShowRejectForm] = useState(false)
@@ -126,10 +127,21 @@ export function SellerInspectionModal({
     }
   }
 
-  const steps: VerificationStepKey[] = ["business", "store", "bank", "documents"]
-  const approvedStepsCount = steps.filter((s) => getStepStatus(s) === "APPROVED").length
-  const rejectedStepsCount = steps.filter((s) => getStepStatus(s) === "REJECTED").length
-  const pendingStepsCount = steps.filter((s) => getStepStatus(s) === "PENDING" || getStepStatus(s) === "UNDER_REVIEW").length
+  const steps: VerificationStepKey[] = [
+    "business",
+    "store",
+    "bank",
+    "documents",
+  ]
+  const approvedStepsCount = steps.filter(
+    (s) => getStepStatus(s) === "APPROVED"
+  ).length
+  const rejectedStepsCount = steps.filter(
+    (s) => getStepStatus(s) === "REJECTED"
+  ).length
+  const pendingStepsCount = steps.filter(
+    (s) => getStepStatus(s) === "PENDING" || getStepStatus(s) === "UNDER_REVIEW"
+  ).length
   const progressPercent = Math.round((approvedStepsCount / steps.length) * 100)
 
   // API handlers
@@ -150,11 +162,16 @@ export function SellerInspectionModal({
       setSuccessMsg(`Step "${step.toUpperCase()}" marked as Approved.`)
       if (onSuccess) onSuccess()
     } catch (err: any) {
-      setErrorMsg(err?.data?.message || err?.message || "Failed to approve step.")
+      setErrorMsg(
+        err?.data?.message || err?.message || "Failed to approve step."
+      )
     }
   }
 
-  const handleRejectStepSubmit = async (reasonText: string, step: VerificationStepKey) => {
+  const handleRejectStepSubmit = async (
+    reasonText: string,
+    step: VerificationStepKey
+  ) => {
     setErrorMsg("")
     setSuccessMsg("")
     if (!reasonText.trim()) {
@@ -179,7 +196,9 @@ export function SellerInspectionModal({
       setStepRejectReasonInput("")
       if (onSuccess) onSuccess()
     } catch (err: any) {
-      setErrorMsg(err?.data?.message || err?.message || "Failed to submit step rejection.")
+      setErrorMsg(
+        err?.data?.message || err?.message || "Failed to submit step rejection."
+      )
     }
   }
 
@@ -193,10 +212,14 @@ export function SellerInspectionModal({
           reviveStep: step,
         },
       }).unwrap()
-      setSuccessMsg(`Step "${step.toUpperCase()}" revived back to Pending review!`)
+      setSuccessMsg(
+        `Step "${step.toUpperCase()}" revived back to Pending review!`
+      )
       if (onSuccess) onSuccess()
     } catch (err: any) {
-      setErrorMsg(err?.data?.message || err?.message || "Failed to revive step.")
+      setErrorMsg(
+        err?.data?.message || err?.message || "Failed to revive step."
+      )
     }
   }
 
@@ -213,7 +236,11 @@ export function SellerInspectionModal({
       setSuccessMsg("Seller application revived back to Under Review!")
       if (onSuccess) onSuccess()
     } catch (err: any) {
-      setErrorMsg(err?.data?.message || err?.message || "Failed to revive seller application.")
+      setErrorMsg(
+        err?.data?.message ||
+          err?.message ||
+          "Failed to revive seller application."
+      )
     }
   }
 
@@ -231,7 +258,9 @@ export function SellerInspectionModal({
       if (onSuccess) onSuccess()
       onClose()
     } catch (err: any) {
-      setErrorMsg(err?.data?.message || err?.message || "Failed to approve seller.")
+      setErrorMsg(
+        err?.data?.message || err?.message || "Failed to approve seller."
+      )
     }
   }
 
@@ -240,7 +269,9 @@ export function SellerInspectionModal({
     setErrorMsg("")
     setSuccessMsg("")
     if (!rejectionRemarks.trim()) {
-      setErrorMsg("Please enter remarks explaining why this application is rejected.")
+      setErrorMsg(
+        "Please enter remarks explaining why this application is rejected."
+      )
       return
     }
 
@@ -255,17 +286,21 @@ export function SellerInspectionModal({
       if (onSuccess) onSuccess()
       onClose()
     } catch (err: any) {
-      setErrorMsg(err?.data?.message || err?.message || "Failed to submit rejection.")
+      setErrorMsg(
+        err?.data?.message || err?.message || "Failed to submit rejection."
+      )
     }
   }
 
-  const sigDoc = seller.verification?.documents?.find((d) => d.type === "SIGNATURE")
+  const sigDoc = seller.verification?.documents?.find(
+    (d) => d.type === "SIGNATURE"
+  )
 
   const renderStepBadge = (step: VerificationStepKey) => {
     const st = getStepStatus(step)
     if (st === "APPROVED") {
       return (
-        <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+        <span className="inline-flex items-center gap-1 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-600">
           <CheckCircle2Icon className="size-3.5" />
           Verified
         </span>
@@ -273,14 +308,14 @@ export function SellerInspectionModal({
     }
     if (st === "REJECTED") {
       return (
-        <span className="inline-flex items-center gap-1 rounded-md bg-destructive/10 px-2 py-0.5 text-xs font-bold text-destructive border border-destructive/20">
+        <span className="inline-flex items-center gap-1 rounded-md border border-destructive/20 bg-destructive/10 px-2 py-0.5 text-xs font-bold text-destructive">
           <XCircleIcon className="size-3.5" />
           Rejected
         </span>
       )
     }
     return (
-      <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-2 py-0.5 text-xs font-bold text-amber-600 dark:text-amber-400 border border-amber-500/20">
+      <span className="inline-flex items-center gap-1 rounded-md border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-xs font-bold text-amber-600">
         <ClockIcon className="size-3.5" />
         Pending
       </span>
@@ -288,14 +323,13 @@ export function SellerInspectionModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex animate-in items-center justify-center bg-black/60 p-4 backdrop-blur-md duration-200 fade-in">
       {/* Increased width to max-w-6xl for precision layout */}
-      <div className="relative w-full max-w-6xl overflow-hidden rounded-2xl bg-card border shadow-2xl text-card-foreground flex flex-col h-[90vh]">
-        
+      <div className="relative flex h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-2xl">
         {/* Top Header */}
-        <div className="flex items-center justify-between border-b px-6 py-4 bg-muted/20 shrink-0">
+        <div className="flex shrink-0 items-center justify-between border-b bg-muted/20 px-6 py-4">
           <div className="flex items-center gap-4">
-            <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-xs border border-primary/20">
+            <div className="flex size-12 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-xs">
               <StoreIcon className="size-6" />
             </div>
             <div>
@@ -303,18 +337,39 @@ export function SellerInspectionModal({
                 <h2 className="text-xl font-extrabold tracking-tight text-foreground">
                   {seller.businessName}
                 </h2>
-                {seller.status === "APPROVED" && <Badge variant="success" className="px-2.5 py-0.5">Approved Merchant</Badge>}
-                {seller.status === "UNDER_REVIEW" && <Badge variant="warning" className="px-2.5 py-0.5">Under Review</Badge>}
-                {seller.status === "REJECTED" && <Badge variant="destructive" className="px-2.5 py-0.5">Action Needed</Badge>}
+                {seller.status === "APPROVED" && (
+                  <Badge variant="success" className="px-2.5 py-0.5">
+                    Approved Merchant
+                  </Badge>
+                )}
+                {seller.status === "UNDER_REVIEW" && (
+                  <Badge variant="warning" className="px-2.5 py-0.5">
+                    Under Review
+                  </Badge>
+                )}
+                {seller.status === "REJECTED" && (
+                  <Badge variant="destructive" className="px-2.5 py-0.5">
+                    Action Needed
+                  </Badge>
+                )}
               </div>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1 font-medium">
-                <span>Seller ID: <code className="font-mono text-foreground font-semibold">{seller.id}</code></span>
+              <div className="mt-1 flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                <span>
+                  Seller ID:{" "}
+                  <code className="font-mono font-semibold text-foreground">
+                    {seller.id}
+                  </code>
+                </span>
                 <span>•</span>
-                <span>Type: <strong>{seller.businessType}</strong></span>
+                <span>
+                  Type: <strong>{seller.businessType}</strong>
+                </span>
                 {seller.contactEmail && (
                   <>
                     <span>•</span>
-                    <span>Email: <strong>{seller.contactEmail}</strong></span>
+                    <span>
+                      Email: <strong>{seller.contactEmail}</strong>
+                    </span>
                   </>
                 )}
               </div>
@@ -322,36 +377,37 @@ export function SellerInspectionModal({
           </div>
           <button
             onClick={onClose}
-            className="rounded-xl p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
+            className="cursor-pointer rounded-xl p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             <XIcon className="size-5" />
           </button>
         </div>
 
         {/* Dynamic Stepper Progress Bar */}
-        <div className="border-b px-6 py-3.5 bg-muted/10 shrink-0 space-y-2.5">
+        <div className="shrink-0 space-y-2.5 border-b bg-muted/10 px-6 py-3.5">
           <div className="flex items-center justify-between text-xs font-bold">
             <div className="flex items-center gap-2 text-foreground">
               <ShieldCheckIcon className="size-4 text-primary" />
               <span>Step-by-Step Verification Status:</span>
-              <span className="text-muted-foreground font-normal">
-                ({approvedStepsCount} of {steps.length} Steps Approved — {progressPercent}%)
+              <span className="font-normal text-muted-foreground">
+                ({approvedStepsCount} of {steps.length} Steps Approved —{" "}
+                {progressPercent}%)
               </span>
             </div>
 
             <div className="flex items-center gap-4 text-xs">
-              <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold">
+              <span className="flex items-center gap-1.5 font-bold text-emerald-600">
                 <CheckCircle2Icon className="size-3.5" />
                 {approvedStepsCount} Verified
               </span>
               {rejectedStepsCount > 0 && (
-                <span className="flex items-center gap-1.5 text-destructive font-bold">
+                <span className="flex items-center gap-1.5 font-bold text-destructive">
                   <XCircleIcon className="size-3.5" />
                   {rejectedStepsCount} Rejected
                 </span>
               )}
               {pendingStepsCount > 0 && (
-                <span className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-bold">
+                <span className="flex items-center gap-1.5 font-bold text-amber-600">
                   <ClockIcon className="size-3.5" />
                   {pendingStepsCount} Pending
                 </span>
@@ -359,14 +415,14 @@ export function SellerInspectionModal({
             </div>
           </div>
 
-          <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted border border-muted/50">
+          <div className="h-2.5 w-full overflow-hidden rounded-full border border-muted/50 bg-muted">
             <div
               className={`h-full transition-all duration-300 ${
                 rejectedStepsCount > 0
                   ? "bg-amber-500"
                   : progressPercent === 100
-                  ? "bg-emerald-500"
-                  : "bg-primary"
+                    ? "bg-emerald-500"
+                    : "bg-primary"
               }`}
               style={{ width: `${progressPercent}%` }}
             />
@@ -375,42 +431,49 @@ export function SellerInspectionModal({
 
         {/* Global Alert Notices */}
         {errorMsg && (
-          <div className="mx-6 mt-3 p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs font-semibold flex items-center justify-between gap-2 shrink-0">
+          <div className="mx-6 mt-3 flex shrink-0 items-center justify-between gap-2 rounded-xl border border-destructive/20 bg-destructive/10 p-3 text-xs font-semibold text-destructive">
             <div className="flex items-center gap-2">
               <AlertTriangleIcon className="size-4 shrink-0" />
               <span>{errorMsg}</span>
             </div>
-            <button onClick={() => setErrorMsg("")} className="hover:opacity-75 cursor-pointer">
+            <button
+              onClick={() => setErrorMsg("")}
+              className="cursor-pointer hover:opacity-75"
+            >
               <XIcon className="size-4" />
             </button>
           </div>
         )}
         {successMsg && (
-          <div className="mx-6 mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center justify-between gap-2 shrink-0">
+          <div className="mx-6 mt-3 flex shrink-0 items-center justify-between gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-xs font-semibold text-emerald-600">
             <div className="flex items-center gap-2">
               <CheckCircle2Icon className="size-4 shrink-0" />
               <span>{successMsg}</span>
             </div>
-            <button onClick={() => setSuccessMsg("")} className="hover:opacity-75 cursor-pointer">
+            <button
+              onClick={() => setSuccessMsg("")}
+              className="cursor-pointer hover:opacity-75"
+            >
               <XIcon className="size-4" />
             </button>
           </div>
         )}
 
         {/* Main Split Content Area */}
-        <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x">
-          
+        <div className="grid flex-1 grid-cols-1 divide-y overflow-hidden lg:grid-cols-12 lg:divide-x lg:divide-y-0">
           {/* LEFT SECTION: Data Inspection Deck (approx 65% / 8 cols) */}
-          <div className="lg:col-span-7 xl:col-span-8 flex flex-col h-full overflow-hidden bg-background">
-            
+          <div className="flex h-full flex-col overflow-hidden bg-background lg:col-span-7 xl:col-span-8">
             {/* Step Navigation Tabs */}
-            <div className="flex border-b px-6 pt-3 bg-muted/10 gap-2 overflow-x-auto text-xs font-semibold shrink-0">
+            <div className="flex shrink-0 gap-2 overflow-x-auto border-b bg-muted/10 px-6 pt-3 text-xs font-semibold">
               <button
-                onClick={() => { setActiveTab("business"); setShowRejectForm(false) }}
-                className={`flex items-center gap-2.5 px-4 py-3 border-b-2 transition-all cursor-pointer ${
+                onClick={() => {
+                  setActiveTab("business")
+                  setShowRejectForm(false)
+                }}
+                className={`flex cursor-pointer items-center gap-2.5 border-b-2 px-4 py-3 transition-all ${
                   activeTab === "business"
-                    ? "border-primary text-primary font-bold bg-background rounded-t-xl shadow-xs"
-                    : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/30 rounded-t-xl"
+                    ? "rounded-t-xl border-primary bg-background font-bold text-primary shadow-xs"
+                    : "rounded-t-xl border-transparent text-muted-foreground hover:bg-muted/30 hover:text-foreground"
                 }`}
               >
                 <Building2Icon className="size-4" />
@@ -419,11 +482,14 @@ export function SellerInspectionModal({
               </button>
 
               <button
-                onClick={() => { setActiveTab("store"); setShowRejectForm(false) }}
-                className={`flex items-center gap-2.5 px-4 py-3 border-b-2 transition-all cursor-pointer ${
+                onClick={() => {
+                  setActiveTab("store")
+                  setShowRejectForm(false)
+                }}
+                className={`flex cursor-pointer items-center gap-2.5 border-b-2 px-4 py-3 transition-all ${
                   activeTab === "store"
-                    ? "border-primary text-primary font-bold bg-background rounded-t-xl shadow-xs"
-                    : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/30 rounded-t-xl"
+                    ? "rounded-t-xl border-primary bg-background font-bold text-primary shadow-xs"
+                    : "rounded-t-xl border-transparent text-muted-foreground hover:bg-muted/30 hover:text-foreground"
                 }`}
               >
                 <StoreIcon className="size-4" />
@@ -432,11 +498,14 @@ export function SellerInspectionModal({
               </button>
 
               <button
-                onClick={() => { setActiveTab("bank"); setShowRejectForm(false) }}
-                className={`flex items-center gap-2.5 px-4 py-3 border-b-2 transition-all cursor-pointer ${
+                onClick={() => {
+                  setActiveTab("bank")
+                  setShowRejectForm(false)
+                }}
+                className={`flex cursor-pointer items-center gap-2.5 border-b-2 px-4 py-3 transition-all ${
                   activeTab === "bank"
-                    ? "border-primary text-primary font-bold bg-background rounded-t-xl shadow-xs"
-                    : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/30 rounded-t-xl"
+                    ? "rounded-t-xl border-primary bg-background font-bold text-primary shadow-xs"
+                    : "rounded-t-xl border-transparent text-muted-foreground hover:bg-muted/30 hover:text-foreground"
                 }`}
               >
                 <CreditCardIcon className="size-4" />
@@ -445,11 +514,14 @@ export function SellerInspectionModal({
               </button>
 
               <button
-                onClick={() => { setActiveTab("documents"); setShowRejectForm(false) }}
-                className={`flex items-center gap-2.5 px-4 py-3 border-b-2 transition-all cursor-pointer ${
+                onClick={() => {
+                  setActiveTab("documents")
+                  setShowRejectForm(false)
+                }}
+                className={`flex cursor-pointer items-center gap-2.5 border-b-2 px-4 py-3 transition-all ${
                   activeTab === "documents"
-                    ? "border-primary text-primary font-bold bg-background rounded-t-xl shadow-xs"
-                    : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/30 rounded-t-xl"
+                    ? "rounded-t-xl border-primary bg-background font-bold text-primary shadow-xs"
+                    : "rounded-t-xl border-transparent text-muted-foreground hover:bg-muted/30 hover:text-foreground"
                 }`}
               >
                 <FileCheckIcon className="size-4" />
@@ -459,17 +531,21 @@ export function SellerInspectionModal({
             </div>
 
             {/* Left Data View Scrollable */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="flex-1 space-y-6 overflow-y-auto p-6">
               {showRejectForm ? (
                 /* Global Application Rejection Form */
-                <form onSubmit={handleRejectEntireSeller} className="space-y-4 animate-in fade-in duration-150 max-w-xl">
-                  <div className="rounded-xl p-4 bg-destructive/5 border border-destructive/20 space-y-2">
-                    <h3 className="text-sm font-bold text-destructive flex items-center gap-2">
+                <form
+                  onSubmit={handleRejectEntireSeller}
+                  className="max-w-xl animate-in space-y-4 duration-150 fade-in"
+                >
+                  <div className="space-y-2 rounded-xl border border-destructive/20 bg-destructive/5 p-4">
+                    <h3 className="flex items-center gap-2 text-sm font-bold text-destructive">
                       <XCircleIcon className="size-4" />
                       Reject Entire Merchant Application
                     </h3>
                     <p className="text-xs text-muted-foreground">
-                      Provide clear remarks explaining overall why this merchant application is rejected.
+                      Provide clear remarks explaining overall why this merchant
+                      application is rejected.
                     </p>
                   </div>
 
@@ -483,7 +559,7 @@ export function SellerInspectionModal({
                       placeholder="e.g. Invalid GSTIN or corrupted signature document. Please re-apply with valid details."
                       rows={4}
                       required
-                      className="w-full rounded-xl border bg-background px-3.5 py-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+                      className="w-full rounded-xl border bg-background px-3.5 py-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/20 focus:outline-none"
                     />
                   </div>
 
@@ -503,7 +579,11 @@ export function SellerInspectionModal({
                       disabled={isLoading}
                       className="gap-1.5"
                     >
-                      {isLoading ? <Loader2Icon className="size-3.5 animate-spin" /> : <XCircleIcon className="size-3.5" />}
+                      {isLoading ? (
+                        <Loader2Icon className="size-3.5 animate-spin" />
+                      ) : (
+                        <XCircleIcon className="size-3.5" />
+                      )}
                       Submit Rejection
                     </Button>
                   </div>
@@ -512,82 +592,123 @@ export function SellerInspectionModal({
                 <>
                   {/* TAB 1: Business Details Data */}
                   {activeTab === "business" && (
-                    <div className="space-y-5 animate-in fade-in duration-150">
+                    <div className="animate-in space-y-5 duration-150 fade-in">
                       <div className="flex items-center justify-between border-b pb-2">
-                        <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                        <h3 className="flex items-center gap-2 text-sm font-bold text-foreground">
                           <Building2Icon className="size-4 text-primary" />
                           Business Identity & Tax Information
                         </h3>
-                        <span className="text-xs text-muted-foreground">Step 1 of 4</span>
+                        <span className="text-xs text-muted-foreground">
+                          Step 1 of 4
+                        </span>
                       </div>
 
-                      <div className="grid gap-4 sm:grid-cols-2 text-xs">
-                        <div className="rounded-xl border p-4 bg-muted/20 space-y-1">
-                          <span className="text-muted-foreground font-medium">Business Registered Name</span>
-                          <div className="font-bold text-sm text-foreground flex items-center justify-between">
+                      <div className="grid gap-4 text-xs sm:grid-cols-2">
+                        <div className="space-y-1 rounded-xl border bg-muted/20 p-4">
+                          <span className="font-medium text-muted-foreground">
+                            Business Registered Name
+                          </span>
+                          <div className="flex items-center justify-between text-sm font-bold text-foreground">
                             <span>{seller.businessName}</span>
                             <button
-                              onClick={() => copyToClipboard(seller.businessName, "businessName")}
+                              onClick={() =>
+                                copyToClipboard(
+                                  seller.businessName,
+                                  "businessName"
+                                )
+                              }
                               className="text-muted-foreground hover:text-foreground"
                               title="Copy Business Name"
                             >
-                              {copiedField === "businessName" ? <CheckIcon className="size-3.5 text-emerald-500" /> : <CopyIcon className="size-3.5" />}
+                              {copiedField === "businessName" ? (
+                                <CheckIcon className="size-3.5 text-emerald-500" />
+                              ) : (
+                                <CopyIcon className="size-3.5" />
+                              )}
                             </button>
                           </div>
                         </div>
 
-                        <div className="rounded-xl border p-4 bg-muted/20 space-y-1">
-                          <span className="text-muted-foreground font-medium">Legal Structure Type</span>
-                          <div className="font-bold text-sm text-foreground">{seller.businessType}</div>
+                        <div className="space-y-1 rounded-xl border bg-muted/20 p-4">
+                          <span className="font-medium text-muted-foreground">
+                            Legal Structure Type
+                          </span>
+                          <div className="text-sm font-bold text-foreground">
+                            {seller.businessType}
+                          </div>
                         </div>
 
-                        <div className="rounded-xl border p-4 bg-muted/20 space-y-1">
-                          <span className="text-muted-foreground font-medium">GSTIN Tax Registration</span>
-                          <div className="font-bold text-sm font-mono text-primary flex items-center justify-between">
+                        <div className="space-y-1 rounded-xl border bg-muted/20 p-4">
+                          <span className="font-medium text-muted-foreground">
+                            GSTIN Tax Registration
+                          </span>
+                          <div className="flex items-center justify-between font-mono text-sm font-bold text-primary">
                             <span>{seller.gstin || "Not Provided"}</span>
                             {seller.gstin && (
                               <button
-                                onClick={() => copyToClipboard(seller.gstin!, "gstin")}
+                                onClick={() =>
+                                  copyToClipboard(seller.gstin!, "gstin")
+                                }
                                 className="text-muted-foreground hover:text-foreground"
                                 title="Copy GSTIN"
                               >
-                                {copiedField === "gstin" ? <CheckIcon className="size-3.5 text-emerald-500" /> : <CopyIcon className="size-3.5" />}
+                                {copiedField === "gstin" ? (
+                                  <CheckIcon className="size-3.5 text-emerald-500" />
+                                ) : (
+                                  <CopyIcon className="size-3.5" />
+                                )}
                               </button>
                             )}
                           </div>
                         </div>
 
-                        <div className="rounded-xl border p-4 bg-muted/20 space-y-1">
-                          <span className="text-muted-foreground font-medium">Primary Contact Phone</span>
-                          <div className="font-semibold text-foreground flex items-center justify-between">
+                        <div className="space-y-1 rounded-xl border bg-muted/20 p-4">
+                          <span className="font-medium text-muted-foreground">
+                            Primary Contact Phone
+                          </span>
+                          <div className="flex items-center justify-between font-semibold text-foreground">
                             <span className="flex items-center gap-1.5">
                               <PhoneIcon className="size-3.5 text-primary" />
                               {seller.contactPhone || "N/A"}
                             </span>
                             {seller.contactPhone && (
                               <button
-                                onClick={() => copyToClipboard(seller.contactPhone!, "phone")}
+                                onClick={() =>
+                                  copyToClipboard(seller.contactPhone!, "phone")
+                                }
                                 className="text-muted-foreground hover:text-foreground"
                               >
-                                {copiedField === "phone" ? <CheckIcon className="size-3.5 text-emerald-500" /> : <CopyIcon className="size-3.5" />}
+                                {copiedField === "phone" ? (
+                                  <CheckIcon className="size-3.5 text-emerald-500" />
+                                ) : (
+                                  <CopyIcon className="size-3.5" />
+                                )}
                               </button>
                             )}
                           </div>
                         </div>
 
-                        <div className="rounded-xl border p-4 bg-muted/20 space-y-1 sm:col-span-2">
-                          <span className="text-muted-foreground font-medium">Official Contact Email</span>
-                          <div className="font-semibold text-foreground flex items-center justify-between">
+                        <div className="space-y-1 rounded-xl border bg-muted/20 p-4 sm:col-span-2">
+                          <span className="font-medium text-muted-foreground">
+                            Official Contact Email
+                          </span>
+                          <div className="flex items-center justify-between font-semibold text-foreground">
                             <span className="flex items-center gap-1.5">
                               <MailIcon className="size-3.5 text-primary" />
                               {seller.contactEmail || "N/A"}
                             </span>
                             {seller.contactEmail && (
                               <button
-                                onClick={() => copyToClipboard(seller.contactEmail!, "email")}
+                                onClick={() =>
+                                  copyToClipboard(seller.contactEmail!, "email")
+                                }
                                 className="text-muted-foreground hover:text-foreground"
                               >
-                                {copiedField === "email" ? <CheckIcon className="size-3.5 text-emerald-500" /> : <CopyIcon className="size-3.5" />}
+                                {copiedField === "email" ? (
+                                  <CheckIcon className="size-3.5 text-emerald-500" />
+                                ) : (
+                                  <CopyIcon className="size-3.5" />
+                                )}
                               </button>
                             )}
                           </div>
@@ -598,26 +719,34 @@ export function SellerInspectionModal({
 
                   {/* TAB 2: Store & Address Data */}
                   {activeTab === "store" && (
-                    <div className="space-y-5 animate-in fade-in duration-150">
+                    <div className="animate-in space-y-5 duration-150 fade-in">
                       <div className="flex items-center justify-between border-b pb-2">
-                        <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                        <h3 className="flex items-center gap-2 text-sm font-bold text-foreground">
                           <StoreIcon className="size-4 text-primary" />
                           Storefront & Warehouse Pickup Address
                         </h3>
-                        <span className="text-xs text-muted-foreground">Step 2 of 4</span>
+                        <span className="text-xs text-muted-foreground">
+                          Step 2 of 4
+                        </span>
                       </div>
 
                       {seller.store ? (
                         <>
-                          <div className="grid gap-4 sm:grid-cols-2 text-xs">
-                            <div className="rounded-xl border p-4 bg-muted/20 space-y-1">
-                              <span className="text-muted-foreground font-medium">Store Display Name</span>
-                              <div className="font-bold text-sm text-foreground">{seller.store.displayName}</div>
+                          <div className="grid gap-4 text-xs sm:grid-cols-2">
+                            <div className="space-y-1 rounded-xl border bg-muted/20 p-4">
+                              <span className="font-medium text-muted-foreground">
+                                Store Display Name
+                              </span>
+                              <div className="text-sm font-bold text-foreground">
+                                {seller.store.displayName}
+                              </div>
                             </div>
 
-                            <div className="rounded-xl border p-4 bg-muted/20 space-y-1">
-                              <span className="text-muted-foreground font-medium">Store URL Handle</span>
-                              <div className="font-mono text-primary font-bold flex items-center justify-between">
+                            <div className="space-y-1 rounded-xl border bg-muted/20 p-4">
+                              <span className="font-medium text-muted-foreground">
+                                Store URL Handle
+                              </span>
+                              <div className="flex items-center justify-between font-mono font-bold text-primary">
                                 <span>/store/{seller.store.slug}</span>
                                 <a
                                   href={`/store/${seller.store.slug}`}
@@ -631,88 +760,132 @@ export function SellerInspectionModal({
                             </div>
                           </div>
 
-                          <div className="rounded-xl border p-4 bg-muted/20 space-y-2 text-xs">
-                            <span className="text-muted-foreground font-bold flex items-center gap-1.5">
+                          <div className="space-y-2 rounded-xl border bg-muted/20 p-4 text-xs">
+                            <span className="flex items-center gap-1.5 font-bold text-muted-foreground">
                               <MapPinIcon className="size-4 text-primary" />
                               Primary Warehouse / Pickup Location Address
                             </span>
                             {seller.store.address ? (
-                              <div className="font-medium text-foreground leading-relaxed p-3 rounded-lg border bg-background space-y-1">
-                                <div className="font-bold text-foreground">{seller.store.address.street1}</div>
+                              <div className="space-y-1 rounded-lg border bg-background p-3 leading-relaxed font-medium text-foreground">
+                                <div className="font-bold text-foreground">
+                                  {seller.store.address.street1}
+                                </div>
                                 {seller.store.address.street2 && (
-                                  <div className="text-muted-foreground">{seller.store.address.street2}</div>
+                                  <div className="text-muted-foreground">
+                                    {seller.store.address.street2}
+                                  </div>
                                 )}
                                 <div className="text-muted-foreground">
-                                  {seller.store.address.city}, {seller.store.address.state} —{" "}
-                                  <code className="font-mono font-bold text-foreground">{seller.store.address.postalCode}</code>
+                                  {seller.store.address.city},{" "}
+                                  {seller.store.address.state} —{" "}
+                                  <code className="font-mono font-bold text-foreground">
+                                    {seller.store.address.postalCode}
+                                  </code>
                                 </div>
-                                <div className="text-xs text-primary font-bold pt-1">
+                                <div className="pt-1 text-xs font-bold text-primary">
                                   Country: {seller.store.address.country}
                                 </div>
                               </div>
                             ) : (
-                              <div className="text-muted-foreground italic p-4 text-center rounded-lg border bg-background">
+                              <div className="rounded-lg border bg-background p-4 text-center text-muted-foreground italic">
                                 Address details missing or not submitted yet
                               </div>
                             )}
                           </div>
                         </>
                       ) : (
-                        <div className="text-center py-12 text-muted-foreground">No store details uploaded</div>
+                        <div className="py-12 text-center text-muted-foreground">
+                          No store details uploaded
+                        </div>
                       )}
                     </div>
                   )}
 
                   {/* TAB 3: Bank Account Data */}
                   {activeTab === "bank" && (
-                    <div className="space-y-5 animate-in fade-in duration-150">
+                    <div className="animate-in space-y-5 duration-150 fade-in">
                       <div className="flex items-center justify-between border-b pb-2">
-                        <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                        <h3 className="flex items-center gap-2 text-sm font-bold text-foreground">
                           <CreditCardIcon className="size-4 text-primary" />
                           Bank Settlement Account Details
                         </h3>
-                        <span className="text-xs text-muted-foreground">Step 3 of 4</span>
+                        <span className="text-xs text-muted-foreground">
+                          Step 3 of 4
+                        </span>
                       </div>
 
                       {seller.bankAccounts && seller.bankAccounts.length > 0 ? (
                         seller.bankAccounts.map((acc) => (
-                          <div key={acc.id} className="rounded-xl border p-4 bg-muted/20 space-y-3 text-xs">
+                          <div
+                            key={acc.id}
+                            className="space-y-3 rounded-xl border bg-muted/20 p-4 text-xs"
+                          >
                             <div className="flex items-center justify-between border-b pb-2">
-                              <div className="font-extrabold text-sm text-foreground flex items-center gap-2">
+                              <div className="flex items-center gap-2 text-sm font-extrabold text-foreground">
                                 <CreditCardIcon className="size-4 text-primary" />
                                 {acc.bankName}
                               </div>
-                              {acc.isPrimary && <Badge variant="secondary">Primary Account</Badge>}
+                              {acc.isPrimary && (
+                                <Badge variant="secondary">
+                                  Primary Account
+                                </Badge>
+                              )}
                             </div>
 
                             <div className="grid gap-4 sm:grid-cols-2">
                               <div>
-                                <span className="text-muted-foreground">Account Holder Name</span>
-                                <div className="font-bold text-foreground text-xs mt-0.5">{acc.accountHolderName}</div>
+                                <span className="text-muted-foreground">
+                                  Account Holder Name
+                                </span>
+                                <div className="mt-0.5 text-xs font-bold text-foreground">
+                                  {acc.accountHolderName}
+                                </div>
                               </div>
 
                               <div>
-                                <span className="text-muted-foreground">Account Number</span>
-                                <div className="font-mono font-bold text-foreground text-xs mt-0.5 flex items-center gap-2">
+                                <span className="text-muted-foreground">
+                                  Account Number
+                                </span>
+                                <div className="mt-0.5 flex items-center gap-2 font-mono text-xs font-bold text-foreground">
                                   <span>{acc.accountNumber}</span>
                                   <button
-                                    onClick={() => copyToClipboard(acc.accountNumber, `acc_${acc.id}`)}
+                                    onClick={() =>
+                                      copyToClipboard(
+                                        acc.accountNumber,
+                                        `acc_${acc.id}`
+                                      )
+                                    }
                                     className="text-muted-foreground hover:text-foreground"
                                   >
-                                    {copiedField === `acc_${acc.id}` ? <CheckIcon className="size-3 text-emerald-500" /> : <CopyIcon className="size-3" />}
+                                    {copiedField === `acc_${acc.id}` ? (
+                                      <CheckIcon className="size-3 text-emerald-500" />
+                                    ) : (
+                                      <CopyIcon className="size-3" />
+                                    )}
                                   </button>
                                 </div>
                               </div>
 
                               <div>
-                                <span className="text-muted-foreground">Bank IFSC Code</span>
-                                <div className="font-mono font-bold text-primary text-xs mt-0.5 flex items-center gap-2">
+                                <span className="text-muted-foreground">
+                                  Bank IFSC Code
+                                </span>
+                                <div className="mt-0.5 flex items-center gap-2 font-mono text-xs font-bold text-primary">
                                   <span>{acc.ifscCode}</span>
                                   <button
-                                    onClick={() => copyToClipboard(acc.ifscCode, `ifsc_${acc.id}`)}
+                                    onClick={() =>
+                                      copyToClipboard(
+                                        acc.ifscCode,
+                                        `ifsc_${acc.id}`
+                                      )
+                                    }
                                     className="text-muted-foreground hover:text-foreground"
                                   >
-                                    {copiedField === `ifsc_${acc.id}` ? <CheckIcon className="size-3 text-emerald-500" /> : <CopyIcon className="size-3" />}
+                                    {copiedField === `ifsc_${acc.id}` ? (
+                                      <CheckIcon className="size-3 text-emerald-500" />
+                                    ) : (
+                                      <CopyIcon className="size-3" />
+                                    )}
                                   </button>
                                 </div>
                               </div>
@@ -720,48 +893,60 @@ export function SellerInspectionModal({
                           </div>
                         ))
                       ) : (
-                        <div className="text-center py-12 text-muted-foreground">No bank account details uploaded</div>
+                        <div className="py-12 text-center text-muted-foreground">
+                          No bank account details uploaded
+                        </div>
                       )}
                     </div>
                   )}
 
                   {/* TAB 4: Documents Data */}
                   {activeTab === "documents" && (
-                    <div className="space-y-5 animate-in fade-in duration-150">
+                    <div className="animate-in space-y-5 duration-150 fade-in">
                       <div className="flex items-center justify-between border-b pb-2">
-                        <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                        <h3 className="flex items-center gap-2 text-sm font-bold text-foreground">
                           <FileCheckIcon className="size-4 text-primary" />
                           Verification Proofs & Authorized Signature
                         </h3>
-                        <span className="text-xs text-muted-foreground">Step 4 of 4</span>
+                        <span className="text-xs text-muted-foreground">
+                          Step 4 of 4
+                        </span>
                       </div>
 
                       {sigDoc ? (
-                        <div className="rounded-xl border p-4 bg-muted/20 space-y-3 text-xs">
+                        <div className="space-y-3 rounded-xl border bg-muted/20 p-4 text-xs">
                           <div className="flex items-center justify-between">
-                            <span className="font-bold text-foreground flex items-center gap-2">
+                            <span className="flex items-center gap-2 font-bold text-foreground">
                               <FileCheckIcon className="size-4 text-primary" />
                               Uploaded e-Signature Document
                             </span>
-                            <span className="text-muted-foreground font-mono">{sigDoc.media.fileName}</span>
+                            <span className="font-mono text-muted-foreground">
+                              {sigDoc.media.fileName}
+                            </span>
                           </div>
 
-                          <div className="rounded-xl border bg-white p-6 flex flex-col items-center justify-center min-h-[160px] shadow-inner">
+                          <div className="flex min-h-[160px] flex-col items-center justify-center rounded-xl border bg-white p-6 shadow-inner">
                             <img
-                              src={sigDoc.media.url || `http://localhost:5000/uploads/${sigDoc.media.fileName}`}
+                              src={
+                                sigDoc.media.url ||
+                                `http://localhost:5000/uploads/${sigDoc.media.fileName}`
+                              }
                               alt="Seller Signature Proof"
                               className="max-h-36 object-contain"
                               onError={(e) => {
-                                (e.target as HTMLElement).style.display = 'none'
+                                ;(e.target as HTMLElement).style.display =
+                                  "none"
                               }}
                             />
-                            <div className="text-xs text-zinc-500 font-mono mt-2">
+                            <div className="mt-2 font-mono text-xs text-zinc-500">
                               {sigDoc.media.fileName} ({sigDoc.media.mimeType})
                             </div>
                           </div>
                         </div>
                       ) : (
-                        <div className="text-center py-12 text-muted-foreground">No signature file uploaded</div>
+                        <div className="py-12 text-center text-muted-foreground">
+                          No signature file uploaded
+                        </div>
                       )}
                     </div>
                   )}
@@ -771,12 +956,11 @@ export function SellerInspectionModal({
           </div>
 
           {/* RIGHT SECTION: Step Decision & Progressive Revive Sidebar (approx 35% / 4-5 cols) */}
-          <div className="lg:col-span-5 xl:col-span-4 flex flex-col h-full bg-muted/10 p-6 space-y-5 overflow-y-auto">
-            
+          <div className="flex h-full flex-col space-y-5 overflow-y-auto bg-muted/10 p-6 lg:col-span-5 xl:col-span-4">
             {/* Step Decision Card */}
-            <div className="rounded-xl border bg-card p-4 space-y-4 shadow-sm">
+            <div className="space-y-4 rounded-xl border bg-card p-4 shadow-sm">
               <div className="flex items-center justify-between border-b pb-2">
-                <span className="font-bold text-xs text-foreground uppercase tracking-wider">
+                <span className="text-xs font-bold tracking-wider text-foreground uppercase">
                   Review Step: {activeTab}
                 </span>
                 {renderStepBadge(activeTab)}
@@ -784,12 +968,12 @@ export function SellerInspectionModal({
 
               {/* Current Rejection Reason Callout if rejected */}
               {getStepRejectionReason(activeTab) && (
-                <div className="rounded-lg p-3 bg-destructive/10 border border-destructive/20 text-destructive text-xs space-y-1">
-                  <div className="font-bold flex items-center gap-1.5">
+                <div className="space-y-1 rounded-lg border border-destructive/20 bg-destructive/10 p-3 text-xs text-destructive">
+                  <div className="flex items-center gap-1.5 font-bold">
                     <XCircleIcon className="size-4 shrink-0" />
                     Current Step Rejection Reason:
                   </div>
-                  <p className="font-medium leading-relaxed pl-5.5">
+                  <p className="pl-5.5 leading-relaxed font-medium">
                     &quot;{getStepRejectionReason(activeTab)}&quot;
                   </p>
                 </div>
@@ -803,7 +987,7 @@ export function SellerInspectionModal({
                     variant="outline"
                     onClick={() => handleReviveStep(activeTab)}
                     disabled={isLoading}
-                    className="w-full gap-2 text-primary border-primary/30 hover:bg-primary/10 font-bold"
+                    className="w-full gap-2 border-primary/30 font-bold text-primary hover:bg-primary/10"
                   >
                     <RotateCcwIcon className="size-4" />
                     Revive & Reset Step to Pending
@@ -814,7 +998,7 @@ export function SellerInspectionModal({
                     variant="outline"
                     onClick={() => setRejectingStep(activeTab)}
                     disabled={isLoading}
-                    className="w-full gap-2 text-destructive border-destructive/30 hover:bg-destructive/10 font-bold"
+                    className="w-full gap-2 border-destructive/30 font-bold text-destructive hover:bg-destructive/10"
                   >
                     <XCircleIcon className="size-4" />
                     Change to Rejected
@@ -826,7 +1010,7 @@ export function SellerInspectionModal({
                       variant="outline"
                       onClick={() => setRejectingStep(activeTab)}
                       disabled={isLoading}
-                      className="gap-1.5 text-destructive border-destructive/30 hover:bg-destructive/10 font-bold"
+                      className="gap-1.5 border-destructive/30 font-bold text-destructive hover:bg-destructive/10"
                     >
                       <XCircleIcon className="size-4" />
                       Reject Step
@@ -836,7 +1020,7 @@ export function SellerInspectionModal({
                       size="sm"
                       onClick={() => handleApproveStep(activeTab)}
                       disabled={isLoading}
-                      className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+                      className="gap-1.5 bg-emerald-600 font-bold text-white hover:bg-emerald-700"
                     >
                       <CheckCircle2Icon className="size-4" />
                       Approve Step
@@ -847,9 +1031,11 @@ export function SellerInspectionModal({
 
               {/* Inline Step Rejection Preset Reason Picker */}
               {rejectingStep === activeTab && (
-                <div className="space-y-3 pt-3 border-t animate-in fade-in duration-150">
-                  <div className="text-xs font-bold text-destructive flex items-center justify-between">
-                    <span>Select Rejection Reason for {activeTab.toUpperCase()}:</span>
+                <div className="animate-in space-y-3 border-t pt-3 duration-150 fade-in">
+                  <div className="flex items-center justify-between text-xs font-bold text-destructive">
+                    <span>
+                      Select Rejection Reason for {activeTab.toUpperCase()}:
+                    </span>
                     <button
                       onClick={() => setRejectingStep(null)}
                       className="text-muted-foreground hover:text-foreground"
@@ -860,40 +1046,54 @@ export function SellerInspectionModal({
 
                   {/* Preset Chip Buttons */}
                   <div className="space-y-1.5">
-                    <span className="text-[11px] text-muted-foreground font-semibold">1-Click Presets:</span>
+                    <span className="text-[11px] font-semibold text-muted-foreground">
+                      1-Click Presets:
+                    </span>
                     <div className="space-y-1.5">
-                      {PRESET_REJECTION_REASONS[activeTab]?.map((preset, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          onClick={() => handleRejectStepSubmit(preset, activeTab)}
-                          className="w-full text-left p-2 rounded-lg border text-xs text-foreground bg-muted/20 hover:bg-destructive/10 hover:border-destructive/30 transition-all font-medium flex items-center justify-between group cursor-pointer"
-                        >
-                          <span className="line-clamp-2">{preset}</span>
-                          <XCircleIcon className="size-3.5 text-destructive shrink-0 opacity-0 group-hover:opacity-100 transition-opacity ml-1" />
-                        </button>
-                      ))}
+                      {PRESET_REJECTION_REASONS[activeTab]?.map(
+                        (preset, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() =>
+                              handleRejectStepSubmit(preset, activeTab)
+                            }
+                            className="group flex w-full cursor-pointer items-center justify-between rounded-lg border bg-muted/20 p-2 text-left text-xs font-medium text-foreground transition-all hover:border-destructive/30 hover:bg-destructive/10"
+                          >
+                            <span className="line-clamp-2">{preset}</span>
+                            <XCircleIcon className="ml-1 size-3.5 shrink-0 text-destructive opacity-0 transition-opacity group-hover:opacity-100" />
+                          </button>
+                        )
+                      )}
                     </div>
                   </div>
 
                   {/* Custom Reason Box */}
                   <div className="space-y-1.5 pt-1">
-                    <span className="text-[11px] text-muted-foreground font-semibold">Or enter custom reason:</span>
+                    <span className="text-[11px] font-semibold text-muted-foreground">
+                      Or enter custom reason:
+                    </span>
                     <textarea
                       value={stepRejectReasonInput}
                       onChange={(e) => setStepRejectReasonInput(e.target.value)}
                       placeholder="Type specific issue details..."
                       rows={2}
-                      className="w-full rounded-lg border bg-background px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-destructive/30"
+                      className="w-full rounded-lg border bg-background px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-destructive/30 focus:outline-none"
                     />
                     <Button
                       size="sm"
                       variant="destructive"
-                      onClick={() => handleRejectStepSubmit(stepRejectReasonInput, activeTab)}
+                      onClick={() =>
+                        handleRejectStepSubmit(stepRejectReasonInput, activeTab)
+                      }
                       disabled={isLoading || !stepRejectReasonInput.trim()}
-                      className="w-full gap-1.5 mt-1"
+                      className="mt-1 w-full gap-1.5"
                     >
-                      {isLoading ? <Loader2Icon className="size-3.5 animate-spin" /> : <XCircleIcon className="size-3.5" />}
+                      {isLoading ? (
+                        <Loader2Icon className="size-3.5 animate-spin" />
+                      ) : (
+                        <XCircleIcon className="size-3.5" />
+                      )}
                       Submit Custom Rejection
                     </Button>
                   </div>
@@ -902,8 +1102,8 @@ export function SellerInspectionModal({
             </div>
 
             {/* Overall Audit Summary Checklist */}
-            <div className="rounded-xl border bg-card p-4 space-y-3 shadow-sm">
-              <span className="font-bold text-xs text-foreground uppercase tracking-wider block border-b pb-2">
+            <div className="space-y-3 rounded-xl border bg-card p-4 shadow-sm">
+              <span className="block border-b pb-2 text-xs font-bold tracking-wider text-foreground uppercase">
                 All Steps Overview
               </span>
 
@@ -912,11 +1112,15 @@ export function SellerInspectionModal({
                   <div
                     key={st}
                     onClick={() => setActiveTab(st)}
-                    className={`flex items-center justify-between p-2 rounded-lg border transition-all cursor-pointer ${
-                      activeTab === st ? "bg-muted/40 border-primary/50" : "bg-muted/10 hover:bg-muted/20"
+                    className={`flex cursor-pointer items-center justify-between rounded-lg border p-2 transition-all ${
+                      activeTab === st
+                        ? "border-primary/50 bg-muted/40"
+                        : "bg-muted/10 hover:bg-muted/20"
                     }`}
                   >
-                    <span className="capitalize font-semibold text-foreground">{st} Details</span>
+                    <span className="font-semibold text-foreground capitalize">
+                      {st} Details
+                    </span>
                     {renderStepBadge(st)}
                   </div>
                 ))}
@@ -924,13 +1128,15 @@ export function SellerInspectionModal({
             </div>
 
             {/* Info Hint */}
-            <div className="rounded-xl p-3.5 bg-primary/5 border border-primary/10 text-xs text-muted-foreground space-y-1">
-              <div className="font-bold text-primary flex items-center gap-1.5">
+            <div className="space-y-1 rounded-xl border border-primary/10 bg-primary/5 p-3.5 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1.5 font-bold text-primary">
                 <InfoIcon className="size-4" />
                 Progressive Verification Rule
               </div>
               <p className="text-[11px] leading-relaxed">
-                If any step is rejected, the seller application requires revisions. Once all 4 steps are verified, the merchant can be fully approved.
+                If any step is rejected, the seller application requires
+                revisions. Once all 4 steps are verified, the merchant can be
+                fully approved.
               </p>
             </div>
           </div>
@@ -938,7 +1144,7 @@ export function SellerInspectionModal({
 
         {/* Modal Bottom Global Actions */}
         {!showRejectForm && (
-          <div className="flex items-center justify-between border-t px-6 py-4 bg-muted/20 shrink-0">
+          <div className="flex shrink-0 items-center justify-between border-t bg-muted/20 px-6 py-4">
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" onClick={onClose}>
                 Close
@@ -949,7 +1155,7 @@ export function SellerInspectionModal({
                   size="sm"
                   onClick={handleReviveSeller}
                   disabled={isLoading}
-                  className="gap-1.5 border-primary/30 text-primary hover:bg-primary/10 font-bold"
+                  className="gap-1.5 border-primary/30 font-bold text-primary hover:bg-primary/10"
                 >
                   <RotateCcwIcon className="size-4" />
                   Revive Seller Application
@@ -963,7 +1169,7 @@ export function SellerInspectionModal({
                   variant="outline"
                   size="sm"
                   onClick={() => setShowRejectForm(true)}
-                  className="gap-1.5 border-destructive/30 text-destructive hover:bg-destructive/10 font-bold"
+                  className="gap-1.5 border-destructive/30 font-bold text-destructive hover:bg-destructive/10"
                 >
                   <XCircleIcon className="size-4" />
                   Reject Entire Application
@@ -973,9 +1179,13 @@ export function SellerInspectionModal({
                   size="sm"
                   onClick={handleApproveEntireSeller}
                   disabled={isLoading}
-                  className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-5"
+                  className="gap-1.5 bg-emerald-600 px-5 font-extrabold text-white hover:bg-emerald-700"
                 >
-                  {isLoading ? <Loader2Icon className="size-4 animate-spin" /> : <CheckCircle2Icon className="size-4" />}
+                  {isLoading ? (
+                    <Loader2Icon className="size-4 animate-spin" />
+                  ) : (
+                    <CheckCircle2Icon className="size-4" />
+                  )}
                   Approve Entire Merchant
                 </Button>
               </div>

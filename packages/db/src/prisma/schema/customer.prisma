@@ -22,12 +22,16 @@ model Customer {
 
 model Address {
   id          String  @id @onCreate(cuid(2))
+  recipientName String?
+  type        AddressType?
   street1     String
   street2     String?
   landmark    String?
   city        String
   state       String
   postalCode  String
+  // Two-digit GST state code; decides CGST+SGST versus IGST on an order.
+  stateCode   String?
   country     String
   phoneNumber String?
 

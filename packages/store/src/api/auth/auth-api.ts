@@ -1,7 +1,10 @@
-import { baseApi } from "../baseApi";
-import { tokenReceived, userProfileReceived, loggedOut } from "../../slices/authSlice";
+import { baseApi } from "../baseApi"
+import {
+  tokenReceived,
+  userProfileReceived,
+  loggedOut,
+} from "../../slices/authSlice"
 import type {
-  UserProfile,
   LoginRequest,
   LoginResponse,
   RegisterRequest,
@@ -16,7 +19,7 @@ import type {
   ResetPasswordResponse,
   LogoutResponse,
   GetMeResponse,
-} from "./auth-api.types";
+} from "./auth-api.types"
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -28,9 +31,9 @@ export const authApi = baseApi.injectEndpoints({
       }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
-          dispatch(tokenReceived(data.accessToken));
-          dispatch(userProfileReceived(data.user));
+          const { data } = await queryFulfilled
+          dispatch(tokenReceived(data.accessToken))
+          dispatch(userProfileReceived(data.user))
         } catch {
           // Ignore failed login attempt actions
         }
@@ -57,14 +60,20 @@ export const authApi = baseApi.injectEndpoints({
         body: payload,
       }),
     }),
-    forgotPassword: builder.mutation<ForgotPasswordResponse, ForgotPasswordRequest>({
+    forgotPassword: builder.mutation<
+      ForgotPasswordResponse,
+      ForgotPasswordRequest
+    >({
       query: (payload) => ({
         url: "/users/forgot-password",
         method: "POST",
         body: payload,
       }),
     }),
-    resetPassword: builder.mutation<ResetPasswordResponse, ResetPasswordRequest>({
+    resetPassword: builder.mutation<
+      ResetPasswordResponse,
+      ResetPasswordRequest
+    >({
       query: (payload) => ({
         url: "/users/reset-password",
         method: "POST",
@@ -79,31 +88,31 @@ export const authApi = baseApi.injectEndpoints({
       }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
-          await queryFulfilled;
+          await queryFulfilled
         } catch {
           // Proceed with client logout even if API call fails
         } finally {
-          dispatch(loggedOut());
+          dispatch(loggedOut())
         }
       },
     }),
-    
+
     getMe: builder.query<GetMeResponse, void>({
       query: () => "/users/me",
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
-          dispatch(userProfileReceived(data.user));
+          const { data } = await queryFulfilled
+          dispatch(userProfileReceived(data.user))
         } catch (error) {
           if ((error as any)?.error?.status === 401) {
-            dispatch(loggedOut());
+            dispatch(loggedOut())
           }
         }
       },
     }),
   }),
   overrideExisting: false,
-});
+})
 
 export const {
   useLoginMutation,
@@ -115,4 +124,4 @@ export const {
   useLogoutMutation,
   useGetMeQuery,
   useLazyGetMeQuery,
-} = authApi;
+} = authApi

@@ -17,7 +17,10 @@ import type {
 
 export const categoryApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getCategoryTree: builder.query<GetCategoryTreeResponse, GetCategoryTreeParams | void>({
+    getCategoryTree: builder.query<
+      GetCategoryTreeResponse,
+      GetCategoryTreeParams | void
+    >({
       query: (params) => {
         const queryParams = new URLSearchParams()
         if (params?.includeInactive !== undefined) {
@@ -29,7 +32,10 @@ export const categoryApi = baseApi.injectEndpoints({
       providesTags: ["CategoryTree"],
     }),
 
-    listCategories: builder.query<ListCategoriesResponse, ListCategoriesParams | void>({
+    listCategories: builder.query<
+      ListCategoriesResponse,
+      ListCategoriesParams | void
+    >({
       query: (params) => {
         const queryParams = new URLSearchParams()
         if (params?.page) queryParams.append("page", String(params.page))
@@ -47,7 +53,10 @@ export const categoryApi = baseApi.injectEndpoints({
       providesTags: (result) =>
         result
           ? [
-              ...result.items.map(({ id }) => ({ type: "Category" as const, id })),
+              ...result.items.map(({ id }) => ({
+                type: "Category" as const,
+                id,
+              })),
               { type: "Category", id: "LIST" },
             ]
           : [{ type: "Category", id: "LIST" }],
@@ -63,7 +72,10 @@ export const categoryApi = baseApi.injectEndpoints({
       providesTags: (_result, _error, slug) => [{ type: "Category", id: slug }],
     }),
 
-    createCategory: builder.mutation<CreateCategoryResponse, CreateCategoryRequest>({
+    createCategory: builder.mutation<
+      CreateCategoryResponse,
+      CreateCategoryRequest
+    >({
       query: (body) => ({
         url: "/categories",
         method: "POST",
@@ -72,7 +84,10 @@ export const categoryApi = baseApi.injectEndpoints({
       invalidatesTags: [{ type: "Category", id: "LIST" }, "CategoryTree"],
     }),
 
-    updateCategory: builder.mutation<UpdateCategoryResponse, UpdateCategoryRequest>({
+    updateCategory: builder.mutation<
+      UpdateCategoryResponse,
+      UpdateCategoryRequest
+    >({
       query: ({ id, data }) => ({
         url: `/categories/${id}`,
         method: "PUT",

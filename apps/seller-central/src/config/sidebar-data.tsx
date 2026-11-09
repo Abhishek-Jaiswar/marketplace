@@ -1,4 +1,4 @@
-
+import { LogoMark } from "@workspace/ui/components/logo"
 import { SidebarData } from "@workspace/ui/components/app-sidebar"
 import {
   LayoutDashboardIcon,
@@ -14,12 +14,13 @@ import {
   ZapIcon,
   ClockIcon,
   CheckCircle2Icon,
+  WarehouseIcon,
 } from "lucide-react"
 
 export const sellerSidebarData: SidebarData = {
   appName: "Seller Central",
   appSubtitle: "seller.cbsmarketplace.com",
-  appLogo: "/shopping.png",
+  appLogo: <LogoMark className="size-5" />,
   groups: [
     {
       groupTitle: "Overview",
@@ -79,9 +80,14 @@ export const sellerSidebarData: SidebarData = {
           icon: <InboxIcon />,
         },
         {
-          title: "Products & Stock",
+          title: "Product Catalog & Offers",
           url: "/dashboard/products",
           icon: <PackageIcon />,
+        },
+        {
+          title: "Multi-Warehouse Inventory",
+          url: "/dashboard/inventory",
+          icon: <WarehouseIcon />,
         },
         {
           title: "Sales Reporting",

@@ -1,23 +1,34 @@
 /* eslint-disable react-hooks/refs */
-"use client";
+"use client"
 
-import { useRef } from "react";
-import { Provider, setupListeners, makeStore, AppStore, useGetMeQuery, useGetSellerMeQuery } from "@workspace/store";
+import { useRef } from "react"
+import {
+  Provider,
+  setupListeners,
+  makeStore,
+  AppStore,
+  useGetMeQuery,
+  useGetSellerMeQuery,
+} from "@workspace/store"
 
 function SellerPreloader() {
-  const { data: userData } = useGetMeQuery();
+  const { data: userData } = useGetMeQuery()
   useGetSellerMeQuery(undefined, {
     skip: !userData?.user,
-  });
-  return null;
+  })
+  return null
 }
 
-export default function StoreProvider({ children }: { children: React.ReactNode }) {
-  const storeRef = useRef<AppStore>(undefined);
+export default function StoreProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const storeRef = useRef<AppStore>(undefined)
 
   if (!storeRef.current) {
-    storeRef.current = makeStore() as AppStore;
-    setupListeners(storeRef.current.dispatch);
+    storeRef.current = makeStore() as AppStore
+    setupListeners(storeRef.current.dispatch)
   }
 
   return (
@@ -25,5 +36,5 @@ export default function StoreProvider({ children }: { children: React.ReactNode 
       <SellerPreloader />
       {children}
     </Provider>
-  );
+  )
 }

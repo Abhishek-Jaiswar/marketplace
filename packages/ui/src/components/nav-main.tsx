@@ -47,11 +47,20 @@ function RenderIcon({
 }) {
   if (!icon) return null
   if (React.isValidElement(icon)) {
-    return React.cloneElement(icon as React.ReactElement<{ className?: string }>, {
-      className: `size-4 shrink-0 ${className} ${(icon.props as { className?: string }).className || ""}`,
-    })
+    return React.cloneElement(
+      icon as React.ReactElement<{ className?: string }>,
+      {
+        className: `size-4 shrink-0 ${className} ${(icon.props as { className?: string }).className || ""}`,
+      }
+    )
   }
-  return <span className={`size-4 shrink-0 flex items-center justify-center ${className}`}>{icon}</span>
+  return (
+    <span
+      className={`flex size-4 shrink-0 items-center justify-center ${className}`}
+    >
+      {icon}
+    </span>
+  )
 }
 
 function isUrlActive(url: string, pathname: string): boolean {
@@ -90,7 +99,7 @@ export function NavMain({
       {navGroups.map((group, index) => (
         <SidebarGroup key={group.groupTitle || index} className="p-0">
           {group.groupTitle && (
-            <SidebarGroupLabel className="flex items-center justify-between px-2.5 pb-1.5 text-[11px] font-semibold text-muted-foreground/70 tracking-wider uppercase">
+            <SidebarGroupLabel className="flex items-center justify-between px-2.5 pb-1.5 text-[11px] font-semibold tracking-wider text-muted-foreground/70 uppercase">
               <span>{group.groupTitle}</span>
               <ChevronDownIcon className="size-3 text-muted-foreground/50" />
             </SidebarGroupLabel>
@@ -99,8 +108,11 @@ export function NavMain({
           <SidebarMenu className="gap-1">
             {group.items.map((item) => {
               const hasSubItems = item.items && item.items.length > 0
-              const itemIsActive = item.isActive || isUrlActive(item.url, activePath)
-              const childIsActive = item.items?.some((sub) => sub.isActive || isUrlActive(sub.url, activePath))
+              const itemIsActive =
+                item.isActive || isUrlActive(item.url, activePath)
+              const childIsActive = item.items?.some(
+                (sub) => sub.isActive || isUrlActive(sub.url, activePath)
+              )
               const shouldBeOpen = Boolean(itemIsActive || childIsActive)
 
               // Parent without sub-items (Single Link)
@@ -120,15 +132,15 @@ export function NavMain({
                       isActive={itemIsActive}
                       className={`group relative flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm font-medium transition-all ${
                         itemIsActive
-                          ? "bg-slate-200/80 text-foreground font-semibold dark:bg-slate-800/80 shadow-2xs"
-                          : "text-foreground/80 hover:bg-slate-100 dark:hover:bg-slate-800/40 hover:text-foreground"
+                          ? "bg-slate-200/80 font-semibold text-foreground shadow-2xs"
+                          : "text-foreground/80 hover:bg-slate-100 hover:text-foreground"
                       }`}
                     >
                       <RenderIcon
                         icon={item.icon}
                         className={`size-4 ${
                           itemIsActive
-                            ? "text-foreground font-bold"
+                            ? "font-bold text-foreground"
                             : "text-foreground/80 group-hover:text-foreground"
                         }`}
                       />
@@ -136,12 +148,12 @@ export function NavMain({
 
                       {item.badge !== undefined && (
                         <span
-                          className={`inline-flex items-center justify-center rounded-md px-1.5 py-0.5 text-[11px] font-semibold leading-none ${
+                          className={`inline-flex items-center justify-center rounded-md px-1.5 py-0.5 text-[11px] leading-none font-semibold ${
                             item.badgeColor === "red"
                               ? "bg-red-500 text-white shadow-2xs"
                               : item.badgeColor === "brand"
-                              ? "bg-primary text-primary-foreground font-bold"
-                              : "bg-muted text-muted-foreground/80 font-normal"
+                                ? "bg-primary font-bold text-primary-foreground"
+                                : "bg-muted font-normal text-muted-foreground/80"
                           }`}
                         >
                           {item.badge}
@@ -149,7 +161,7 @@ export function NavMain({
                       )}
 
                       {item.isExternal && (
-                        <ArrowUpRightIcon className="size-3.5 text-muted-foreground/60 group-hover:text-foreground transition-colors" />
+                        <ArrowUpRightIcon className="size-3.5 text-muted-foreground/60 transition-colors group-hover:text-foreground" />
                       )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -207,35 +219,41 @@ function CollapsibleNavItem({
             tooltip={item.title}
             className={`flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm font-medium transition-colors ${
               itemIsActive
-                ? "bg-slate-200/80 text-foreground font-semibold dark:bg-slate-800/80 shadow-2xs"
-                : "text-foreground/90 hover:bg-slate-100 dark:hover:bg-slate-800/40"
+                ? "bg-slate-200/80 font-semibold text-foreground shadow-2xs"
+                : "text-foreground/90 hover:bg-slate-100"
             }`}
           />
         }
       >
         <RenderIcon
           icon={item.icon}
-          className={`size-4 ${itemIsActive ? "text-foreground font-bold" : "text-foreground/80"}`}
+          className={`size-4 ${itemIsActive ? "font-bold text-foreground" : "text-foreground/80"}`}
         />
-        <span className="flex-1 text-left font-medium truncate">{item.title}</span>
-        <ChevronDownIcon className="size-4 shrink-0 transition-transform duration-200 group-data-open/collapsible:rotate-180 text-muted-foreground/70" />
+        <span className="flex-1 truncate text-left font-medium">
+          {item.title}
+        </span>
+        <ChevronDownIcon className="size-4 shrink-0 text-muted-foreground/70 transition-transform duration-200 group-data-open/collapsible:rotate-180" />
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div className="ml-4 border-l-2 border-slate-200/80 dark:border-slate-800/80 pl-3.5 my-1 flex flex-col gap-0.5">
+        <div className="my-1 ml-4 flex flex-col gap-0.5 border-l-2 border-slate-200/80 pl-3.5">
           {item.items?.map((subItem) => {
-            const subIsActive = subItem.isActive || isUrlActive(subItem.url, activePath)
+            const subIsActive =
+              subItem.isActive || isUrlActive(subItem.url, activePath)
             return (
               <a
                 key={subItem.title}
                 href={subItem.url}
                 className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-xs transition-colors ${
                   subIsActive
-                    ? "font-semibold text-foreground bg-slate-200/70 dark:bg-slate-800/70 shadow-2xs"
-                    : "text-muted-foreground hover:text-foreground hover:bg-slate-100/60 dark:hover:bg-slate-800/40"
+                    ? "bg-slate-200/70 font-semibold text-foreground shadow-2xs"
+                    : "text-muted-foreground hover:bg-slate-100/60 hover:text-foreground"
                 }`}
               >
                 {subItem.icon ? (
-                  <RenderIcon icon={subItem.icon} className="size-3.5 text-foreground/70" />
+                  <RenderIcon
+                    icon={subItem.icon}
+                    className="size-3.5 text-foreground/70"
+                  />
                 ) : (
                   <span className="size-3.5 shrink-0" />
                 )}

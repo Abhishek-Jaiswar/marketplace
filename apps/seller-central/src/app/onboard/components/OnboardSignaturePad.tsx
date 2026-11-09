@@ -1,17 +1,24 @@
-import React, { useState } from "react";
-import { PenTool, Upload, RefreshCw, CheckCircle2, Loader2, Image as ImageIcon } from "lucide-react";
+import React, { useState } from "react"
+import {
+  PenTool,
+  Upload,
+  RefreshCw,
+  CheckCircle2,
+  Loader2,
+  Image as ImageIcon,
+} from "lucide-react"
 
 export interface OnboardSignaturePadProps {
-  signatureUploaded?: string | null;
-  canvasSignature?: string | null;
-  onUploadFile: (file: File) => Promise<void>;
-  onSaveCanvasSignature: () => Promise<void>;
-  clearCanvas: () => void;
-  isUploading?: boolean;
-  canvasRef: React.RefObject<HTMLCanvasElement | null>;
-  startDrawing: (e: React.MouseEvent<HTMLCanvasElement>) => void;
-  draw: (e: React.MouseEvent<HTMLCanvasElement>) => void;
-  stopDrawing: () => void;
+  signatureUploaded?: string | null
+  canvasSignature?: string | null
+  onUploadFile: (file: File) => Promise<void>
+  onSaveCanvasSignature: () => Promise<void>
+  clearCanvas: () => void
+  isUploading?: boolean
+  canvasRef: React.RefObject<HTMLCanvasElement | null>
+  startDrawing: (e: React.MouseEvent<HTMLCanvasElement>) => void
+  draw: (e: React.MouseEvent<HTMLCanvasElement>) => void
+  stopDrawing: () => void
 }
 
 export const OnboardSignaturePad: React.FC<OnboardSignaturePadProps> = ({
@@ -26,29 +33,29 @@ export const OnboardSignaturePad: React.FC<OnboardSignaturePadProps> = ({
   draw,
   stopDrawing,
 }) => {
-  const [tab, setTab] = useState<"upload" | "draw">("upload");
+  const [tab, setTab] = useState<"upload" | "draw">("upload")
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      onUploadFile(e.target.files[0]);
+      onUploadFile(e.target.files[0])
     }
-  };
+  }
 
   return (
-    <div className="bg-white border border-zinc-200/80 rounded-3xl p-6 shadow-xs flex flex-col gap-4 text-left">
+    <div className="flex flex-col gap-4 rounded-3xl border border-zinc-200/80 bg-white p-6 text-left shadow-xs">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
-            <PenTool className="w-4 h-4" />
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-indigo-100 bg-indigo-50 text-indigo-600">
+            <PenTool className="h-4 w-4" />
           </div>
-          <h3 className="text-sm font-extrabold text-zinc-900 leading-none">
+          <h3 className="text-sm leading-none font-extrabold text-zinc-900">
             Digital Signature Verification
           </h3>
         </div>
 
         {signatureUploaded && (
-          <span className="flex items-center gap-1 text-[10px] font-extrabold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-            <CheckCircle2 className="w-3 h-3" /> Attached
+          <span className="flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[10px] font-extrabold text-emerald-600">
+            <CheckCircle2 className="h-3 w-3" /> Attached
           </span>
         )}
       </div>
@@ -58,7 +65,7 @@ export const OnboardSignaturePad: React.FC<OnboardSignaturePadProps> = ({
         <button
           type="button"
           onClick={() => setTab("upload")}
-          className={`flex-1 py-2 rounded-lg transition-all cursor-pointer ${
+          className={`flex-1 cursor-pointer rounded-lg py-2 transition-all ${
             tab === "upload"
               ? "bg-white text-indigo-600 shadow-xs"
               : "text-zinc-500 hover:text-zinc-800"
@@ -69,7 +76,7 @@ export const OnboardSignaturePad: React.FC<OnboardSignaturePadProps> = ({
         <button
           type="button"
           onClick={() => setTab("draw")}
-          className={`flex-1 py-2 rounded-lg transition-all cursor-pointer ${
+          className={`flex-1 cursor-pointer rounded-lg py-2 transition-all ${
             tab === "draw"
               ? "bg-white text-indigo-600 shadow-xs"
               : "text-zinc-500 hover:text-zinc-800"
@@ -82,7 +89,7 @@ export const OnboardSignaturePad: React.FC<OnboardSignaturePadProps> = ({
       {/* TAB 1: FILE UPLOAD */}
       {tab === "upload" && (
         <div className="space-y-3">
-          <label className="border-2 border-dashed border-zinc-200 hover:border-indigo-500 rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-colors bg-zinc-50/50">
+          <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-zinc-200 bg-zinc-50/50 p-6 text-center transition-colors hover:border-indigo-500">
             <input
               type="file"
               accept="image/png, image/jpeg, image/jpg"
@@ -90,14 +97,14 @@ export const OnboardSignaturePad: React.FC<OnboardSignaturePadProps> = ({
               className="hidden"
             />
             {isUploading ? (
-              <Loader2 className="w-6 h-6 animate-spin text-indigo-600" />
+              <Loader2 className="h-6 w-6 animate-spin text-indigo-600" />
             ) : (
               <>
-                <Upload className="w-6 h-6 text-indigo-600 mb-2" />
+                <Upload className="mb-2 h-6 w-6 text-indigo-600" />
                 <span className="text-xs font-bold text-zinc-800">
                   Click to Upload Signature File
                 </span>
-                <span className="text-[10px] text-zinc-400 font-semibold mt-0.5">
+                <span className="mt-0.5 text-[10px] font-semibold text-zinc-400">
                   PNG, JPG or JPEG (Max 5MB)
                 </span>
               </>
@@ -105,9 +112,11 @@ export const OnboardSignaturePad: React.FC<OnboardSignaturePadProps> = ({
           </label>
 
           {signatureUploaded && (
-            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-700 flex items-center gap-2">
-              <ImageIcon className="w-4 h-4 text-emerald-600" />
-              <span className="truncate">Attached File: {signatureUploaded}</span>
+            <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs font-bold text-emerald-700">
+              <ImageIcon className="h-4 w-4 text-emerald-600" />
+              <span className="truncate">
+                Attached File: {signatureUploaded}
+              </span>
             </div>
           )}
         </div>
@@ -116,7 +125,7 @@ export const OnboardSignaturePad: React.FC<OnboardSignaturePadProps> = ({
       {/* TAB 2: CANVAS DRAWING */}
       {tab === "draw" && (
         <div className="space-y-3">
-          <div className="border border-zinc-200 rounded-2xl overflow-hidden bg-zinc-50 relative">
+          <div className="relative overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50">
             <canvas
               ref={canvasRef}
               width={480}
@@ -125,9 +134,9 @@ export const OnboardSignaturePad: React.FC<OnboardSignaturePadProps> = ({
               onMouseMove={draw}
               onMouseUp={stopDrawing}
               onMouseLeave={stopDrawing}
-              className="w-full h-36 cursor-crosshair touch-none"
+              className="h-36 w-full cursor-crosshair touch-none"
             />
-            <span className="absolute bottom-2 left-3 text-[10px] text-zinc-400 font-semibold pointer-events-none">
+            <span className="pointer-events-none absolute bottom-2 left-3 text-[10px] font-semibold text-zinc-400">
               Sign inside the box using mouse or touch
             </span>
           </div>
@@ -136,19 +145,19 @@ export const OnboardSignaturePad: React.FC<OnboardSignaturePadProps> = ({
             <button
               type="button"
               onClick={clearCanvas}
-              className="text-xs font-bold text-zinc-500 hover:text-zinc-800 flex items-center gap-1 cursor-pointer"
+              className="flex cursor-pointer items-center gap-1 text-xs font-bold text-zinc-500 hover:text-zinc-800"
             >
-              <RefreshCw className="w-3.5 h-3.5" /> Clear Signature
+              <RefreshCw className="h-3.5 w-3.5" /> Clear Signature
             </button>
 
             <button
               type="button"
               onClick={onSaveCanvasSignature}
               disabled={!canvasSignature || isUploading}
-              className="h-9 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5 shadow-xs"
+              className="flex h-9 cursor-pointer items-center gap-1.5 rounded-lg bg-indigo-600 px-4 text-xs font-bold text-white shadow-xs transition-colors hover:bg-indigo-700 disabled:opacity-50"
             >
               {isUploading ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
               ) : (
                 "Save Drawn Signature"
               )}
@@ -157,5 +166,5 @@ export const OnboardSignaturePad: React.FC<OnboardSignaturePadProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

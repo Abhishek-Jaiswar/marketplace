@@ -1,3 +1,4 @@
+import { LogoMark } from "@workspace/ui/components/logo"
 import { SidebarData } from "@workspace/ui/components/app-sidebar"
 import {
   LayoutDashboardIcon,
@@ -5,16 +6,16 @@ import {
   StoreIcon,
   CreditCardIcon,
   SettingsIcon,
-  ShieldCheckIcon,
   BellIcon,
   HelpCircleIcon,
   UserPlusIcon,
+  PackageIcon,
 } from "lucide-react"
 
 export const adminSidebarData: SidebarData = {
   appName: "Admin Central",
   appSubtitle: "admin.cbsmarketplace.studio",
-  appLogo: <ShieldCheckIcon className="size-4" />,
+  appLogo: <LogoMark className="size-5" />,
   groups: [
     {
       groupTitle: "Overview",
@@ -28,6 +29,11 @@ export const adminSidebarData: SidebarData = {
           title: "Seller Approvals",
           url: "/dashboard/sellers",
           icon: <StoreIcon />,
+        },
+        {
+          title: "Catalog Moderation",
+          url: "/dashboard/catalog",
+          icon: <PackageIcon />,
         },
       ],
     },

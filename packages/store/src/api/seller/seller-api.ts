@@ -1,5 +1,6 @@
-import { baseApi } from "../baseApi";
-import { tokenReceived, userProfileReceived } from "../../slices/authSlice";
+import { baseApi } from "../baseApi"
+import { UPLOAD_TIMEOUT_MS } from "../retry-policy"
+import { tokenReceived, userProfileReceived } from "../../slices/authSlice"
 import type {
   Seller,
   RegisterSellerRequest,
@@ -11,21 +12,36 @@ import type {
   Store,
   BankAccount,
   BusinessType,
-} from "./seller-api.types";
+} from "./seller-api.types"
 
 export const sellerApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    registerSeller: builder.mutation<{ message: string; user: any; seller: Seller }, RegisterSellerRequest>({
+    registerSeller: builder.mutation<
+      { message: string; user: any; seller: Seller },
+      RegisterSellerRequest
+    >({
       query: (payload) => ({
         url: "/sellers/register",
         method: "POST",
         body: payload,
       }),
     }),
-    verifyGstin: builder.query<{ tradeName: string; legalName: string; businessType: BusinessType; state: string; status: string }, string>({
+    verifyGstin: builder.query<
+      {
+        tradeName: string
+        legalName: string
+        businessType: BusinessType
+        state: string
+        status: string
+      },
+      string
+    >({
       query: (gstin) => `/sellers/verify-gstin?gstin=${gstin}`,
     }),
-    onboardSeller: builder.mutation<{ message: string; user: any; seller: Seller; accessToken: string }, OnboardRequest>({
+    onboardSeller: builder.mutation<
+      { message: string; user: any; seller: Seller; accessToken: string },
+      OnboardRequest
+    >({
       query: (payload) => ({
         url: "/sellers/onboard",
         method: "POST",
@@ -33,10 +49,10 @@ export const sellerApi = baseApi.injectEndpoints({
       }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
+          const { data } = await queryFulfilled
           // Dynamically update tokens and profile on the client
-          dispatch(tokenReceived(data.accessToken));
-          dispatch(userProfileReceived(data.user));
+          dispatch(tokenReceived(data.accessToken))
+          dispatch(userProfileReceived(data.user))
         } catch {
           // Ignore
         }
@@ -47,10 +63,16 @@ export const sellerApi = baseApi.injectEndpoints({
       query: () => "/sellers/me",
       providesTags: ["Seller"],
     }),
-    getPublicStoreBySlug: builder.query<{ store: Store & { seller?: Seller } }, string>({
+    getPublicStoreBySlug: builder.query<
+      { store: Store & { seller?: Seller } },
+      string
+    >({
       query: (slug) => `/sellers/store-public/${slug}`,
     }),
-    updateSellerProfile: builder.mutation<{ message: string; seller: Seller }, OnboardRequest>({
+    updateSellerProfile: builder.mutation<
+      { message: string; seller: Seller },
+      OnboardRequest
+    >({
       query: (payload) => ({
         url: "/sellers/profile",
         method: "PUT",
@@ -58,7 +80,10 @@ export const sellerApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Seller"],
     }),
-    updateStore: builder.mutation<{ message: string; store: Store }, UpdateStoreRequest>({
+    updateStore: builder.mutation<
+      { message: string; store: Store },
+      UpdateStoreRequest
+    >({
       query: (payload) => ({
         url: "/sellers/store",
         method: "PUT",
@@ -66,7 +91,10 @@ export const sellerApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Seller"],
     }),
-    addBankAccount: builder.mutation<{ message: string; account: BankAccount }, BankAccountRequest>({
+    addBankAccount: builder.mutation<
+      { message: string; account: BankAccount },
+      BankAccountRequest
+    >({
       query: (payload) => ({
         url: "/sellers/bank-accounts",
         method: "POST",
@@ -74,30 +102,43 @@ export const sellerApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Seller"],
     }),
-    uploadDocument: builder.mutation<{ message: string; document: any }, FormData>({
+    uploadDocument: builder.mutation<
+      { message: string; document: any },
+      FormData
+    >({
       query: (formData) => ({
         url: "/sellers/documents",
+        timeout: UPLOAD_TIMEOUT_MS,
         method: "POST",
         body: formData,
         // FormData needs headers to be automatically set by the browser (multipart/form-data boundary)
       }),
       invalidatesTags: ["Seller"],
     }),
-    submitOnboarding: builder.mutation<{ message: string; seller: Seller }, void>({
+    submitOnboarding: builder.mutation<
+      { message: string; seller: Seller },
+      void
+    >({
       query: () => ({
         url: "/sellers/submit",
         method: "POST",
       }),
       invalidatesTags: ["Seller"],
     }),
-    getSellersAdmin: builder.query<PaginatedSellersResponse, { page?: number; limit?: number } | void>({
+    getSellersAdmin: builder.query<
+      PaginatedSellersResponse,
+      { page?: number; limit?: number } | void
+    >({
       query: (params) => ({
         url: "/sellers",
         params: params || undefined,
       }),
       providesTags: ["SellerList"],
     }),
-    verifySellerAdmin: builder.mutation<{ message: string; seller: Seller }, { sellerId: string; body: VerifySellerRequest }>({
+    verifySellerAdmin: builder.mutation<
+      { message: string; seller: Seller },
+      { sellerId: string; body: VerifySellerRequest }
+    >({
       query: ({ sellerId, body }) => ({
         url: `/sellers/${sellerId}/verify`,
         method: "POST",
@@ -107,7 +148,7 @@ export const sellerApi = baseApi.injectEndpoints({
     }),
   }),
   overrideExisting: false,
-});
+})
 
 export const {
   useRegisterSellerMutation,
@@ -125,4 +166,4 @@ export const {
   useSubmitOnboardingMutation,
   useGetSellersAdminQuery,
   useVerifySellerAdminMutation,
-} = sellerApi;
+} = sellerApi

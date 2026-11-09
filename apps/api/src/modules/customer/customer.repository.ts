@@ -7,18 +7,17 @@ import {
 
 class CustomerRepository {
   async findCustomerByUserId(userId: string) {
-    return db.orm.public.Customer
-      .include("user", (user) =>
-        user.select(
-          "id",
-          "firstName",
-          "lastName",
-          "email",
-          "status",
-          "roles",
-          "avatar",
-        ),
+    return db.orm.public.Customer.include("user", (user) =>
+      user.select(
+        "id",
+        "firstName",
+        "lastName",
+        "email",
+        "status",
+        "roles",
+        "avatar"
       )
+    )
       .include("defaultShippingAddress")
       .include("defaultBillingAddress")
       .include("addresses")
@@ -27,13 +26,11 @@ class CustomerRepository {
   }
 
   async updateCustomerProfile(userId: string, data: TUpdateProfile) {
-    return db.orm.public.Customer
-      .where({ userId })
-      .update({
-        ...(data.phoneNumber !== undefined && {
-          phoneNumber: data.phoneNumber ?? null,
-        }),
-      })
+    return db.orm.public.Customer.where({ userId }).update({
+      ...(data.phoneNumber !== undefined && {
+        phoneNumber: data.phoneNumber ?? null,
+      }),
+    })
   }
 
   async findAddressById(addressId: string) {
@@ -42,6 +39,7 @@ class CustomerRepository {
 
   async createAddress(customerId: string, data: TCreateAddress) {
     return db.orm.public.Address.create({
+      recipientName: data.recipientName ?? null,
       street1: data.street1,
       street2: data.street2 ?? null,
       landmark: data.landmark ?? null,
@@ -55,20 +53,21 @@ class CustomerRepository {
   }
 
   async updateAddress(addressId: string, data: TUpdateAddress) {
-    return db.orm.public.Address
-      .where({ id: addressId })
-      .update({
-        ...(data.street1 !== undefined && { street1: data.street1 }),
-        ...(data.street2 !== undefined && { street2: data.street2 ?? null }),
-        ...(data.landmark !== undefined && { landmark: data.landmark ?? null }),
-        ...(data.city !== undefined && { city: data.city }),
-        ...(data.state !== undefined && { state: data.state }),
-        ...(data.postalCode !== undefined && { postalCode: data.postalCode }),
-        ...(data.country !== undefined && { country: data.country }),
-        ...(data.phoneNumber !== undefined && {
-          phoneNumber: data.phoneNumber ?? null,
-        }),
-      })
+    return db.orm.public.Address.where({ id: addressId }).update({
+      ...(data.recipientName !== undefined && {
+        recipientName: data.recipientName ?? null,
+      }),
+      ...(data.street1 !== undefined && { street1: data.street1 }),
+      ...(data.street2 !== undefined && { street2: data.street2 ?? null }),
+      ...(data.landmark !== undefined && { landmark: data.landmark ?? null }),
+      ...(data.city !== undefined && { city: data.city }),
+      ...(data.state !== undefined && { state: data.state }),
+      ...(data.postalCode !== undefined && { postalCode: data.postalCode }),
+      ...(data.country !== undefined && { country: data.country }),
+      ...(data.phoneNumber !== undefined && {
+        phoneNumber: data.phoneNumber ?? null,
+      }),
+    })
   }
 
   async deleteAddress(addressId: string) {
@@ -76,19 +75,15 @@ class CustomerRepository {
   }
 
   async setDefaultShippingAddress(userId: string, addressId: string | null) {
-    return db.orm.public.Customer
-      .where({ userId })
-      .update({
-        defaultShippingAddressId: addressId,
-      })
+    return db.orm.public.Customer.where({ userId }).update({
+      defaultShippingAddressId: addressId,
+    })
   }
 
   async setDefaultBillingAddress(userId: string, addressId: string | null) {
-    return db.orm.public.Customer
-      .where({ userId })
-      .update({
-        defaultBillingAddressId: addressId,
-      })
+    return db.orm.public.Customer.where({ userId }).update({
+      defaultBillingAddressId: addressId,
+    })
   }
 }
 

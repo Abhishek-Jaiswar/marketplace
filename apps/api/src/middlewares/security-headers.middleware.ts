@@ -7,7 +7,7 @@ export const securityHeaders: RequestHandler = (_request, response, next) => {
   response.setHeader("Cross-Origin-Resource-Policy", "cross-origin")
   response.setHeader(
     "Content-Security-Policy",
-    "default-src 'none'; frame-ancestors 'none'; base-uri 'none'",
+    "default-src 'none'; frame-ancestors 'none'; base-uri 'none'"
   )
 
   next()

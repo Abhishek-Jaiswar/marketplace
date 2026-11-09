@@ -18,7 +18,8 @@ export const corsMiddleware = cors({
     // Allow any Vercel deployment domain (*.vercel.app)
     if (
       normalizedOrigin.startsWith("https://") &&
-      (normalizedOrigin.endsWith(".vercel.app") || normalizedOrigin === "https://vercel.app")
+      (normalizedOrigin.endsWith(".vercel.app") ||
+        normalizedOrigin === "https://vercel.app")
     ) {
       return callback(null, true)
     }

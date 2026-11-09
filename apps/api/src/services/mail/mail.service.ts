@@ -1,5 +1,5 @@
 import { logger } from "@workspace/logger"
-import { Env } from "../../config/env.config.js"
+import { Env, marketplaceName } from "../../config/env.config.js"
 import nodemailer from "nodemailer"
 import { verifyEmailOtpTemplate } from "./templates/email-otp.template.js"
 import { resetPasswordOtpTemplate } from "./templates/reset-password.template.js"
@@ -29,7 +29,7 @@ class MailService {
     try {
       const htmlContent = `<div style="font-family: sans-serif; font-size: 15px; line-height: 1.6; color: #111; white-space: pre-line;">${content}</div>`
       const info = await this.transporter.sendMail({
-        from: `"CBS Marketplace" <${Env.MAIL_USER}>`,
+        from: `"${marketplaceName}" <${Env.MAIL_USER}>`,
         to,
         subject,
         text: content,
@@ -47,7 +47,7 @@ class MailService {
   async sendOtpEmail(to: string, otp: string) {
     return this.sendEmail(
       to,
-      "Verify Your Email - CBS Marketplace",
+      `Verify Your Email - ${marketplaceName}`,
       verifyEmailOtpTemplate(otp)
     )
   }
@@ -55,7 +55,7 @@ class MailService {
   async sendResetPasswordOtp(to: string, otp: string) {
     return this.sendEmail(
       to,
-      "Reset Your Password - CBS Marketplace",
+      `Reset Your Password - ${marketplaceName}`,
       resetPasswordOtpTemplate(otp)
     )
   }

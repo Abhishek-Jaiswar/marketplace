@@ -10,6 +10,8 @@ export const contract = contractFromJson<Contract>(contractJson)
 
 export const db: PostgresClient<Contract> = postgres({
   contract,
+  // Budgets below are severity warn; strict mode would throw on them anyway.
+  mode: "permissive",
   ...(dbEnv.DATABASE_URL ? { url: dbEnv.DATABASE_URL } : {}),
   middleware: [
     lints({

@@ -1,0 +1,123 @@
+// use prisma-8
+
+model Shipment {
+  id String @id @onCreate(cuid(2))
+
+  sellerOrderId String
+  sellerOrder   SellerOrder @relation(fields: [sellerOrderId], references: [id], onDelete: Restrict)
+
+  // Set on reverse pickups for a return.
+  returnRequestId String?
+  returnRequest   ReturnRequest? @relation(fields: [returnRequestId], references: [id], onDelete: SetNull)
+
+  direction ShipmentDirection @default(FORWARD)
+  status    ShipmentStatus    @default(PENDING)
+
+  carrier        String?
+  trackingNumber String?
+
+  labelMediaId String?
+  labelMedia   Media?  @relation(fields: [labelMediaId], references: [id], onDelete: SetNull)
+
+  weightGrams  Int?
+  shippingCost Int?
+  // Cash the carrier must collect, in paise. Zero for prepaid orders.
+  codAmount    Int  @default(0)
+
+  expectedDeliveryAt TimestampString(3)?
+  pickedUpAt         TimestampString(3)?
+  deliveredAt        TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@unique([carrier, trackingNumber])
+  @@index([sellerOrderId])
+  @@index([returnRequestId])
+  @@index([labelMediaId])
+  @@index([status])
+}
+
+model ShipmentItem {
+  id String @id @onCreate(cuid(2))
+
+  shipmentId String
+  shipment   Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  orderItemId String
+  orderItem   OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Restrict)
+
+  quantity Int
+
+  @@unique([shipmentId, orderItemId])
+  @@index([orderItemId])
+  @@check(expression: sql`"quantity" > 0`, name: "shipment_item_quantity_positive")
+}
+
+model ShipmentEvent {
+  id String @id @onCreate(cuid(2))
+
+  shipmentId String
+  shipment   Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  status      ShipmentStatus
+  rawStatus   String?
+  location    String?
+  description String?
+  occurredAt  TimestampString(3)
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+
+  @@index([shipmentId, occurredAt])
+}
+
+model ReturnRequest {
+  id           String @id @onCreate(cuid(2))
+  returnNumber String @unique
+
+  orderItemId String
+  orderItem   OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Restrict)
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  // Copied from the order so the seller's queue needs no join through it.
+  sellerId String
+  seller   Seller @relation(fields: [sellerId], references: [id], onDelete: Restrict)
+
+  quantity   Int
+  reason     ReturnReason
+  comment    String?
+  resolution ReturnResolution @default(REFUND)
+  status     ReturnStatus     @default(REQUESTED)
+
+  rejectionReason String?
+  decidedById     String?
+  decidedBy       User?   @relation(fields: [decidedById], references: [id], onDelete: SetNull)
+
+  decidedAt   TimestampString(3)?
+  receivedAt  TimestampString(3)?
+  completedAt TimestampString(3)?
+
+  createdAt TimestampString(3) @default(now()) @onCreate(now())
+  updatedAt TimestampString(3) @onCreate(now()) @onUpdate(now())
+
+  @@index([orderItemId])
+  @@index([customerId])
+  @@index([sellerId, status])
+  @@index([decidedById])
+  @@check(expression: sql`"quantity" > 0`, name: "return_quantity_positive")
+}
+
+model ReturnMedia {
+  id String @id @onCreate(cuid(2))
+
+  returnRequestId String
+  returnRequest   ReturnRequest @relation(fields: [returnRequestId], references: [id], onDelete: Cascade)
+
+  mediaId String
+  media   Media  @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@unique([returnRequestId, mediaId])
+  @@index([mediaId])
+}

@@ -15,6 +15,7 @@
     "db:verify": "prisma db verify",
     "migration:plan": "prisma migration plan",
     "db:seed": "tsx src/prisma/seed.ts",
+    "db:seed:catalog": "tsx src/prisma/seed-catalog.ts",
     "db:reset": "tsx scripts/wipe-db.ts && prisma db init && tsx src/prisma/seed.ts"
   },
   "main": "./dist/src/index.js",

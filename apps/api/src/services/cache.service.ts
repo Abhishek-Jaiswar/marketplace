@@ -1,7 +1,6 @@
 import { logger } from "@workspace/logger"
 import { redis } from "../lib/redis.js"
 
-
 class CacheService {
   private isAvailable(): boolean {
     return redis.status === "ready"

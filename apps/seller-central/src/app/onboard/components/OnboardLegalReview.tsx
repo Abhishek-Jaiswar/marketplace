@@ -1,13 +1,13 @@
-import React from "react";
-import { Check, FileCheck, ArrowLeft, ArrowRight } from "lucide-react";
+import React from "react"
+import { Check, FileCheck, ArrowLeft, ArrowRight } from "lucide-react"
 
 interface OnboardLegalReviewProps {
-  tradeName?: string;
-  gstin: string;
-  bankName: string;
-  accountNumber: string;
-  onBack: () => void;
-  onProceed: () => void;
+  tradeName?: string
+  gstin: string
+  bankName: string
+  accountNumber: string
+  onBack: () => void
+  onProceed: () => void
 }
 
 export const OnboardLegalReview: React.FC<OnboardLegalReviewProps> = ({
@@ -19,32 +19,30 @@ export const OnboardLegalReview: React.FC<OnboardLegalReviewProps> = ({
   onProceed,
 }) => {
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="animate-fadeIn space-y-6">
       <div className="space-y-1">
         <h2 className="text-2xl font-extrabold text-zinc-900">
           3. Confirm Legal Onboarding
         </h2>
-        <p className="text-xs text-zinc-500 font-medium">
+        <p className="text-xs font-medium text-zinc-500">
           Confirm your verified details before creating your storefront.
         </p>
       </div>
 
-      <div className="bg-white border border-zinc-200/80 rounded-2xl p-5 space-y-3 shadow-xs">
+      <div className="space-y-3 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs">
         <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
           <span className="text-xs font-bold text-zinc-500">
             Verified Legal Entity
           </span>
-          <span className="text-xs font-extrabold text-zinc-900 flex items-center gap-1">
-            <Check className="w-4 h-4 text-emerald-600" />
+          <span className="flex items-center gap-1 text-xs font-extrabold text-zinc-900">
+            <Check className="h-4 w-4 text-emerald-600" />
             {tradeName}
           </span>
         </div>
 
         <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
-          <span className="text-xs font-bold text-zinc-500">
-            GSTIN Number
-          </span>
-          <span className="text-xs font-mono font-bold text-zinc-800">
+          <span className="text-xs font-bold text-zinc-500">GSTIN Number</span>
+          <span className="font-mono text-xs font-bold text-zinc-800">
             {gstin}
           </span>
         </div>
@@ -53,8 +51,8 @@ export const OnboardLegalReview: React.FC<OnboardLegalReviewProps> = ({
           <span className="text-xs font-bold text-zinc-500">
             Digital Signature
           </span>
-          <span className="text-xs font-bold text-emerald-600 flex items-center gap-1">
-            <FileCheck className="w-4 h-4" /> Signature Bound
+          <span className="flex items-center gap-1 text-xs font-bold text-emerald-600">
+            <FileCheck className="h-4 w-4" /> Signature Bound
           </span>
         </div>
 
@@ -68,24 +66,24 @@ export const OnboardLegalReview: React.FC<OnboardLegalReviewProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center justify-between pt-4 border-t border-zinc-200">
+      <div className="flex items-center justify-between border-t border-zinc-200 pt-4">
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1 text-xs font-bold text-zinc-600 hover:text-zinc-900 cursor-pointer"
+          className="flex cursor-pointer items-center gap-1 text-xs font-bold text-zinc-600 hover:text-zinc-900"
         >
-          <ArrowLeft className="w-4 h-4" /> Edit Bank Details
+          <ArrowLeft className="h-4 w-4" /> Edit Bank Details
         </button>
 
         <button
           type="button"
           onClick={onProceed}
-          className="h-12 px-8 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold shadow-md shadow-indigo-600/20 transition-all cursor-pointer flex items-center gap-2"
+          className="flex h-12 cursor-pointer items-center gap-2 rounded-xl bg-indigo-600 px-8 text-xs font-extrabold text-white shadow-md shadow-indigo-600/20 transition-all hover:bg-indigo-700"
         >
           <span>Proceed to Storefront & Pickup Setup</span>
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="h-4 w-4" />
         </button>
       </div>
     </div>
-  );
-};
+  )
+}

@@ -2,23 +2,33 @@ import { Redis } from "ioredis"
 import { logger } from "@workspace/logger"
 import { Env } from "../config/env.config.js"
 
+const MAX_RECONNECT_DELAY_MS = 30_000
+
 export const redis = new Redis(Env.REDIS_URL, {
   lazyConnect: true,
   maxRetriesPerRequest: 1,
   enableOfflineQueue: false,
+  // Keep trying for as long as the API runs, so Redis can return without a
+  // restart. The cap keeps an outage from flooding the connection.
   retryStrategy(times) {
-    if (times > 3) {
-      // Stop retrying after 3 failed attempts to avoid log flooding
-      return null
-    }
-    return Math.min(times * 1000, 3000)
+    return Math.min(times * 500, MAX_RECONNECT_DELAY_MS)
   },
 })
 
+// Reported once per outage rather than on every reconnect attempt.
+let isDown = false
+
 redis.on("error", (error) => {
-  logger.warn("Redis connection error:", {
+  if (isDown) return
+  isDown = true
+  logger.warn("Redis is unavailable; running without cache and rate limits", {
     error: error instanceof Error ? error.message : String(error),
   })
+})
+
+redis.on("ready", () => {
+  if (isDown) logger.info("Redis connection restored")
+  isDown = false
 })
 
 export const testRedisConnection = async (): Promise<void> => {
